@@ -1909,6 +1909,7 @@ enum BBS_COMMAND_ID {
 	ID_StatisticsActionName = 2595,
 };
 
+extern const int BeginEndList[17][2];
 extern const uint16_t commandSizeTable[2596];
 
 struct sActionBegin

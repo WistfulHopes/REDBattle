@@ -213,8 +213,31 @@ private:
 	CBBSFileAnalyzeData m_BBSFileAnalyzeData[2][7]; // 0x2F0
 public:
 	static int32_t GetPlayerIndexWithCommon(SIDE_ID, EMemberID);
-	CBBSFileAnalyzeData * GetScriptData(SIDE_ID, EMemberID, EScriptData);
-	CBBSFileAnalyzeData * GetCommonScriptData(EScriptData);
+	CBBSFileAnalyzeData * GetScriptData(SIDE_ID side, EMemberID member, EScriptData script)
+	{
+		auto index = side * 3 + member;
+		switch (script)
+		{
+			case ScriptData_Body:
+				return &m_BBSFileAnalyzeData[0][index];
+			case ScriptData_Effect:
+				return &m_BBSFileAnalyzeData[1][index];
+			default:
+				return nullptr;
+		}
+	}
+	CBBSFileAnalyzeData * GetCommonScriptData(EScriptData script)
+	{
+		switch (script)
+		{
+			case ScriptData_Body:
+				return &m_BBSFileAnalyzeData[0][6];
+			case ScriptData_Effect:
+				return &m_BBSFileAnalyzeData[1][6];
+			default:
+				return nullptr;
+		}
+	}
 	OBJ_CBase * GetNoActiveObject(const OBJ_CBase *);
 	OBJ_CBase * SearchLowPriorityObject(const OBJ_CBase *);
 	static int32_t GetPlayerIndex(SIDE_ID, EMemberID);
@@ -242,8 +265,8 @@ public:
 	int32_t m_EtcActiveObjectCount; // 0x8AC
 	int32_t m_ForceDeleteCount; // 0x8B0
 private:
-    static const uint32_t CHARA_OBJECT_NUM = 7;
-    static const uint32_t OBJECT_NUM = 100;
+    static const uint32_t CHARA_OBJECT_NUM = 6;
+    static const uint32_t OBJECT_NUM = 101;
     static const uint32_t TOTAL_OBJECT_NUM = CHARA_OBJECT_NUM + OBJECT_NUM;
 	OBJ_CBase * m_ObjPtrVector[TOTAL_OBJECT_NUM]; // 0x8B8
 	OBJ_CBase * m_SortedObjPtrVector[TOTAL_OBJECT_NUM]; // 0xC10
@@ -376,7 +399,7 @@ public:
 	void SetHPGaugeColor(int32_t, uint32_t, uint32_t);
 	void SetTensGaugeColor(int32_t, uint32_t, uint32_t);
 	bool IsPlayingCutScene();
-	void TransferAirActionCount(OBJ_CCharBase *, OBJ_CCharBase *);
+	void TransferAirActionCount(OBJ_CCharBase* dst, OBJ_CCharBase* src);
 	int32_t GetStartupPositionXBase(SIDE_ID, EMemberID);
 	void TransferMemberIndexInTrainingMode();
 	void SetStartupPositionInTrainingMode();
@@ -542,7 +565,7 @@ private:
 	bool m_FuncCallArgStackDebug; // 0x3D30
 public:
 	void InitFuncCallArg();
-	void PushFuncCallArg(int32_t, int32_t, int32_t, int32_t);
+	void PushFuncCallArg(int arg0, int arg1, int arg2, int arg3);
 	void PopFuncCallArg();
 	int32_t GetFuncCallArg(int32_t);
 	void FuncCallArgDebug(bool);

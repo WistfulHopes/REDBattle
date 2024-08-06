@@ -76,17 +76,17 @@ private:
 public:
 	BATTLE_TeamManager();
 	void Initialize(SIDE_ID);
-	SIDE_ID GetSideID();
+	SIDE_ID GetSideID() { return m_SideID; }
 	void RoundReset();
 	void SetMember(EMemberID, OBJ_CCharBase *);
 	OBJ_CCharBase * GetMember(EMemberID);
-	OBJ_CCharBase * GetMemberFromIndex(int32_t);
-	OBJ_CCharBase * GetMainPlayer();
+	OBJ_CCharBase * GetMemberFromIndex(int32_t index) { return m_pMemberObjects[index]; }
+	OBJ_CCharBase * GetMainPlayer() { return m_pMainPlayerObject; }
 	void SetMainPlayer(OBJ_CCharBase *);
 	void SetMainPlayerSimple(OBJ_CCharBase *);
 	OBJ_CCharBase * GetPrevMainPlayer();
 	OBJ_CCharBase * GetSubMember(ESubMemberID);
-	OBJ_CCharBase * GetAliveSubMember(ESubMemberID);
+	OBJ_CCharBase * GetAliveSubMember(ESubMemberID SubMemberID);
 	void UpdateMainTarget(BATTLE_TeamManager *);
 	void ChangeMainPlayer(OBJ_CCharBase *);
 	void Update();

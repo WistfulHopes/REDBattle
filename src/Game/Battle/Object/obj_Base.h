@@ -6,8 +6,39 @@
 #include "Base/Jon/TL_Jon.h"
 #include "Common/tl_Filepack.h"
 #include <AudioManager.h>
+#include "obj_Flag.h"
 
+class OBJ_CCharBase;
 class OBJ_CBase;
+
+class CVoiceInfo
+{
+public:
+	CVoiceInfo();
+	void CVoiceInfoInit();
+	int32_t m_VoiceTimer; // 0x0
+	int32_t m_VoiceHistoryTimer; // 0x4
+	CXXBYTE<16> m_VoiceHistoryName; // 0x8
+	char m_DamageVoiceWait; // 0x18
+	bool m_ForceVoicePlay; // 0x19
+	bool m_IgnoreForceVoicePlay; // 0x1A
+	VOICE_TYPE m_LastVoiceType[8]; // 0x1C
+	CXXBYTE<16> m_LastPlayVoiceName[8]; // 0x3C
+	int32_t m_LastRandomVoiceIndex[8]; // 0xBC
+	int32_t m_LastVoicePriority[8]; // 0xDC
+	int32_t m_LastVoiceRemainCount[8]; // 0xFC
+	bool m_bDamageVoiceRequest; // 0x11C
+	CXXBYTE<16> m_DamageVoiceName; // 0x11D
+	struct SFinishBranchVoiceInfo
+	{
+		bool bSet; // 0x0
+		CXXBYTE<16> DefaultVoice; // 0x1
+		CXXBYTE<16> FinishVoice; // 0x11
+		void Reset();
+		SFinishBranchVoiceInfo();
+	};
+	SFinishBranchVoiceInfo m_FinishBranchVoiceInfo; // 0x12D
+};
 
 enum ACTV_STATE
 {
@@ -27,6 +58,41 @@ enum OBJ_DIR
 	OBJDIR_NUM = 2,
 };
 
+enum SNDTYPE
+{
+	SNDTYPE_COMMON_SE = 0,
+	SNDTYPE_VOICE = 1,
+	SNDTYPE_SE = 2,
+	SNDTYPE_NARRATION = 3,
+	SNDTYPE_PRIVATE_SE = 4,
+	SNDTYPE_TUTORIAL = 5,
+	SNDTYPE_COMMON_VOICE = 6,
+	SNDTYPE_BG_CLASH_SE = 7,
+};
+
+enum SNDREQFLG
+{
+	SNDREQFLG_CENTER = 2,
+	SNDREQFLG_OBJ_POS = 4,
+	SNDREQFLG_TUTORIAL_GUIDE = 8,
+	SNDREQFLG_VOICE_NAME_FIX = 16,
+	SNDREQFLG_WITH_NORMAL_CUE = 32,
+	SNDREQFLG_FORCE_LIPSYNC = 64,
+};
+
+struct sSoundReq
+{
+	int32_t m_Volume; // 0x0
+	int32_t m_Pitch; // 0x4
+	uint32_t m_SoundReqFlag; // 0x8
+	uint32_t m_Channel; // 0xC
+	int32_t m_RandomChannel; // 0x10
+	ESoundBank m_Bank; // 0x14
+	int32_t m_Priority; // 0x18
+	sSoundReq();
+	void sSoundReqClear();
+};
+
 class OBJ_CBaseRelativePtr
 {
 private:
@@ -34,12 +100,20 @@ private:
 public:
 	OBJ_CBaseRelativePtr() { InitOBJ_CBaseRelativePtr(); }
 	void InitOBJ_CBaseRelativePtr() { m_Ptr = nullptr; }
-	void SetPtr(OBJ_CBase * obj) { m_Ptr = obj; }
-	void ClearPtr() { m_Ptr = nullptr; }
+	void SetPtr(OBJ_CBase * obj);
+	void ClearPtr();
 	OBJ_CBase * GetPtr() { return m_Ptr; }
 	operator class OBJ_CBase *() { return m_Ptr; }
 	OBJ_CBaseRelativePtr & operator=(OBJ_CBaseRelativePtr ptr) { m_Ptr = ptr.m_Ptr; } 
 	OBJ_CBaseRelativePtr & operator=(OBJ_CBase * obj) { m_Ptr = obj; }
+};
+
+enum STOP_TYPE
+{
+	STOP_TYPE_NON = 0,
+	STOP_TYPE_HITSTOP = 1,
+	STOP_TYPE_SLOW = 2,
+	STOP_TYPE_ANTEN = 3,
 };
 
 class CCreateArg
@@ -200,34 +274,34 @@ public:
     uint32_t m_CollisionFlag2;
     uint32_t m_CollisionFlag3;
     uint32_t m_Direction;
-    uint32_t m_PosX;
-    uint32_t m_PosY;
-    uint32_t m_PosZ;
-    uint32_t m_AngleDeg_x1000;
-    uint32_t m_AngleXDeg_x1000;
-    uint32_t m_AngleYDeg_x1000;
-    uint32_t m_AngleSpeed;
-    uint32_t m_ScaleX;
-    uint32_t m_ScaleY;
-    uint32_t m_ScaleZ;
-    uint32_t m_ScaleSpeedX;
-    uint32_t m_ScaleSpeedY;
-    uint32_t m_ScaleSpeedZ;
-    uint32_t m_TransformCenterX;
-    uint32_t m_TransformCenterY;
-    uint32_t m_DrawOffsetX;
-    uint32_t m_DrawOffsetY;
-    uint32_t m_BoundRate;
+    int32_t m_PosX;
+    int32_t m_PosY;
+    int32_t m_PosZ;
+    int32_t m_AngleDeg_x1000;
+    int32_t m_AngleXDeg_x1000;
+    int32_t m_AngleYDeg_x1000;
+    int32_t m_AngleSpeed;
+    int32_t m_ScaleX;
+    int32_t m_ScaleY;
+    int32_t m_ScaleZ;
+    int32_t m_ScaleSpeedX;
+    int32_t m_ScaleSpeedY;
+    int32_t m_ScaleSpeedZ;
+    int32_t m_TransformCenterX;
+    int32_t m_TransformCenterY;
+    int32_t m_DrawOffsetX;
+    int32_t m_DrawOffsetY;
+    int32_t m_BoundRate;
 
-    uint32_t m_PushPosX;
-    uint32_t m_PushPosY;
-    uint32_t m_PushPosZ;
-    uint32_t m_PushSpeedX;
-    uint32_t m_PushSpeedY;
-    uint32_t m_PushGravity;
-    uint32_t m_PushAcceleration;
-    uint32_t m_PushAccelerationZ;
-    uint32_t m_PushInertia;
+    int32_t m_PushPosX;
+    int32_t m_PushPosY;
+    int32_t m_PushPosZ;
+    int32_t m_PushSpeedX;
+    int32_t m_PushSpeedY;
+    int32_t m_PushGravity;
+    int32_t m_PushAcceleration;
+    int32_t m_PushAccelerationZ;
+    int32_t m_PushInertia;
 
     ZLINE m_ZLine;
     ZLINE_LEVEL m_ZLevel;
@@ -270,15 +344,45 @@ public:
     int32_t m_NamerakaMoveX;
     int32_t m_PassiveMoveX;
     int32_t m_PassiveMoveY;
+	
+	OBJ_CBaseRelativePtr m_pAttackSlave[10];
+	OBJ_CBaseRelativePtr m_pLockLinkObj;
+	OBJ_CBaseRelativePtr m_pAttackSlaveNewest;
 
+	int32_t m_HitPoint;
+	int32_t m_HitPointMax;
+	int32_t m_RecoverHitPoint;
+	int32_t m_HitPoint_x1000;
+	int32_t m_RecoverBlueHitPoint;
+	int32_t m_RecoverBlueHitPointTime;
+
+	CBBSFileAnalyzeData* m_pBBSFile;
+	uint8_t* m_TopAddr;
+	uint8_t* m_CurAddr;
+	uint8_t* m_CurActionTopAddr;
+	
     CXXBYTE<32> m_PreActionName;
     CXXBYTE<32> m_CurActionName;
     CXXBYTE<32> m_ParentActionName;
+
+	OBJ_CBaseRelativePtr m_pControlObject;
+	
+	bool m_IfReturnVal;
+	
     CActionRequestInfo m_ActionRequestInfo;
     CActionRequestInfo m_ActionRequestInfoReg;
 
+	CVoiceInfo m_VoiceInfo;
+	
+	sSoundReq m_SoundReq;
+	
     CCreateArg m_CreateArg;
     CCreateArg m_CreateArgFromParent;
+
+	uint32_t m_ScriptFlag;
+	unsigned char* m_ScriptGotoAddr;
+	unsigned char* m_GotoForLoopAddr;
+	int32_t m_GotoTimes;
 
 public:
     int ObjectInitializeOnActivate(const class CInitializeObjectExArg * arg);
@@ -290,4 +394,41 @@ public:
 	
     bool ActionRequestForce(const class CXXBYTE<32>& actionName);
     bool ActionRequestEx(const class CXXBYTE<32> & actionName, unsigned int flag, class OBJ_CBase * pEnemy, class CXXBYTE<32> label, unsigned int reqFlag);
+	STOP_TYPE CheckForceStop();
+	STOP_TYPE CheckForceStopSub();
+
+	bool IsAir() { return (m_ActionFlag & OBJ_ACT_AIR) || m_PosY > 0; }
+    virtual bool IsDead();
+
+	OBJ_CCharBase* GetMainPlayerBase(SIDE_ID side);
+	
+	int GetPosY();
+	int GetPosYCenter();
+
+	uint32_t GetObjDir();
+
+private:
+	uint8_t* ExecuteNestCommand(uint8_t* addr, int recCount, bool* jumpDone, bool bJumpCheckOnly, bool* pForceStop);
+	int ExecuteFunctionBlock(const class CXXBYTE<32> & funcName);
+	int FuncCallBySwitchCaseTable(uint8_t* addr);
+	uint8_t* GetSkipBeginEndAddr(uint8_t* addr);
+
+public:
+	void FuncCall(const class CXXBYTE<32> & funcName);
+
+	void WorldCollision(int on);	
+	void ScreenCollision(int on);
+
+	void CommonSE(const class CXXBYTE<32> & name);
+	void Voice(const class CXXBYTE<16> & name);
+
+	void ResetAirDashCount();
+	void ResetAirJumpCount();
+	
+	bool IsDamage()
+	{
+		return (m_CollisionFlag & OBJ_CLSN_DAMAGE_IMPACT) && (m_CollisionFlag & OBJ_CLSN_DAMAGE);
+	}
+
+	void ZLine(ZLINE line, ZLINE_LEVEL level);
 };

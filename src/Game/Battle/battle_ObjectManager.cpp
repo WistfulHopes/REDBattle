@@ -24,14 +24,14 @@ void BATTLE_CObjectManager::ExecuteObjectManagerEvent(const BOMEventInfo* pEvent
     switch (id)
     {
     case BOM_EVENT_ENTRY:
-    {
-        BOM_RoundAndEasyResetInitialize(true);
-        std::memset(&m_EventData, 0, sizeof(SEventData));
-        m_CharVector[pEvent->param0].ActionRequestForce(AN_CmnActEntryWait);
-        auto charOffset = 0;
-        if (!pEvent->param0) charOffset = 3;
-        m_CharVector[charOffset].ActionRequestForce(AN_CmnActEntryWait);
-    }
+        {
+            BOM_RoundAndEasyResetInitialize(true);
+            std::memset(&m_EventData, 0, sizeof(SEventData));
+            m_CharVector[pEvent->param0].ActionRequestForce(AN_CmnActEntryWait);
+            auto charOffset = 0;
+            if (!pEvent->param0) charOffset = 3;
+            m_CharVector[charOffset].ActionRequestForce(AN_CmnActEntryWait);
+        }
     default:
         break;
     }
@@ -41,7 +41,7 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
 {
     m_BattleCheckSumTimeCount = 0;
     m_BattleCheckSumErrorFound = 0;
-    auto battleScene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene());
+    const auto battleScene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene());
     if (battleScene->GetBattleState()->GetWinner() == SIDE_ID_INVALID)
     {
         m_BurstVal[0] = m_PreBurstVal[0];
@@ -68,7 +68,7 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
     m_TrialExVal2 = 0;
     m_TrialExVal3 = 0;
 
-    int order[2] = { 0, 1 };
+    int order[2] = {0, 1};
 
     for (int i = 0; i < 2; i++)
     {
@@ -168,5 +168,132 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
         m_TeamManager->Update();
     }
 
+    for (auto teamManager : m_TeamManager)
+    {
+        if (auto member = teamManager.GetMemberFromIndex(0))
+        {
+            auto enemy = m_TeamManager[1].GetMemberFromIndex(0);
+            if (teamManager.GetSideID() == SIDE_2P) enemy = m_TeamManager[1].GetMemberFromIndex(0);
+            
+            member->m_pTargetObj.ClearPtr();
+            member->m_pTargetObj.SetPtr(enemy);
+            
+            member->m_pAttackSlave[0].ClearPtr();
+            member->m_pAttackSlave[0].SetPtr(enemy);
+            
+            member->m_pAttackSlaveNewest.ClearPtr();
+            member->m_pAttackSlaveNewest.SetPtr(enemy);
+        }
+        if (auto member = teamManager.GetMemberFromIndex(1))
+        {
+            auto enemy = m_TeamManager[1].GetMemberFromIndex(0);
+            if (teamManager.GetSideID() == SIDE_2P) enemy = m_TeamManager[1].GetMemberFromIndex(0);
+            
+            member->m_pTargetObj.ClearPtr();
+            member->m_pTargetObj.SetPtr(enemy);
+            
+            member->m_pAttackSlave[0].ClearPtr();
+            member->m_pAttackSlave[0].SetPtr(enemy);
+            
+            member->m_pAttackSlaveNewest.ClearPtr();
+            member->m_pAttackSlaveNewest.SetPtr(enemy);
+        }
+        if (auto member = teamManager.GetMemberFromIndex(2))
+        {
+            auto enemy = m_TeamManager[1].GetMemberFromIndex(0);
+            if (teamManager.GetSideID() == SIDE_2P) enemy = m_TeamManager[1].GetMemberFromIndex(0);
+            
+            member->m_pTargetObj.ClearPtr();
+            member->m_pTargetObj.SetPtr(enemy);
+            
+            member->m_pAttackSlave[0].ClearPtr();
+            member->m_pAttackSlave[0].SetPtr(enemy);
+            
+            member->m_pAttackSlaveNewest.ClearPtr();
+            member->m_pAttackSlaveNewest.SetPtr(enemy);
+        }
+    }
+
+    for (auto& battleInputAnalyzer : m_BattleInputAnalyzer)
+    {
+        memset(&battleInputAnalyzer, 0, sizeof(CBattleInputAnalyzer));
+        battleInputAnalyzer.ResetRecFlagSafe(false);
+    }
+    AllActiveCheck();
+
+    m_CharVector[order[0] * 3].FuncCall("cmn_EnvInit");
+
+    for (const int i : order)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (m_CharVector[i * 3 + j].IsEntry())
+            {
+                m_CharVector[i * 3 + j].ZLine(ZLINE_FAR, ZLL_LV0);
+            }
+        }
+    }
+
+    // TODO finish
+    
     return 0;
+}
+
+void BATTLE_CObjectManager::AllActiveCheck()
+{
+    // TODO all active check
+}
+
+void BATTLE_CObjectManager::TransferAirActionCount(OBJ_CCharBase* dst, OBJ_CCharBase* src)
+{
+    int v3;
+    int ply_AirJumpCountMax;
+    int ply_AirDashCountMax;
+    int m_HomingDashCountMax;
+    int m_MikiwameMoveCountMax;
+    
+    if (dst->IsEntry() && src->IsEntry())
+    {
+        v3 = src->ply_AirDashCountMax - src->m_AirDashCount;
+        ply_AirJumpCountMax = dst->ply_AirJumpCountMax;
+        if ( ply_AirJumpCountMax + src->m_AirJumpCount - src->ply_AirJumpCountMax < ply_AirJumpCountMax )
+            ply_AirJumpCountMax += src->m_AirJumpCount - src->ply_AirJumpCountMax;
+        dst->m_AirJumpCount = ply_AirJumpCountMax;
+        ply_AirDashCountMax = dst->ply_AirDashCountMax;
+        if ( ply_AirDashCountMax - v3 < ply_AirDashCountMax )
+            ply_AirDashCountMax = dst->ply_AirDashCountMax - v3;
+        dst->m_AirDashCount = ply_AirDashCountMax;
+        m_HomingDashCountMax = dst->m_HomingDashCountMax;
+        if ( src->m_HomingDashCount < m_HomingDashCountMax )
+            m_HomingDashCountMax = src->m_HomingDashCount;
+        dst->m_HomingDashCount = m_HomingDashCountMax;
+        m_MikiwameMoveCountMax = dst->m_MikiwameMoveCountMax;
+        if ( src->m_MikiwameMoveCount < m_MikiwameMoveCountMax )
+            m_MikiwameMoveCountMax = src->m_MikiwameMoveCount;
+        dst->m_MikiwameMoveCount = m_MikiwameMoveCountMax;
+    }
+}
+
+void BATTLE_CObjectManager::PushFuncCallArg(int arg0, int arg1, int arg2, int arg3)
+{
+    if (m_FuncCallArgStack < 9)
+    {
+        m_FuncCallArg[0][m_FuncCallArgStack] = arg0;
+        m_FuncCallArg[1][m_FuncCallArgStack] = arg1;
+        m_FuncCallArg[2][m_FuncCallArgStack] = arg2;
+        m_FuncCallArg[3][m_FuncCallArgStack] = arg3;
+        m_FuncCallArgStack++;
+    }
+}
+
+void BATTLE_CObjectManager::PopFuncCallArg()
+{
+    if (m_FuncCallArgStack > 0)
+    {
+        m_FuncCallArgStack--;
+        m_FuncCallArg[0][m_FuncCallArgStack] = 0;
+        m_FuncCallArg[1][m_FuncCallArgStack] = 0;
+        m_FuncCallArg[2][m_FuncCallArgStack] = 0;
+        m_FuncCallArg[3][m_FuncCallArgStack] = 0;
+    }
 }

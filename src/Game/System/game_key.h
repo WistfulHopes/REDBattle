@@ -24,5 +24,5 @@ public:
 	bool IsTrgOff(unsigned short);
 	unsigned short GetCurRecFlg();
 	void ResetRecFlag();
-	void ResetRecFlagSafe(bool);
+	void ResetRecFlagSafe(bool isTime0);
 };

@@ -35,8 +35,10 @@ PRIVATE
 	src/Game/Battle/battle_ObjectManager.cpp
 	src/Game/Battle/Object/obj_Base.cpp
 	src/Game/Battle/Object/obj_BBScript.cpp
+	src/Game/Battle/Object/Char/char_Base.cpp
 	src/Game/Scene/scene_Battle.cpp
 	src/Game/Scene/scene_Base.cpp
+	src/Game/System/game_key.cpp
 )
 
 # use C++11

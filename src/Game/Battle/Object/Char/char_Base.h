@@ -1,5 +1,6 @@
 #pragma once
 #include <Battle/Object/obj_base.h>
+#include "char_ActFlag.h"
 
 enum SKLEST
 {
@@ -156,6 +157,26 @@ class OBJ_CCharBase : public OBJ_CBase
 		BTN_H = 7,
 		BTN_NUM = 8,
 	};
+	
+	enum EChangeRequestCategory
+	{
+		CRC_EnterCutscene = 0,
+		CRC_EnterNormal = 1,
+		CRC_EnterAttack = 2,
+		CRC_EnterAttackUltimate1 = 3,
+		CRC_EnterAttackUltimate2 = 4,
+		CRC_AssistAttack = 5,
+		CRC_AssistAttackUltimate = 6,
+		CRC_GuardCancelEnterAttack = 7,
+		CRC_AssistAttackReady = 8,
+		CRC_EnterNormalReady = 9,
+		CRC_EnterAttackReady = 10,
+		CRC_EnterAttackUltimate1Ready = 11,
+		CRC_EnterAttackUltimate2Ready = 12,
+		CRC_GuardCancelEnterAttackReady = 13,
+		CRC_None = 14,
+	};
+
     struct VSCharMouthTable 
     {
         ECharaID m_id;
@@ -176,7 +197,15 @@ protected:
 	uint32_t m_EnableFlagPreAction; // 0x5F98
 	uint32_t m_AttackFlag; // 0x5F9C
 	uint32_t m_AttackFlag2; // 0x5FA0
-	double m_LocalWorldTimer; // 0x5FA8    
+	double m_LocalWorldTimer; // 0x5FA8
+	
+public:
+	int32_t m_GuardStopCount; // 0x5FB0
+	int32_t m_AirJumpCount; // 0x5FB4
+	int32_t m_AirDashCount; // 0x5FB8
+	int32_t m_AirDashTimer; // 0x5FBC
+	int32_t m_AirDashTimerMax; // 0x5FC0
+	int32_t m_AirDashGravity; // 0x5FC4
     VSCharMouthTable m_VsCharMouthTable[3];
 	int32_t m_VsCharMouthTableIdx; // 0x976C
 	int32_t m_IgnoreSkillTime; // 0x9770
@@ -319,8 +348,56 @@ private:
 	bool m_Entry; // 0xE940
 	bool m_EntryBattle; // 0xE941
 	bool m_EntryBattleDoing; // 0xE942
+	bool m_LeaveRequest; // 0xE943
+	bool m_LeaveRequestImm; // 0xE944
+	EChangeRequestCategory m_ChangeRequestCategory;
+	bool m_Win; // 0xE94C
+	CXXBYTE<32> m_DefaultMeshSet; // 0xE94D
+	CXXBYTE<32> m_WinCameraObjName; // 0xE96D
+	short m_CooldownTime; // 0xE98E
+	short m_CooldownTimeMax; // 0xE990
+	short m_InnerCooldownTime; // 0xE992
+	bool m_bFullCooldownTime; // 0xE994
+	bool m_bPlayReadySE; // 0xE995
+	int32_t m_ResultWinPos; // 0xE998
+	bool m_isAddUltimateChangeCommand; // 0xE99C
+	EMemberID m_callingChar; // 0xE9A0
+	EMemberID m_calledChar; // 0xE9A4
+	
+public:
+	int32_t m_HomingDashCount; // 0xE9E8
+	int32_t m_HomingDashCountMax; // 0xE9EC
+	bool m_bChangeHomingDash; // 0xE9F0
+	bool m_bGCHomingDash; // 0xE9F1
+	int32_t m_MikiwameMoveCount; // 0xEA0C
+	int32_t m_MikiwameMoveCountMax; // 0xEA10
+	unsigned char m_MikiwameMoveCancelAvailable; // 0xEA14
+	unsigned char m_MemberChangeUltimateAvailable; // 0xEA15
 
 public:
 	void ObjectConstructor_ForPlayer();
+	
+	short GetChangeCDT() { return ply_CDT_Change; }
+	short GetUltimateChangeCDT() { return ply_CDT_UltimateChange; }
+	short GetGuardCancelCDT() { return ply_CDT_GuardCancelChange; }
+	short GetForceChangeCDT() { return ply_CDT_ForceChange; }
+	short GetInnerCDT() { return ply_CDT_Inner; }
+	bool CheckPlayerFlag(PLAYER_FLAG flag) { return m_PlayerFlag & flag; }
+	void AddPlayerFlag4(PLAYER_FLAG4 flag) { m_PlayerFlag4 |= flag; }
+	void DelPlayerFlag4(PLAYER_FLAG4 flag) { m_PlayerFlag4 &= ~flag; }
+	bool CheckPlayerFlag4(PLAYER_FLAG4 flag) { return m_PlayerFlag4 & flag; }
+	bool CheckAttackFlag(PLATTACK_FLAG flag) { return m_AttackFlag & flag; }
+	virtual bool IsDead() override;
 	bool IsEntry() { return m_Entry; }
+	void SetCallingChar(EMemberID memberID) { m_callingChar = memberID; }
+	void SetCalledChar(EMemberID memberID) { m_calledChar = memberID; }
+	
+	void SetImmLeaveRequest(bool bImmidiate) { m_LeaveRequestImm = bImmidiate; }
+	
+	void ChangeEnterRequest() { m_ChangeRequestCategory = CRC_EnterNormal; }
+	void ChangeEnterAttackRequest() { m_ChangeRequestCategory = CRC_EnterAttack; }
+	void GuardCancelChangeEnterAttackRequest() { m_ChangeRequestCategory = CRC_GuardCancelEnterAttack; }
+	void ChangeAttackUltimate1ReadyRequest() { m_ChangeRequestCategory = CRC_EnterAttackUltimate1; }
+	void ChangeAttackUltimate2ReadyRequest() { m_ChangeRequestCategory = CRC_EnterAttackUltimate2; }
+	void SetCooldownTime(int32_t frame, int32_t innerFrame, bool bPlaySE);
 };

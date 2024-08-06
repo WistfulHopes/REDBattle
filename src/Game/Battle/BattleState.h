@@ -33,7 +33,7 @@ public:
 	void Setup();
 	void Update();
 	void SetPause(bool);
-	bool IsPause();
+	bool IsPause() { return m_PauseUpdate; }
 	void RoundStart();
 	void RoundReset();
 	void RoundEnd();
@@ -55,7 +55,7 @@ public:
 	bool IsMatchResultDraw();
 	bool IsMatchEnd();
 	void SetBattleDoing(bool);
-	bool IsBattleDoing();
+	bool IsBattleDoing() { return m_IsBattleDoing; }
 	void SetStartedBattle(bool);
 	bool IsStartedBattle();
 	bool IsStraightWin(SIDE_ID);
@@ -63,7 +63,7 @@ public:
 	void SetRematchBattle(uint32_t);
 	bool IsRematchBattle();
 	void SetBattleTempStop(bool);
-	bool IsBattleTempStop();
+	bool IsBattleTempStop() { return m_IsBattleTempStop; }
 	void SetBattleQuickEnd(bool);
 	bool IsBattleQuickEnd();
 	void BattleQuickEndON();

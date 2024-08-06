@@ -36,7 +36,7 @@ public:
 	//GAME_BattleKeyController * GetBattleKeyFromPadID(PAD_ID);
 	//GAME_KeyboardKeyController * GetKeyboardKey();
 private:
-	static AASystemRED * s_Instance; // 0xFFFFFFFFFFFFFFFF
+	static inline AASystemRED * s_Instance; // 0xFFFFFFFFFFFFFFFF
 public:
 	static AASystemRED * GetInstance() { return s_Instance; }
 	static void StaticInitialize();
