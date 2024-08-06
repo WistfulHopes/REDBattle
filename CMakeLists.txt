@@ -31,6 +31,7 @@ PRIVATE
 	src/AALib/Common/cmn_hashex.cpp
 	src/AALib/Common/tl_Filepack.cpp
 	src/Game/REDGameCommon.cpp
+	src/Game/Battle/battle_TeamManager.cpp
 	src/Game/Battle/battle_ObjectManager.cpp
 	src/Game/Battle/Object/obj_Base.cpp
 	src/Game/Battle/Object/obj_BBScript.cpp
