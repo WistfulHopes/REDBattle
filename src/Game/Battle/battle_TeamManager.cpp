@@ -63,4 +63,8 @@ void BATTLE_TeamManager::RoundReset()
 
 void BATTLE_TeamManager::Update()
 {
+    for (int i = 0; i < 2; i++)
+    {
+        auto 
+    }
 }
