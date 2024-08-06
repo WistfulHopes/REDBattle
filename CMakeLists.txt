@@ -25,6 +25,7 @@ PUBLIC
 target_sources(${EXECUTABLE_NAME} 
 PRIVATE 
     src/main.cpp
+	src/AALib/AASystemRED.cpp
 	src/AALib/Base/sys_Collision.cpp
 	src/AALib/Base/Jon/JonCommon.cpp
 	src/AALib/Base/Jon/tl_Jon.cpp
@@ -37,9 +38,11 @@ PRIVATE
 	src/Game/Battle/Object/obj_Base.cpp
 	src/Game/Battle/Object/obj_BBScript.cpp
 	src/Game/Battle/Object/Char/char_Base.cpp
-	src/Game/Scene/scene_Battle.cpp
 	src/Game/Scene/scene_Base.cpp
+	src/Game/Scene/scene_Battle.cpp
+	src/Game/Scene/scene_Boot.cpp
 	src/Game/System/game_key.cpp
+	src/Game/Utility/UtilityStateMachine.cpp
 )
 
 # use C++11

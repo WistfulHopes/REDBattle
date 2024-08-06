@@ -13,7 +13,6 @@ public:
 	{
 		strncpy(m_Buf, "", Length);
 		m_Buf[Length - 1] = 0;
-
 	}
     CXXBYTE(const char* str);
     CXXBYTE& operator=(const char* str);

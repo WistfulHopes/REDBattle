@@ -10,7 +10,6 @@ private:
 protected:
 	void Cleanup();
 public:
-	AA_ManagerBase(const AA_ManagerBase &);
 	AA_ManagerBase();
 	~AA_ManagerBase();
 	void CleanupInstance();
@@ -21,3 +20,10 @@ public:
 	void Update();
 	AA_ManagerBase & operator=(const AA_ManagerBase &);
 };
+
+template<typename T, int Count>
+inline AA_ManagerBase<T, Count>::AA_ManagerBase()
+{
+	m_InstanceNum = 0;
+	memset(m_Instances, 0, sizeof(m_Instances));
+}
