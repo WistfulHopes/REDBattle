@@ -30,6 +30,7 @@ PRIVATE
 	src/AALib/Base/Jon/tl_Jon.cpp
 	src/AALib/Common/cmn_hashex.cpp
 	src/AALib/Common/tl_Filepack.cpp
+	src/AALib/Common/tl_RandMT.cpp
 	src/Game/REDGameCommon.cpp
 	src/Game/Battle/battle_TeamManager.cpp
 	src/Game/Battle/battle_ObjectManager.cpp

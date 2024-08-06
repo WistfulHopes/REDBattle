@@ -9,6 +9,12 @@ private:
     char m_Buf[Length];
 
 public:
+	CXXBYTE()
+	{
+		strncpy(m_Buf, "", Length);
+		m_Buf[Length - 1] = 0;
+
+	}
     CXXBYTE(const char* str);
     CXXBYTE& operator=(const char* str);
     CXXBYTE& operator+=(const char* str);
@@ -20,7 +26,7 @@ template <int Length>
 CXXBYTE<Length>::CXXBYTE(const char* str)
 {
     strncpy(m_Buf, str, Length);
-    m_Buf[31] = 0;
+    m_Buf[Length - 1] = 0;
 }
 
 template <int Length>
@@ -86,14 +92,14 @@ CXXBYTE<Length>& CXXBYTE<Length>::operator+=(const char* str)
             ++bufLen;
             ++bufEnd;
             ++str;
-        } while (bufEnd - static_cast<char*>(this) < 32);
+        } while (bufEnd - static_cast<char*>(this) < Length);
     }
 
-    if (bufLen < 32)
+    if (bufLen < Length)
     {
         memset(&m_Buf[bufLen], 0, Length - bufLen);
     }
-    m_Buf[31] = 0;
+    m_Buf[Length - 1] = 0;
 
     return this;
 }

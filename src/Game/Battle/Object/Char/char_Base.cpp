@@ -2,6 +2,10 @@
 
 #include <Scene/scene_Battle.h>
 
+void OBJ_CCharBase::ObjectConstructor_ForPlayer()
+{
+}
+
 bool OBJ_CCharBase::IsDead()
 {
     return OBJ_CBase::IsDead() || !m_Entry;

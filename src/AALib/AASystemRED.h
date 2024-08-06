@@ -29,7 +29,7 @@ public:
 	void Update();
 	//AA_CCameraManager & GetCameraManager();
 	//AA_CInputManager & GetInputManager();
-	AA_CRandomManager & GetRandomManager();
+	AA_CRandomManager & GetRandomManager() { return m_RandomManager; }
 	AA_CRandMT * GetRandom(ERondomType);
 	//GAME_SystemKeyController * GetSystemKey();
 	//GAME_BattleKeyController * GetBattleKey(SIDE_ID);

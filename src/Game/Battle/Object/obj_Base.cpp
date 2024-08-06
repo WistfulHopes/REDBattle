@@ -19,6 +19,59 @@ void OBJ_CBaseRelativePtr::ClearPtr()
     m_Ptr = nullptr;
 }
 
+int OBJ_CBase::ObjectInitializeOnActivate(const CInitializeObjectExArg* arg)
+{
+    return 0;
+}
+
+int OBJ_CBase::ReleaseResource()
+{
+    if (m_IsPlayerObj)
+    {
+
+    }
+
+    m_pParentObj.ClearPtr();
+    m_pParentPly.ClearPtr();
+    m_pTargetObj.ClearPtr();
+    m_pPrevChild.ClearPtr();
+    m_pTrialObj.ClearPtr();
+    for (auto& child : m_pChildStack)
+    {
+        child.ClearPtr();
+    }
+    
+    for (auto& slave : m_pAttackSlave)
+    {
+        slave.ClearPtr();
+    }
+    m_pAttackSlaveNewest.ClearPtr();
+    m_pLockLinkObj.ClearPtr();
+    m_pControlObject.ClearPtr();
+    // TODO add more relative objects
+
+    m_pLinkObject_PushCollision.ClearPtr();
+    m_pLinkObject_Angle.ClearPtr();
+    m_pLinkObject_Position.ClearPtr();
+    m_pLinkObject_Direction.ClearPtr();
+    m_pLinkObject_DamageToEliminate.ClearPtr();
+    m_pLinkObject_ChangeToEliminate.ClearPtr();
+    m_pLinkObject_Stop.ClearPtr();
+    m_pLinkObject_PositionCenter.ClearPtr();
+    m_pLinkObject_Scale.ClearPtr();
+    m_pLinkObject_Color.ClearPtr();
+    m_pLinkObject_MaterialSet.ClearPtr();
+    m_pLinkObject_CmnMaterialParam.ClearPtr();
+    m_pLinkObject_Z.ClearPtr();
+    m_pLinkObject_Collision.ClearPtr();
+
+    return 0;
+}
+
+void OBJ_CBase::ObjectConstructor_ForObject()
+{
+}
+
 bool OBJ_CBase::ActionRequestForce(const class CXXBYTE<32>& actionName)
 {
     return ActionRequestEx(actionName, 9, nullptr, CXXBYTE<32>(""), 0);

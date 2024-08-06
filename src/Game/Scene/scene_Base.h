@@ -20,6 +20,7 @@ public:
 
 private:
     bool bFirstTickCall;
+	bool bSuspend;
 
 public:
     virtual void SceneInitialize();
@@ -33,12 +34,12 @@ private:
 	void OnFadeOutDelegate(bool);
 
 protected:
-	void OnSceneChangeStart(const CSceneChange *);
+	void OnSceneChangeStart(const CSceneChange *) {}
 	bool CheckGotoSceneChange(const CSceneChange *);
     
 public:
-	void SetSuspend(bool);
-	bool IsSuspend();
+	void SetSuspend(bool bInSuspend) { bSuspend = bInSuspend; }
+	bool IsSuspend() { return bSuspend; }
 
 private:
    	bool bSignOutDialogDoing; // 0xA68

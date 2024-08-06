@@ -54,7 +54,11 @@ public:
 class CInitializeObjectExArg
 {
 public:
-	CInitializeObjectExArg();
+	CInitializeObjectExArg()
+	{
+		actName = "";
+		argparent = nullptr;
+	}
 	CXXBYTE<32> actName; // 0x0
 	OBJ_CBase * argparent; // 0x20
 	int32_t flag; // 0x28
@@ -167,7 +171,7 @@ public:
 private:
 	BATTLE_TeamManager m_TeamManager[2]; // 0x0
 public:
-	BATTLE_TeamManager * GetTeamManager(SIDE_ID);
+	BATTLE_TeamManager * GetTeamManager(SIDE_ID side) { return &m_TeamManager[side]; }
 	void UpdateTeamTrainingMode();
 	int32_t BOM_MatchOneceInitialize(bool);
 	int32_t BOM_RoundAndEasyResetInitialize(bool use2ndInitialize);

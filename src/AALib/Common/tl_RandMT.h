@@ -26,7 +26,7 @@ public:
 	bool Init(const uint32_t *, int32_t);
 	bool Init(uint32_t);
 	uint32_t GenU32();
-	int32_t GenS32();
+	int32_t GenS32() { return GenU32() >> 1; }
 	double GenR1();
 	double GenR2();
 	double GenR3();
