@@ -189,6 +189,7 @@ public:
 	}
 
 	SCENE_CBase* GetScene() { return m_CurrentScene.get(); }
+	GAME_MODE GetGameMode() { return m_GameMode; }
 
 	void ChangeScene();
 	void Tick(float DeltaSeconds);

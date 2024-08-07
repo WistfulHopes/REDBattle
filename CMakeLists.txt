@@ -38,6 +38,7 @@ PRIVATE
 	src/Game/Battle/battle_TeamManager.cpp
 	src/Game/Battle/BattleEventManager.cpp
 	src/Game/Battle/BattlePlayerResult.cpp
+	src/Game/Battle/BattleSettings.cpp
 	src/Game/Battle/BattleState.cpp
 	src/Game/Battle/Object/obj_Base.cpp
 	src/Game/Battle/Object/obj_BaseCommon.cpp

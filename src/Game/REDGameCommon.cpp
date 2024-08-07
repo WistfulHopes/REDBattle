@@ -71,7 +71,6 @@ void CSceneChangeCharaInfo::SetBattleCharaData(ECharaID charaID, EColorID colorI
     m_Handicap = handicap;
 }
 
-
 bool red::cmn::SceneChange(const CSceneChange& sc)
 {
     if (!g_SceneChangeFinish) return false;

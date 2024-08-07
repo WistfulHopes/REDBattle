@@ -3,8 +3,9 @@
 SCENE_CBattle::SCENE_CBattle()
 {
     BattleObjectManager = std::make_unique<BATTLE_CObjectManager>();
-    EventManager = std::make_unique<BattleEventManager>();
+    Settings = std::make_unique<BattleSettings>();
     State = std::make_unique<BattleState>();
+    EventManager = std::make_unique<BattleEventManager>();
 }
 
 void SCENE_CBattle::SceneInitialize()

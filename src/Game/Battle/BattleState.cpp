@@ -1,4 +1,5 @@
 #include "BattleState.h"
+#include <Scene/scene_Battle.h>
 
 void BattleState::Setup()
 {
@@ -19,4 +20,17 @@ void BattleState::Setup()
     m_IsStartedBattle = false;
 
     // TODO finish
+
+    const auto settings = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+        GetBattleSettings();
+    
+    if (settings->Time >= 0)
+    {
+        m_Timer.SetTimeMax(settings->Time * 60);
+        m_Timer.Setup(settings->Time * 60);
+    }
+    else 
+    {
+        m_Timer.SetTimeInfinite();
+    }
 }

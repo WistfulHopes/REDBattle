@@ -17,14 +17,14 @@ public:
 	RoundTimer() {}
 	void ResetTime();
 	void Start();
-	void Setup(int32_t);
+	void Setup(int32_t time) { m_CurrentFrameTime = time; }
 	void SetupF(float);
-	void SetTimeMax(int32_t);
+	void SetTimeMax(int32_t timeMax) { m_FrameTimeMax = timeMax; }
 	void SetTimeMaxF(float);
 	void OverwriteTime(int32_t);
 	void AddOverwriteTime(int32_t);
-	void SetTimeInfinite();
-	void ResetTimeInfinite();
+	void SetTimeInfinite() { m_Infinity = true; }
+	void ResetTimeInfinite() { m_Infinity = false; }
 	void SetPause(bool);
 	bool IsPause();
 	bool IsTimeup();
