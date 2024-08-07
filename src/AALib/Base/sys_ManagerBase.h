@@ -14,8 +14,8 @@ public:
 	AA_ManagerBase();
 	~AA_ManagerBase();
 	void CleanupInstance();
-	AA_Handle RegistInstanceHandle(T*);
-	T* RegistInstance(T*);
+	AA_Handle RegistInstanceHandle(T* inst);
+	T* RegistInstance(T* inst);
 	T* Get(const AA_Handle &);
 	T* Get(uint32_t idx) { return m_Instances[idx]; }
 	void Update();
@@ -27,4 +27,14 @@ inline AA_ManagerBase<T, Count>::AA_ManagerBase()
 {
 	m_InstanceNum = 0;
 	std::memset(m_Instances, 0, sizeof(m_Instances));
+}
+
+template<typename T, int Count>
+inline T* AA_ManagerBase<T, Count>::RegistInstance(T* inst)
+{
+	if (m_InstanceNum < Count)
+	{
+		return m_Instances[m_InstanceNum++] = inst;
+	}
+	return nullptr;
 }

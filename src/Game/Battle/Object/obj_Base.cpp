@@ -24,6 +24,30 @@ int OBJ_CBase::ObjectInitializeOnActivate(const CInitializeObjectExArg* arg)
     return 0;
 }
 
+int OBJ_CBase::OnDelete()
+{
+    if (m_pMultiBufferLarge)
+    {
+        const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+            GetBattleObjectManager();
+        objManager->m_MultiBufferLarge.Release(m_pMultiBufferLarge);
+        *((uint64_t*)m_pMultiBufferLarge + 2) = (uint64_t)m_pMultiBufferLarge;
+        *((uint64_t*)m_pMultiBufferLarge + 1) = (uint64_t)nullptr;
+        m_pMultiBufferLarge = nullptr;
+    }
+    if (m_pMultiBufferSmall)
+    {
+        const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+            GetBattleObjectManager();
+        objManager->m_MultiBufferSmall.Release(m_pMultiBufferSmall);
+        *((uint64_t*)m_pMultiBufferSmall + 2) = (uint64_t)m_pMultiBufferSmall;
+        *((uint64_t*)m_pMultiBufferSmall + 1) = (uint64_t)nullptr;
+        m_pMultiBufferSmall = nullptr;
+    }
+    ReleaseResource();
+    return 0;
+}
+
 int OBJ_CBase::ReleaseResource()
 {
     if (m_IsPlayerObj)

@@ -3,6 +3,11 @@
 #include <AASystemRED.h>
 #include <Scene/scene_Battle.h>
 
+void BATTLE_TeamManager::Initialize(SIDE_ID sideID)
+{
+    m_SideID = sideID;
+}
+
 void BATTLE_TeamManager::RoundReset()
 {
     m_ChangeMemberID = SubMemberID_INVALID;
@@ -62,6 +67,13 @@ void BATTLE_TeamManager::RoundReset()
     {
         skillHistory = 0;
     }
+}
+
+void BATTLE_TeamManager::SetMember(EMemberID memberID, OBJ_CCharBase* charBase)
+{
+    m_pMemberObjects[memberID] = charBase;
+    charBase->m_SideID = m_SideID;
+    charBase->m_MemberID = memberID;
 }
 
 OBJ_CCharBase* BATTLE_TeamManager::GetAliveSubMember(ESubMemberID SubMemberID)

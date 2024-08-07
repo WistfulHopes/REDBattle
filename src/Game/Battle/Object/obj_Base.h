@@ -355,7 +355,12 @@ public:
 	int32_t m_HitPoint_x1000;
 	int32_t m_RecoverBlueHitPoint;
 	int32_t m_RecoverBlueHitPointTime;
+	int32_t m_DistortionLevel;
+	int32_t m_DistortionLevelSpeed;
 
+	uint8_t* m_pMultiBufferLarge;
+	uint8_t* m_pMultiBufferSmall;
+	
 	CBBSFileAnalyzeData* m_pBBSFile;
 	uint8_t* m_TopAddr;
 	uint8_t* m_CurAddr;

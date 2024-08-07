@@ -40,6 +40,9 @@ private:
 public:
 	static AASystemRED * GetInstance() { return s_Instance; }
 	static void StaticInitialize();
-	static void StaticFinalize();
+	static void StaticFinalize()
+	{
+		if (s_Instance) delete s_Instance;
+	}
 	AASystemRED & operator=(const AASystemRED &) = delete;
 };

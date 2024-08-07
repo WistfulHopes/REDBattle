@@ -6,7 +6,7 @@
 class AA_CRandomManager : public AA_ManagerBase<AA_CRandMT,16>
 {
 public:
-	bool Init(uint32_t, int32_t);
+	bool Init(uint32_t val, int32_t idx);
 	uint32_t RandU32(int32_t);
 	int32_t RandS31(int32_t);
 	float RandF32(int32_t);

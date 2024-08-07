@@ -57,7 +57,10 @@ public:
 		}
 	}
 	void * Reserve(bool);
-	void Release(void *);
+	void Release(void * buffer)
+	{
+		m_pEmptyChain->pPrev = (MEM*)buffer;
+	}
 };
 
 class CInitializeObjectExArg
@@ -172,7 +175,7 @@ namespace ENextPlayerEntry
 class BATTLE_CObjectManager 
 {
 public:
-    BATTLE_CObjectManager() {}
+    BATTLE_CObjectManager();
     ~BATTLE_CObjectManager() {}
 private:
     void BOM_ConstructorSub();
@@ -183,7 +186,7 @@ private:
 public:
 	BATTLE_TeamManager * GetTeamManager(SIDE_ID side) { return &m_TeamManager[side]; }
 	void UpdateTeamTrainingMode();
-	int32_t BOM_MatchOneceInitialize(bool);
+	int32_t BOM_MatchOneceInitialize(bool bIs2ndCall);
 	int32_t BOM_RoundAndEasyResetInitialize(bool use2ndInitialize);
 	void BOM_ForceUnactivateObjects();
 	uint32_t m_BOMFlag; // 0x2C0
@@ -224,6 +227,7 @@ public:
 	bool IsDemoReady();
 	OBJ_CBase * ActivateObject(const CInitializeObjectExArg *);
 private:
+	CBBSFile m_BBSFile[2][7];
 	CBBSFileAnalyzeData m_BBSFileAnalyzeData[2][7]; // 0x2F0
 public:
 	static int32_t GetPlayerIndexWithCommon(SIDE_ID, EMemberID);
@@ -574,9 +578,9 @@ public:
 private:
 	static const int32_t FuncCallArg_Num; // 0xFFFFFFFFFFFFFFFF
 	static const int32_t FuncCallArg_StackMax; // 0xFFFFFFFFFFFFFFFF
-	int32_t m_FuncCallArg[4][10]; // 0x3C8C
-	int32_t m_FuncCallArgStack; // 0x3D2C
-	bool m_FuncCallArgStackDebug; // 0x3D30
+	int32_t m_FuncCallArg[4][10] {}; // 0x3C8C
+	int32_t m_FuncCallArgStack {}; // 0x3D2C
+	bool m_FuncCallArgStackDebug {}; // 0x3D30
 public:
 	void InitFuncCallArg();
 	void PushFuncCallArg(int arg0, int arg1, int arg2, int arg3);

@@ -60,7 +60,6 @@ CSceneChange& CSceneChange::operator=(const CSceneChange& __that)
 
 void CSceneChangeCharaInfo::CSceneChangeCharaInfoInit()
 {
-    m_Handicap = HANDICAP_TYPE_NORMAL;
 }
 
 void CSceneChangeCharaInfo::SetBattleCharaData(ECharaID charaID, EColorID colorID, EBattleScript scriptType, ECostumeID costumeID, HANDICAP_TYPE handicap)

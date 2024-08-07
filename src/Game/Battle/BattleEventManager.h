@@ -158,10 +158,9 @@ private:
 protected:
 	bool SubStateInTrigger();
 public:
-	BattleEventBase(const BattleEventBase &);
 	BattleEventBase(EDuplicateArg);
 	BattleEventBase(const char *);
-	~BattleEventBase();
+	~BattleEventBase() {}
 	BEM_STATE ExecuteEvent(BattleEventManager *);
 	BattleEventBase::START_RESULT Start(BattleEventManager *);
 	BEM_STATE Execute(BattleEventManager *);
@@ -184,9 +183,9 @@ public:
 class BattleEventManager
 {
 private:
-	BOMEventInfo m_BOMEvent[10]; // 0x8
-	uint32_t m_BOMEventCount; // 0xA8
-	BattleEventBase * m_pBattleEvent; // 0xB0
+	BOMEventInfo m_BOMEvent[10] {}; // 0x8
+	uint32_t m_BOMEventCount {}; // 0xA8
+	BattleEventBase * m_pBattleEvent {}; // 0xB0
 	int32_t m_EventArg[4]; // 0xB8
 	bool m_bFinishUIEnd; // 0xC8
 	bool m_bEnableMatchWinSecondAction; // 0xC9
@@ -202,7 +201,7 @@ private:
 	void Reset();
 	bool GetEventArgBool(int32_t);
 	void ResetEventArg();
-	BattleEventBase * BattleEventFactory(BEM_STATE);
+	BattleEventBase * BattleEventFactory(BEM_STATE state);
 	BOMEventInfo * Pop();
 	void ResetOnSetEvent();
 public:
@@ -211,7 +210,7 @@ public:
 	void Setup();
 	void Update();
 	BattleEventBase * GetEvent();
-	void SetEvent(BEM_STATE);
+	void SetEvent(BEM_STATE state);
 	BEM_STATE GetCurrentBEMState();
 	BEM_STATE GetLastBEMState();
 	void DebugSaveObjectManagerEvent(const BOMEventInfo *);

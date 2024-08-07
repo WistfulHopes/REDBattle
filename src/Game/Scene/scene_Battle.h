@@ -10,6 +10,7 @@ public:
     SCENE_CBattle();
     
     virtual void SceneInitialize() override;
+	virtual void Tick(float DeltaSeconds) override;
     BATTLE_CObjectManager* GetBattleObjectManager() { return BattleObjectManager.get(); }
     BattleEventManager* GetBattleEventManager() { return EventManager.get(); }
     BattleState* GetBattleState() { return State.get(); }
@@ -20,5 +21,6 @@ protected:
     std::unique_ptr<BattleState> State;
 
 private:
+    void SetupBattle();
     void UpdateBattle(float DeltaSeconds, bool bUpdateDraw);
 };

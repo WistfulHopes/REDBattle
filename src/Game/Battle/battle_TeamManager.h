@@ -75,11 +75,11 @@ private:
 	OBJ_CCharBase * GetLatestMainPlayer();
 public:
 	BATTLE_TeamManager() {}
-	void Initialize(SIDE_ID);
+	void Initialize(SIDE_ID sideID);
 	SIDE_ID GetSideID() { return m_SideID; }
 	void RoundReset();
-	void SetMember(EMemberID, OBJ_CCharBase *);
-	OBJ_CCharBase * GetMember(EMemberID);
+	void SetMember(EMemberID memberID, OBJ_CCharBase * charBase);
+	OBJ_CCharBase * GetMember(EMemberID memberID) { return m_pMemberObjects[memberID]; }
 	OBJ_CCharBase * GetMemberFromIndex(int32_t index) { return m_pMemberObjects[index]; }
 	OBJ_CCharBase * GetMainPlayer() { return m_pMainPlayerObject; }
 	void SetMainPlayer(OBJ_CCharBase *);

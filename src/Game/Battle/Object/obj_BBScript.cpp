@@ -2638,7 +2638,7 @@ void CBBSFileAnalyzeData::BBSAnalyzeExe(unsigned char* addr, uint32_t size)
         m_ActIndexTable->m_NodeCnt++;
         auto node = m_ActIndexTable->m_Node[m_ActIndexTable->m_NodeCnt - 1];
         node.SetData(m_ActionBeginListAddr[i].m_OffsetAddr);
-        *(uint32_t*)node.GetKey() = AA_MakeHash(m_ActionBeginListAddr[i].m_ActionName.GetStr());
+        node.SetKey(AA_MakeHash(m_ActionBeginListAddr[i].m_ActionName.GetStr()));
     }
 
     if (m_ActIndexTable->m_NodeCnt)
@@ -2663,7 +2663,7 @@ void CBBSFileAnalyzeData::BBSAnalyzeExe(unsigned char* addr, uint32_t size)
                     pAddrTable->m_NodeCnt++;
                     auto node = pAddrTable->m_Node[pAddrTable->m_NodeCnt - 1];
                     node.SetData(data);
-                    *(uint32_t*)node.GetKey() = AA_MakeHash(name);
+                    node.SetKey(AA_MakeHash(name));
                     hashes.push_back(*(CHashKeyC32BYTE*)node.GetKey());
                 }
                 data += commandSizeTable[command];
@@ -2686,14 +2686,14 @@ unsigned char* CBBSFileAnalyzeData::GetFuncAddrBase(const CXXBYTE<32>& funcName,
 {
     auto hash = AA_MakeHash(funcName.GetStr());
     auto count = pTable->m_NodeCnt - 1;
-    auto unk = 0;
+    auto prevCount = pTable->m_NodeCnt;
     CHashNodeC32BYTEtoU32* node = nullptr;
 
-    if (count < 0) return nullptr;
+    if ((int32_t)count < 0) return nullptr;
 
     while (true)
     {
-        auto index = (count + unk) >> 1;
+        auto index = (count + prevCount) >> 1;
         node = &pTable->m_Node[index];
         auto key = node->GetKey();
         if (key->GetHash() == hash) break;
@@ -2702,14 +2702,14 @@ unsigned char* CBBSFileAnalyzeData::GetFuncAddrBase(const CXXBYTE<32>& funcName,
 
         if (key->GetHash() >= hash)
         {
-            count = index;
-            temp = unk;
+            count = index - 1;
+            temp = prevCount;
         }
-        unk = temp;
+        prevCount = temp;
         if (temp > count) return nullptr;
     }
     if (node) return &m_ScriptTopAddr[node->GetData()];
-    else return nullptr;
+    return nullptr;
 }
 
 unsigned char* CBBSFileAnalyzeData::GetGotoAddrBBSF(unsigned char* curActionTop, const CXXBYTE<32>& gotoLabel)

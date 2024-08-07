@@ -37,3 +37,16 @@ uint32_t AA_MakeHash(const char* s)
 
     return result;
 }
+
+uint32_t AA_MakeHashEasy(const char* s)
+{
+    int result;
+
+    auto chr = *s;
+    for ( result = 0i64; *s; chr = *s )
+    {
+        ++s;
+        result = (unsigned int)(chr + 137 * result);
+    }
+    return result;
+}

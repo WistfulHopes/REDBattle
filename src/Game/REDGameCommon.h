@@ -6,6 +6,59 @@
 
 class SCENE_CBase;
 
+enum BATTLE_DRAMA_ID : int32_t
+{
+	BATTLE_DRAMA_ID_INVALID = 0,
+	BATTLE_DRAMA_ID_OPENING = 1,
+	BATTLE_DRAMA_ID_ENDING = 2,
+	BATTLE_DRAMA_ID_INTERLUDE = 3,
+	BATTLE_DRAMA_ID_MAX = 4,
+};
+
+struct FMemberCharaInfo
+{
+	bool bEnable; // 0x0
+	ECharaID CharaID; // 0x1
+	EColorID ColorID; // 0x2
+	EBattleScript ScriptType; // 0x3
+	ECostumeID CostumeID; // 0x4
+	bool bCPU; // 0x5
+	int32_t CPULv; // 0x8
+	FMemberCharaInfo() {}
+	void Initialize();
+	void Setup(bool, ECharaID, EColorID, EBattleScript, ECostumeID);
+};
+
+class REDBattlePlayerInfo 
+{
+public:
+    REDBattlePlayerInfo() {}
+
+    FMemberCharaInfo m_MemberCharaInfoList[3]; // 0x28
+	bool DecideChara; // 0x4C
+	uint32_t Handicap; // 0x50
+	unsigned char PlayerState; // 0x54
+	bool bUseCard; // 0x55
+	bool bPadAssign; // 0x56
+	bool bPlayTimeLimit; // 0x57
+	PAD_ID PadID; // 0x58
+	GAME_MODE PlayGameMode; // 0x5C
+	int32_t SystemContinueTimer; // 0x60
+	int32_t StageNo; // 0x64
+	int32_t ContinueCount; // 0x68
+	bool bStraightAll; // 0x6C
+	bool bRandomChara; // 0x6D
+	int32_t WinCount; // 0x70
+	int32_t TmpWinCount; // 0x74
+	int32_t TmpLoseCount; // 0x78
+	wchar_t EntryName[4]; // 0x7C
+	enum BATTLE_DRAMA_ID BattleDramaID; // 0x84
+	bool bStylishMode; // 0x88
+	bool bSelectMySet; // 0x89
+	float PauseMenuLeftTime; // 0x8C
+	void InitializeParam();
+};
+
 enum class EFadeType : uint8_t
 {
     Normal = 0x0000,
@@ -119,6 +172,9 @@ private:
 	SCENE_ID m_CurrentSceneID;
 	SCENE_ID m_PrevSceneID;
 
+private:
+	REDBattlePlayerInfo BattlePlayerInfo[2];
+
 public:
 	void SetGameMode(GAME_MODE gameMode) 
 	{
@@ -136,4 +192,9 @@ public:
 
 	void ChangeScene();
 	void Tick(float DeltaSeconds);
+
+	ECharaID GetBattleCharaID(SIDE_ID PlayerSide, EMemberID MemberID) 
+	{
+		return BattlePlayerInfo[PlayerSide].m_MemberCharaInfoList[MemberID].CharaID;
+	}
 };

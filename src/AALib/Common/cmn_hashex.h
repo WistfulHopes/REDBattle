@@ -2,6 +2,7 @@
 #include <cstdint>
 
 uint32_t AA_MakeHash(const char* s);
+uint32_t AA_MakeHashEasy(const char* s);
 
 class U32KEY
 {
@@ -12,6 +13,7 @@ public:
     bool operator<(const U32KEY&);
     operator bool();
     uint32_t GetKey() { return m_Key; }
+    void SetKey(uint32_t key) { m_Key = key; }
 };
 
 class CHashKey
@@ -19,12 +21,14 @@ class CHashKey
 public:
     U32KEY m_Key; // 0x0
     uint32_t GetHash() { return m_Key.GetKey(); }
+    void SetKey(uint32_t key) { m_Key.SetKey(key); }
 };
 
 class CHashNode
 {
 public:
     virtual CHashKey* GetKey() = 0;
+    virtual void SetKey(uint32_t key) = 0;
     CHashNode() {}
 };
 
@@ -39,6 +43,7 @@ public:
     {
         return &m_HashKey;
     }
+    virtual void SetKey(uint32_t key) override { m_HashKey.SetKey(key); }
     CHashNodeC32BYTE() {}
 };
 
@@ -111,9 +116,46 @@ private:
 	T m_ElmTable[V1]; // 0x25C
 public:
 	int32_t GetCount();
-	void Release();
+	void Release()
+	{
+	    m_MaxLinkErrorCount = 0;
+	    for (auto& hash : m_HashTable)
+	    {
+	        hash = -1;
+	    }
+	    for (auto& link : m_LinkTable)
+	    {
+	        link = -1;
+	    }
+	}
 	void Sort();
 	void AA_EasyHashInit();
-	void Insert(const T&, uint32_t);
+	void Insert(const T& elm, uint32_t hash);
 	bool Find(const T&, uint32_t, unsigned short *);
 };
+
+template<typename T, int V1, int V2>
+inline void AA_EasyHash<T, V1, V2>::Insert(const T& elm, uint32_t hash)
+{
+    if (m_ElmCount < V1)
+    {
+        m_ElmTable[m_ElmCount] = elm;
+        auto idx = hash % V2;
+        if (m_HashTable[idx] == -1)
+        {
+            m_HashTable[idx] = m_ElmCount;
+        }
+        else
+        {
+            auto errorCount = 0;
+            for ( auto i = m_LinkTable[idx]; i != -1; i = m_LinkTable[i])
+            {
+                idx = i;
+                errorCount++;
+            }
+            m_LinkTable[idx] = m_ElmCount;
+            if (errorCount > m_MaxLinkErrorCount) m_MaxLinkErrorCount = errorCount;
+        }
+        m_ElmCount++;
+    }
+}

@@ -22,9 +22,9 @@ public:
 	AA_CRandMT(const uint32_t *, int32_t);
 	AA_CRandMT(uint32_t);
 	AA_CRandMT();
-	~AA_CRandMT();
+	~AA_CRandMT() {}
 	bool Init(const uint32_t *, int32_t);
-	bool Init(uint32_t);
+	bool Init(uint32_t start);
 	uint32_t GenU32();
 	int32_t GenS32() { return GenU32() >> 1; }
 	double GenR1();
@@ -43,3 +43,5 @@ public:
 	void MakeRollbackData(FRollbackData &);
 	void ApplyRollbackData(const FRollbackData &);
 };
+
+extern AA_CRandMT s_Rand;

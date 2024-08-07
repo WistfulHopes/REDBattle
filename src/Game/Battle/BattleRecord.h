@@ -62,7 +62,6 @@ enum BATTLE_RECORD_TYPE
 class CBattleRecord
 {
 public:
-	CBattleRecord(const CBattleRecord &);
 	CBattleRecord() {}
 	~CBattleRecord() {}
     struct Battle_Record

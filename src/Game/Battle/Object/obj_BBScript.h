@@ -1971,6 +1971,22 @@ public:
 	int32_t m_RequestGCSkill; // 0x4C
 };
 
+class CBBSFile 
+{
+public:
+	CBBSFile() {}
+
+	CBBSFile(void* data, int32_t size)
+		: m_DataSize(size)
+	{
+		m_pData = new unsigned char[size];
+		memcpy(m_pData, data, size);
+	}
+	
+	void* m_pData;
+	uint32_t m_DataSize;
+};
+
 class CBBSFileAnalyzeData
 {
 public:

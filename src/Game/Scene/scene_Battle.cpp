@@ -10,6 +10,21 @@ SCENE_CBattle::SCENE_CBattle()
 void SCENE_CBattle::SceneInitialize()
 {
     SCENE_CBase::SceneInitialize();
+    SetupBattle();
+}
+
+void SCENE_CBattle::Tick(float DeltaSeconds)
+{
+    UpdateBattle(DeltaSeconds, true);
+}
+
+void SCENE_CBattle::SetupBattle()
+{
+    BattleObjectManager->ScriptAnalyze();
+    BattleObjectManager->BOM_MatchOneceInitialize(false);
+    BattleObjectManager->BOM_RoundAndEasyResetInitialize(false);
+    State->Setup();
+    EventManager->Setup();
 }
 
 void SCENE_CBattle::UpdateBattle(float DeltaSeconds, bool bUpdateDraw)

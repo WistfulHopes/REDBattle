@@ -60,10 +60,10 @@ public:
 	CFloatWithTimer() {}
 	void Init();
 	void Update();
-	float GetVal();
-	void SetVal(float, float, uint32_t);
-	void SetPause(bool);
-	bool IsSet();
+	float GetVal() { return m_Val; }
+	void SetVal(float beginVal, float destVal, int time);
+	void SetPause(bool pause) { m_bPause = pause; }
+	bool IsSet() { return m_bSet; }
 	float m_Val; // 0x0
 	float m_BeginVal; // 0x4
 	float m_DestVal; // 0x8

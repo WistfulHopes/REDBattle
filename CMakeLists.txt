@@ -27,15 +27,20 @@ PRIVATE
     src/main.cpp
 	src/AALib/AASystemRED.cpp
 	src/AALib/Base/sys_Collision.cpp
+	src/AALib/Base/sys_RandomManager.cpp
 	src/AALib/Base/Jon/JonCommon.cpp
 	src/AALib/Base/Jon/tl_Jon.cpp
 	src/AALib/Common/cmn_hashex.cpp
 	src/AALib/Common/tl_Filepack.cpp
 	src/AALib/Common/tl_RandMT.cpp
 	src/Game/REDGameCommon.cpp
-	src/Game/Battle/battle_TeamManager.cpp
 	src/Game/Battle/battle_ObjectManager.cpp
+	src/Game/Battle/battle_TeamManager.cpp
+	src/Game/Battle/BattleEventManager.cpp
+	src/Game/Battle/BattlePlayerResult.cpp
+	src/Game/Battle/BattleState.cpp
 	src/Game/Battle/Object/obj_Base.cpp
+	src/Game/Battle/Object/obj_BaseCommon.cpp
 	src/Game/Battle/Object/obj_BBScript.cpp
 	src/Game/Battle/Object/Char/char_Base.cpp
 	src/Game/Scene/scene_Base.cpp

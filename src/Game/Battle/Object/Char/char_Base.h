@@ -373,9 +373,19 @@ public:
 	int32_t m_MikiwameMoveCountMax; // 0xEA10
 	unsigned char m_MikiwameMoveCancelAvailable; // 0xEA14
 	unsigned char m_MemberChangeUltimateAvailable; // 0xEA15
+	
+public:
+	CXXBYTE<16> m_CharName; // 0xEF5C
+	CXXBYTE<16> m_CharNameForVoice; // 0xEF6C
+	int32_t m_VoiceCond_MyHP[10]; // 0xEF7C
+	int32_t m_VoiceCond_OpponentHP[10]; // 0xEFA4
+	bool m_VoiceCond_OpponentCharaEnable[10]; // 0xEFCC
+	bool m_VoiceCond_OpponentChara[32][10]; // 0xEFD6
+	VAR_Type m_VoiceCond_Var[10]; // 0xF118
 
 public:
 	void ObjectConstructor_ForPlayer();
+	void PlayerInitializeOnEasyReset();
 	
 	short GetChangeCDT() { return ply_CDT_Change; }
 	short GetUltimateChangeCDT() { return ply_CDT_UltimateChange; }
@@ -388,6 +398,7 @@ public:
 	bool CheckPlayerFlag4(PLAYER_FLAG4 flag) { return m_PlayerFlag4 & flag; }
 	bool CheckAttackFlag(PLATTACK_FLAG flag) { return m_AttackFlag & flag; }
 	virtual bool IsDead() override;
+	void SetEntry(bool entry) { m_Entry = entry; }
 	bool IsEntry() { return m_Entry; }
 	void SetCallingChar(EMemberID memberID) { m_callingChar = memberID; }
 	void SetCalledChar(EMemberID memberID) { m_calledChar = memberID; }
