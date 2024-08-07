@@ -3,18 +3,15 @@
 #include <cmath>
 #include <fstream>
 #include <REDGameCommon.h>
-
-#include "Battle/Object/obj_BBScript.h"
 #include <vector>
-#include <Base/Jon/tl_Jon.h>
-#include <Common/tl_Filepack.h>
 
 struct AppContext
 {
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_bool app_quit = SDL_FALSE;
-    float Time;
+    float Time = 0;
+    float Accumulator = 0;
 };
 
 int SDL_Fail()
@@ -89,11 +86,21 @@ int SDL_AppIterate(void* appstate)
 
     // draw a color
     auto time = SDL_GetTicks() / 1000.f;
-    auto deltaSeconds = time- app->Time;
-    REDGameCommon::GetInstance()->Tick(deltaSeconds);
-    if (!red::cmn::g_SceneChangeFinish)
-        REDGameCommon::GetInstance()->ChangeScene();
+    auto frameTime = time - app->Time;
     app->Time = time;
+    auto deltaSeconds = 1.0 / 60.0;
+
+    if (frameTime > 0.25) frameTime = 0.25;
+    app->Accumulator += 0.25;
+
+    while (app->Accumulator >= deltaSeconds)
+    {
+        REDGameCommon::GetInstance()->Tick(deltaSeconds);
+        frameTime += deltaSeconds;
+        app->Accumulator -= deltaSeconds;
+        SDL_Log("Update time: %f", SDL_GetTicks() / 1000.f - time);
+        time = SDL_GetTicks() / 1000.f;
+    }
     
     auto red = (std::sin(time) + 1) / 2.0 * 255;
     auto green = (std::sin(time / 2) + 1) / 2.0 * 255;

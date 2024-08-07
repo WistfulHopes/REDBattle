@@ -12,7 +12,7 @@ protected:
 	void Cleanup();
 public:
 	AA_ManagerBase();
-	~AA_ManagerBase();
+	~AA_ManagerBase() {}
 	void CleanupInstance();
 	AA_Handle RegistInstanceHandle(T* inst);
 	T* RegistInstance(T* inst);

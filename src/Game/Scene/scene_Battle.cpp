@@ -16,6 +16,7 @@ void SCENE_CBattle::SceneInitialize()
 
 void SCENE_CBattle::Tick(float DeltaSeconds)
 {
+    SCENE_CBase::Tick(DeltaSeconds);
     UpdateBattle(DeltaSeconds, true);
 }
 

@@ -1,6 +1,9 @@
 #include "scene_Base.h"
 
-bool s_bReqSceneChangeFinish = false;
+namespace
+{
+    bool s_bReqSceneChangeFinish = false;
+}
 
 void SCENE_CBase::SceneInitialize()
 {
@@ -15,6 +18,7 @@ void SCENE_CBase::SceneFinalize()
 
 void SCENE_CBase::Tick(float DeltaSeconds)
 {
+    GameTime += DeltaSeconds;
     if (red::cmn::g_SceneChangeFinish)
         bSceneChanging = false;
     else

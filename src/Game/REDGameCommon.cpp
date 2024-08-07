@@ -105,9 +105,12 @@ void REDGameCommon::ChangeScene()
         break;
     }
     m_CurrentScene->SceneInitialize();
+    red::cmn::g_SceneChangeFinish = true;
 }
 
 void REDGameCommon::Tick(float DeltaSeconds)
 {
     m_CurrentScene->Tick(DeltaSeconds);
+    if (!red::cmn::g_SceneChangeFinish)
+        REDGameCommon::GetInstance()->ChangeScene();
 }
