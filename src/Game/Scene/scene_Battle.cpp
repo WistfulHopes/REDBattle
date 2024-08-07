@@ -1,5 +1,12 @@
 #include "scene_Battle.h"
 
+SCENE_CBattle::SCENE_CBattle()
+{
+    BattleObjectManager = std::make_unique<BATTLE_CObjectManager>();
+    EventManager = std::make_unique<BattleEventManager>();
+    State = std::make_unique<BattleState>();
+}
+
 void SCENE_CBattle::SceneInitialize()
 {
     SCENE_CBase::SceneInitialize();

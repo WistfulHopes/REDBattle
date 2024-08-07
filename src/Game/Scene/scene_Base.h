@@ -4,7 +4,7 @@
 class SCENE_CBase
 {
 public:
-    SCENE_CBase() {}
+    SCENE_CBase() { }
     ~SCENE_CBase() {}
 
 public:
@@ -25,6 +25,7 @@ private:
 public:
     virtual void SceneInitialize();
 	virtual void SceneFinalize();
+	virtual void Tick(float DeltaSeconds);
 
 private:
 	bool UpdateChangeScene();

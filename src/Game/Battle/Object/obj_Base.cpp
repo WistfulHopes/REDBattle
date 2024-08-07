@@ -340,6 +340,8 @@ int OBJ_CBase::ExecuteFunctionBlock(const CXXBYTE<32>& funcName)
                  true,
                  nullptr));
     }
+
+    return 0;
 }
 
 int OBJ_CBase::FuncCallBySwitchCaseTable(uint8_t* addr)

@@ -74,7 +74,7 @@ private:
 	int32_t m_PositiveBonusNum; // 0x15C
 	OBJ_CCharBase * GetLatestMainPlayer();
 public:
-	BATTLE_TeamManager();
+	BATTLE_TeamManager() {}
 	void Initialize(SIDE_ID);
 	SIDE_ID GetSideID() { return m_SideID; }
 	void RoundReset();

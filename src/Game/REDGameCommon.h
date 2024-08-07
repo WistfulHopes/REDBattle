@@ -6,7 +6,7 @@
 
 class SCENE_CBase;
 
-enum EFadeType : uint8_t
+enum class EFadeType : uint8_t
 {
     Normal = 0x0000,
     Animation = 0x0001,
@@ -62,9 +62,19 @@ private:
 	bool m_scSetFadeOutColor; // 0xB8
 	uint32_t m_scFadeOutColor; // 0xBC
 public:
-	void ChangeFadeColor(uint32_t);
-	uint32_t GetFadeColor();
-	bool IsChangeFadeColor();
+	void ChangeFadeColor(uint32_t color)
+	{
+		m_scSetFadeOutColor = true;
+		m_scFadeOutColor = color;
+	}
+	uint32_t GetFadeColor()
+	{
+		return m_scFadeOutColor;
+	}
+	bool IsChangeFadeColor()
+	{
+		return m_scSetFadeOutColor;
+	}
 	~CSceneChange() {}
 	CSceneChange & operator=(const CSceneChange & __that);
 };
@@ -73,8 +83,8 @@ namespace red
 {
     namespace cmn 
     {
-        static inline bool g_SceneChangeFinish;
-		static inline CSceneChange g_SceneChangeReq;
+        extern bool g_SceneChangeFinish;
+		extern CSceneChange g_SceneChangeReq;
 		bool SceneChange(const CSceneChange& sc);
     };
 };
@@ -91,11 +101,7 @@ public:
 	int32_t playerID;
 	SIDE_ID m_PlayerSide;
 
-	static REDGameCommon* GetInstance() 
-	{
-		static REDGameCommon* sInstance;
-		return sInstance;
-	}
+	static REDGameCommon* GetInstance();
 
 private:
 	GAME_MODE m_GameMode;
@@ -129,4 +135,5 @@ public:
 	SCENE_CBase* GetScene() { return m_CurrentScene.get(); }
 
 	void ChangeScene();
+	void Tick(float DeltaSeconds);
 };

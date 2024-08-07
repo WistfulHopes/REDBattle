@@ -57,7 +57,7 @@ public:
 class CFloatWithTimer
 {
 public:
-	CFloatWithTimer();
+	CFloatWithTimer() {}
 	void Init();
 	void Update();
 	float GetVal();

@@ -102,7 +102,7 @@ template<typename T, int V1, int V2>
 class AA_EasyHash
 {
 public:
-	AA_EasyHash();
+	AA_EasyHash() {}
 private:
 	unsigned short m_MaxLinkErrorCount; // 0x0
 	unsigned short m_ElmCount; // 0x2

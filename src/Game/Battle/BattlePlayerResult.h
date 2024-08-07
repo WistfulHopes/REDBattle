@@ -42,7 +42,7 @@ private:
 	ROUND_RESULT_EX m_ResultRounds[20]; // 0x30
 	void InitParam();
 public:
-	PlayerResult();
+	PlayerResult() {}
 	void Reset();
 	void Setup(uint32_t);
 	void UpdateWinResult(ROUND_RESULT, bool);

@@ -3,7 +3,7 @@
 class CBattleInputAnalyzer
 {
 public:
-	CBattleInputAnalyzer();
+	CBattleInputAnalyzer() {}
 	void ResetBattleInputAnalyzer();
 	enum
 	{

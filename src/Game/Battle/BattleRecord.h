@@ -63,8 +63,8 @@ class CBattleRecord
 {
 public:
 	CBattleRecord(const CBattleRecord &);
-	CBattleRecord();
-	~CBattleRecord();
+	CBattleRecord() {}
+	~CBattleRecord() {}
     struct Battle_Record
     {
         unsigned short m_LightAtk; // 0x0

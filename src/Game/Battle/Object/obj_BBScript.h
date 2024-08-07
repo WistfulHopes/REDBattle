@@ -1951,7 +1951,7 @@ enum INTERRUPT_PARAM
 class CActionRequestInfo
 {
 public:
-	CActionRequestInfo();
+	CActionRequestInfo() {}
 	void CActionRequestInfoInit()
 	{
 		m_RequestName = "";

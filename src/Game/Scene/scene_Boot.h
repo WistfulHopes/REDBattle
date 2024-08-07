@@ -63,7 +63,8 @@ public:
     ~SCENE_CBoot();
 
 public:
-    virtual void SceneInitialize();
+    virtual void SceneInitialize() override;
+    virtual void Tick(float DeltaSeconds) override;
     
 private:
     REDBootSequenceRoot* Sequencer;

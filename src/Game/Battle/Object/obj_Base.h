@@ -14,7 +14,7 @@ class OBJ_CBase;
 class CVoiceInfo
 {
 public:
-	CVoiceInfo();
+	CVoiceInfo() {}
 	void CVoiceInfoInit();
 	int32_t m_VoiceTimer; // 0x0
 	int32_t m_VoiceHistoryTimer; // 0x4
@@ -35,7 +35,7 @@ public:
 		CXXBYTE<16> DefaultVoice; // 0x1
 		CXXBYTE<16> FinishVoice; // 0x11
 		void Reset();
-		SFinishBranchVoiceInfo();
+		SFinishBranchVoiceInfo() {}
 	};
 	SFinishBranchVoiceInfo m_FinishBranchVoiceInfo; // 0x12D
 };
@@ -89,7 +89,7 @@ struct sSoundReq
 	int32_t m_RandomChannel; // 0x10
 	ESoundBank m_Bank; // 0x14
 	int32_t m_Priority; // 0x18
-	sSoundReq();
+	sSoundReq() {}
 	void sSoundReqClear();
 };
 
@@ -119,7 +119,7 @@ enum STOP_TYPE
 class CCreateArg
 {
 public:
-	CCreateArg();
+	CCreateArg() {}
 	void CCreateArgInit();
 	CXXBYTE<32> m_CreateArg_SocketName; // 0x0
 	int32_t m_CreateArg_Angle; // 0x20

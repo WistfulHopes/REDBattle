@@ -1,5 +1,12 @@
 #include "REDGameCommon.h"
+
+#include <Scene/scene_Battle.h>
+#include <Scene/scene_Boot.h>
+
 #include "Scene/scene_Base.h"
+
+bool red::cmn::g_SceneChangeFinish = true;
+CSceneChange red::cmn::g_SceneChangeReq {};
 
 CSceneChange::CSceneChange()
 {
@@ -13,7 +20,7 @@ CSceneChange::CSceneChange()
     m_scAdvStage = "";
     m_LobbySubMenuID = "";
     m_scFadeOutTime = 20;
-    m_scFadeType = Animation;
+    m_scFadeType = EFadeType::Animation;
     m_scSceneID = SCENE_ID_INVALID;
     m_scBGMID = BGMID_INVALID;
     m_scBattleStage = BATTLE_STAGE_MAX;
@@ -74,20 +81,35 @@ bool red::cmn::SceneChange(const CSceneChange& sc)
     return true;
 }
 
+REDGameCommon* REDGameCommon::GetInstance()
+{
+    static REDGameCommon sInstance;
+    return &sInstance;
+}
+
 REDGameCommon::REDGameCommon()
 {
-    m_CurrentScene = nullptr;
+    m_CurrentScene = std::make_unique<SCENE_CBoot>();
+    m_CurrentScene->SceneInitialize();
 }
 
 void REDGameCommon::ChangeScene()
 {
+    m_CurrentScene->SceneFinalize();
+
     switch (m_CurrentSceneID)
     {
     case SCENE_ID_BATTLE:
     case SCENE_ID_BATTLE_DIRECT:
     case SCENE_ID_STORY_BATTLE:
-        m_CurrentScene = std::make_unique<SCENE_CBase>();
+        m_CurrentScene = std::make_unique<SCENE_CBattle>();
     default:
         break;
     }
+    m_CurrentScene->SceneInitialize();
+}
+
+void REDGameCommon::Tick(float DeltaSeconds)
+{
+    m_CurrentScene->Tick(DeltaSeconds);
 }

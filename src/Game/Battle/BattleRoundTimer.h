@@ -14,7 +14,7 @@ private:
 	bool m_forcePause; // 0xF
 	void InitParam();
 public:
-	RoundTimer();
+	RoundTimer() {}
 	void ResetTime();
 	void Start();
 	void Setup(int32_t);

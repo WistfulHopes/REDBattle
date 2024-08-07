@@ -1,7 +1,10 @@
 #include "scene_Boot.h"
 #include <AASystemRED.h>
 
-static bool s_bInitialized;
+namespace
+{
+    bool s_bInitialized = false;
+}
 
 void REDInitializeOnce() 
 {
@@ -34,6 +37,20 @@ void SCENE_CBoot::SceneInitialize()
 {
     SCENE_CBase::SceneInitialize();
     Sequencer->BeginState();
+}
+
+void SCENE_CBoot::Tick(float DeltaSeconds)
+{
+    SCENE_CBase::Tick(DeltaSeconds);
+    Sequencer->TickState(DeltaSeconds);
+    auto sc = CSceneChange();
+    sc.m_scFadeType = EFadeType::Normal;
+    sc.ChangeFadeColor(0xFF000000);
+    if (!Sequencer->GetResult())
+    {
+        sc.m_scSceneID = SCENE_ID_BATTLE;
+        red::cmn::SceneChange(sc);
+    }
 }
 
 void REDBootSequenceRoot::BeginState()

@@ -7,6 +7,8 @@
 class SCENE_CBattle : public SCENE_CBase 
 {
 public:
+    SCENE_CBattle();
+    
     virtual void SceneInitialize() override;
     BATTLE_CObjectManager* GetBattleObjectManager() { return BattleObjectManager.get(); }
     BattleEventManager* GetBattleEventManager() { return EventManager.get(); }

@@ -27,9 +27,8 @@ private:
 	void SetWinnerDraw();
 	void ResetWinner();
 public:
-	BattleState(const BattleState &);
-	BattleState();
-	~BattleState();
+	BattleState() {}
+	~BattleState() {}
 	void Setup();
 	void Update();
 	void SetPause(bool);

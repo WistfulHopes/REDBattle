@@ -16,12 +16,21 @@ class CMultiBuffer
         unsigned char buffer[V1];
         MEM* pPrev;
         MEM* pNext;
+
+		MEM() 
+		{
+			pPrev = nullptr;
+			pNext = nullptr;
+		}
     };
 private:
 	MEM * m_pEmptyChain; // 0x0
 	MEM m_Memory[V2]; // 0x8
 public:
-	CMultiBuffer();
+	CMultiBuffer()
+	{
+		m_pEmptyChain = nullptr;
+	}
 	void Reset() 
 	{
 		memset(m_Memory, 0, sizeof(m_Memory));
@@ -83,7 +92,7 @@ public:
 	float Radius; // 0x20
 	float InnerAngularForce; // 0x24
 	float OuterAngularForce; // 0x28
-	FForceEffectInfo();
+	FForceEffectInfo() {}
 };
 
 enum EScriptData
@@ -163,7 +172,8 @@ namespace ENextPlayerEntry
 class BATTLE_CObjectManager 
 {
 public:
-    BATTLE_CObjectManager();
+    BATTLE_CObjectManager() {}
+    ~BATTLE_CObjectManager() {}
 private:
     void BOM_ConstructorSub();
 public:
@@ -456,7 +466,7 @@ public:
         CXXBYTE<16> ExCharaID[4]; // 0x58
         OBJ_CBase * pLoadWaitObj; // 0x98
         void Update();
-        SEventData();
+        SEventData() {}
     };
 	SEventData m_EventData; // 0x36E8
 	void InitializeEventData();

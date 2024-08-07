@@ -13,6 +13,14 @@ void SCENE_CBase::SceneFinalize()
     
 }
 
+void SCENE_CBase::Tick(float DeltaSeconds)
+{
+    if (red::cmn::g_SceneChangeFinish)
+        bSceneChanging = false;
+    else
+        GoToNextScene(red::cmn::g_SceneChangeReq.m_scSceneID);
+}
+
 bool SCENE_CBase::UpdateChangeScene()
 {
     if (red::cmn::g_SceneChangeFinish || bChangingController || bSignOutDialogDoing) return false;

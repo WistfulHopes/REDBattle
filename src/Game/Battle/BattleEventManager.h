@@ -206,9 +206,8 @@ private:
 	BOMEventInfo * Pop();
 	void ResetOnSetEvent();
 public:
-	BattleEventManager(const BattleEventManager &);
-	BattleEventManager();
-	~BattleEventManager();
+	BattleEventManager() {}
+	~BattleEventManager() {}
 	void Setup();
 	void Update();
 	BattleEventBase * GetEvent();

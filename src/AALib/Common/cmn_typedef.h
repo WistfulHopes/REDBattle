@@ -107,7 +107,7 @@ template <typename T1, typename T2, int V1, int V2>
 class AA_EasyMap
 {
 public:
-    AA_EasyMap();
+    AA_EasyMap() {}
 private:
     T1 m_pKeyList[V1];
     T2 m_pItemList[V1];
