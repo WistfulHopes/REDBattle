@@ -13,7 +13,7 @@ public:
 	float RandF32S(int32_t);
 	void MakeRollbackData(int32_t, AA_CRandMT::FRollbackData &);
 	void ApplyRollbackData(int32_t, const AA_CRandMT::FRollbackData &);
-	AA_CRandomManager();
+	AA_CRandomManager() {}
 	AA_CRandomManager & operator=(AA_CRandomManager &);
 	AA_CRandomManager & operator=(const AA_CRandomManager &);
 };

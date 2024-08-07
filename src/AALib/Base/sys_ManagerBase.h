@@ -1,5 +1,6 @@
 #pragma once
 #include "Common/cmn_class.h"
+#include <cstring>
 
 template <typename T, int Count>
 class AA_ManagerBase
@@ -25,5 +26,5 @@ template<typename T, int Count>
 inline AA_ManagerBase<T, Count>::AA_ManagerBase()
 {
 	m_InstanceNum = 0;
-	memset(m_Instances, 0, sizeof(m_Instances));
+	std::memset(m_Instances, 0, sizeof(m_Instances));
 }

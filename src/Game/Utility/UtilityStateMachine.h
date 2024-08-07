@@ -3,15 +3,21 @@
 
 class REDStateMachine {
 public:
-    REDStateMachine();
+    REDStateMachine() {}
+    virtual ~REDStateMachine() { delete CurrentSubState; }
 
 private:
     REDStateMachine* NewSubState();
 
+public:
+    REDStateMachine * GetCurrentState() { return CurrentSubState; }
+    int32_t GetResult() { return Result; }
+    
 protected:
     virtual void BeginState();
     virtual void TickState(float DeltaSeconds);
     virtual void EndState();
+	void SetResult(int32_t inResult) { Result = inResult; }
     
 public:
 	void ChangeSubState(REDStateMachine* state);
@@ -26,7 +32,7 @@ private:
 class REDStateMachineRoot : public REDStateMachine
 {
 public:
-    REDStateMachineRoot();
+    REDStateMachineRoot() {}
 	virtual void BeginState() override;
 	virtual void EndState() override;
 

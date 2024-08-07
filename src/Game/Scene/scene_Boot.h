@@ -20,7 +20,7 @@ private:
 class REDBootSequenceInit : public REDStateMachine 
 {
 public:
-    REDBootSequenceInit();
+    REDBootSequenceInit() {}
     
     virtual void BeginState() override;
 };
@@ -28,7 +28,7 @@ public:
 class REDBootSequenceStaticLoad : public REDStateMachine 
 {
 public:
-    REDBootSequenceStaticLoad();
+    REDBootSequenceStaticLoad() {}
     
     virtual void BeginState() override;
 	virtual void TickState(float DeltaSeconds) override;
@@ -37,17 +37,17 @@ public:
 class REDBootSequencePreLoadData : public REDStateMachine 
 {
 public:
-    REDBootSequencePreLoadData();
+    REDBootSequencePreLoadData() {}
 
 	virtual void BeginState() override;
 	virtual void TickState(float DeltaSeconds) override;
 	virtual void EndState() override;
 };
 
-class UREDBootSequenceSaveDataRoot : public REDStateMachine
+class REDBootSequenceSaveDataRoot : public REDStateMachine
 {
 public:
-    UREDBootSequenceSaveDataRoot();
+    REDBootSequenceSaveDataRoot() {}
 
 	virtual void BeginState() override;
 	virtual void TickState(float DeltaSeconds) override;

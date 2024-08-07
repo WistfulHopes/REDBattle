@@ -2648,14 +2648,14 @@ void CBBSFileAnalyzeData::BBSAnalyzeExe(unsigned char* addr, uint32_t size)
     auto initFuncTable = [this, size](CHashTable<CHashNodeC32BYTEtoU32>* pAddrTable, uint64_t targetID)
     {
         auto unk = size + (uint64_t)m_DataTopAddr;
-        if (*(uint64_t*)m_ScriptTopAddr < unk)
+        if ((uint64_t)m_ScriptTopAddr < unk)
         {
             int offset = 0;
             int data = 0;
             std::vector<CHashKeyC32BYTE> hashes{};
             do
             {
-                uint64_t begin = *(uint64_t*)m_ScriptTopAddr;
+                unsigned char* begin = m_ScriptTopAddr;
                 uint32_t command = *(uint32_t*)(begin + offset);
                 if (command == targetID)
                 {
@@ -2669,7 +2669,7 @@ void CBBSFileAnalyzeData::BBSAnalyzeExe(unsigned char* addr, uint32_t size)
                 data += commandSizeTable[command];
                 offset = data;
             }
-            while (*(uint64_t*)m_ScriptTopAddr + (uint64_t)offset < unk);
+            while ((uint64_t)m_ScriptTopAddr + (uint64_t)offset < unk);
         }
         if (pAddrTable->m_NodeCnt)
             qsort(pAddrTable->m_Node, pAddrTable->m_NodeCnt, sizeof(CHashNodeC32BYTEtoU32),
