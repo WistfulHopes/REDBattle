@@ -32,7 +32,7 @@ BattleEventBase* BattleEventManager::BattleEventFactory(BEM_STATE state)
 {
     switch (state)
     {
-    default: 
+    default:
         break;
     }
     m_EventArg[0] = 0;

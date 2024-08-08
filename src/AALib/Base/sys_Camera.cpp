@@ -1,6 +1,5 @@
 #include "sys_Camera.h"
-#include <math.h>
-#include <intrin.h>
+#include <cmath>
 
 void AA_CCamera::PlaneFromPoint(AA_Vector3* pP0, AA_Vector3* pP1, AA_Vector3* pP2, AA_Vector4* pPlane)
 {
@@ -24,16 +23,15 @@ AA_CCamera::AA_CCamera()
     m_At.Set(0, 0, 1);
     m_BaseUp.Set(0, 1, 0);
     m_Up.Set(0, 1, 0);
-    m_FOV = 1.5707964;
+    m_FOV = 1.5707964f;
     m_FrontClip = 3;
     m_BackClip = 5000;
+    m_AspectRatio = 16.f / 9.f;
 }
 
 bool AA_CCamera::Update()
 {
-    auto vec = m_At - m_Pos;
-
-    auto halfFOV = m_FOV * 0.5;
+    auto halfFOV = m_FOV * 0.5f;
 
     m_ViewMatrix = AA_Matrix(m_Pos, m_At, m_Up);
     m_ProjMatrix = AA_Matrix(halfFOV, halfFOV, 1, 1, m_FrontClip, m_BackClip);
@@ -46,7 +44,7 @@ bool AA_CCamera::Update()
 
 void AA_CCamera::CreateFOVPlane()
 {
-    auto tangent = tanf(m_FOV * 0.5);
+    auto tangent = tanf(m_FOV * 0.5f);
     auto p0 = AA_Vector3(0, 0, 0);
     auto p1 = AA_Vector3(-(tangent * m_BackClip * m_AspectRatio), -m_BackClip * tangent, m_BackClip);
     auto p2 = AA_Vector3(-(tangent * m_BackClip * m_AspectRatio), m_BackClip * tangent, m_BackClip);

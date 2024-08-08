@@ -11,6 +11,7 @@ public:
 	int32_t RandS31(int32_t);
 	float RandF32(int32_t);
 	float RandF32S(int32_t);
+	virtual void Update() override {}
 	void MakeRollbackData(int32_t, AA_CRandMT::FRollbackData &);
 	void ApplyRollbackData(int32_t, const AA_CRandMT::FRollbackData &);
 	AA_CRandomManager() {}

@@ -3,6 +3,7 @@
 SCENE_CBattle::SCENE_CBattle()
 {
     BattleObjectManager = std::make_unique<BATTLE_CObjectManager>();
+    ScreenManager = std::make_unique<BATTLE_CScreenManager>();
     Settings = std::make_unique<BattleSettings>();
     State = std::make_unique<BattleState>();
     EventManager = std::make_unique<BattleEventManager>();

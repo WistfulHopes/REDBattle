@@ -29,7 +29,7 @@ int SDL_AppInit(void** appstate, int argc, char* argv[])
     }
 
     // create a window
-    SDL_Window* window = SDL_CreateWindow("Window", 352, 430, SDL_WINDOW_RESIZABLE);
+    SDL_Window* window = SDL_CreateWindow("RED Battle", 1280, 720, SDL_WINDOW_RESIZABLE);
     if (!window)
     {
         return SDL_Fail();
@@ -88,7 +88,7 @@ int SDL_AppIterate(void* appstate)
     auto time = SDL_GetTicks() / 1000.f;
     auto frameTime = time - app->Time;
     app->Time = time;
-    auto deltaSeconds = 1.0 / 60.0;
+    auto deltaSeconds = 1.0f / 60.0f;
 
     if (frameTime > 0.25) frameTime = 0.25;
     app->Accumulator += 0.25;

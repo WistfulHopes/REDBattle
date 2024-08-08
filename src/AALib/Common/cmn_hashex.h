@@ -109,10 +109,10 @@ class AA_EasyHash
 public:
 	AA_EasyHash() {}
 private:
-	unsigned short m_MaxLinkErrorCount; // 0x0
-	unsigned short m_ElmCount; // 0x2
-	unsigned short m_HashTable[V2]; // 0x4
-	unsigned short m_LinkTable[V1]; // 0x1E4
+	unsigned short m_MaxLinkErrorCount {}; // 0x0
+	unsigned short m_ElmCount {}; // 0x2
+	unsigned short m_HashTable[V2] {}; // 0x4
+	unsigned short m_LinkTable[V1] {}; // 0x1E4
 	T m_ElmTable[V1]; // 0x25C
 public:
 	int32_t GetCount();
@@ -141,7 +141,7 @@ inline void AA_EasyHash<T, V1, V2>::Insert(const T& elm, uint32_t hash)
     {
         m_ElmTable[m_ElmCount] = elm;
         auto idx = hash % V2;
-        if (m_HashTable[idx] == -1)
+        if ((short)m_HashTable[idx] == -1)
         {
             m_HashTable[idx] = m_ElmCount;
         }

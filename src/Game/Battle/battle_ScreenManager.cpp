@@ -77,7 +77,8 @@ BATTLE_CScreenManager::BATTLE_CScreenManager()
 
 float CalcBattleCameraLinkMagn(AA_CCamera * cam, AA_Vector3 & pos0, AA_Vector3 & pos1)
 {
-    auto BaseMatrix = AA_Matrix(AA_Matrix::CreateIdentity()).Mult(cam->GetViewMatrix()).Mult(cam->GetProjMatrix());
+    auto BaseMatrix = AA_Matrix::CreateIdentity().Mult(cam->GetViewMatrix());
+    BaseMatrix = BaseMatrix.Mult(cam->GetProjMatrix());
     auto vecPos0 = AA_Vector4(pos0, 1);
     vecPos0 = BaseMatrix.TransformFVector4(vecPos0);
     vecPos0 /= BaseMatrix.M[3][3];
@@ -92,7 +93,7 @@ float CalcBattleCameraLinkMagn(AA_CCamera * cam, AA_Vector3 & pos0, AA_Vector3 &
     auto sx = ScreenMatrix.TransformFVector4(vecPos0).GetX();
     auto sy = ScreenMatrix.TransformFVector4(vecPos1).GetY();
 
-    return (rsqrt_fast(sx * sx + sy * sy)) * (pos0 - pos1).Size();
+    return rsqrt_fast(sx * sx + sy * sy) * (pos0 - pos1).Size();
 }
 
 void BATTLE_CScreenManager::ResetScreenManager()
@@ -100,13 +101,13 @@ void BATTLE_CScreenManager::ResetScreenManager()
     m_pCamera = AASystemRED::GetInstance()->GetCameraManager().Get(0);
     if (m_pCamera)
     {
-        m_pCamera->SetFOV(1.134464);
+        m_pCamera->SetFOV(1.134464f);
         m_pCamera->SetBackClip(-50000);
         m_pCamera->SetBasePos(0, 135, 460);
         m_pCamera->SetPos(0, 135, 460);
         m_pCamera->SetBaseLookAt(0, 135, 0);
         m_pCamera->SetLookAt(0, 135, 0);
-        m_pCamera->SetAspectRatio(16. / 9.);
+        m_pCamera->SetAspectRatio(16.f / 9.f);
     }
 
     auto pos0 = AA_Vector3(0, 0, 0);

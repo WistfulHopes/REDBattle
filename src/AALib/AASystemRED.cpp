@@ -25,6 +25,11 @@ void AASystemRED::Initialize()
     }
 }
 
+void AASystemRED::Update()
+{
+    m_CameraManager.Update();
+}
+
 void AASystemRED::StaticInitialize()
 {
     if (s_Instance) return;

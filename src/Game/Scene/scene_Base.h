@@ -26,6 +26,7 @@ public:
     virtual void SceneInitialize();
     virtual void SceneFinalize();
     virtual void Tick(float DeltaSeconds);
+    virtual void UpdateOnEndTick(float DeltaSeconds);
 
 private:
     bool UpdateChangeScene();

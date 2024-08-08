@@ -6,6 +6,7 @@
 #include <vector>
 #include <Scene/scene_Battle.h>
 #include "AASystemRED.h"
+#include <SDL3/SDL.h>
 
 int32_t IsControlPrioritySmallSub_(const void * _a, const void * _b)
 {
@@ -98,39 +99,30 @@ BATTLE_CObjectManager::BATTLE_CObjectManager()
 
     // TODO better way to load chara data
 
-    std::ifstream solBbs("C:\\Users\\theso\\Downloads\\REDBattle\\build\\Debug\\BBS_SOL_100.bbsbin",
-                      std::ios_base::in | std::ios_base::binary);
+    size_t solBbsSize = 0;
+    auto solBbsData = SDL_LoadFile((std::string(SDL_GetBasePath()) + "\\assets\\BBS_SOL.bbsbin").data(), &solBbsSize);
 
-    auto solBbsData = std::vector(std::istreambuf_iterator(solBbs),
-                               std::istreambuf_iterator<char>());
+    size_t solefBbsSize = 0;
+    auto solefBbsData = SDL_LoadFile((std::string(SDL_GetBasePath()) + "\\assets\\BBS_SOLEF.bbsbin").data(), &solefBbsSize);
 
-    std::ifstream solefBbs("H:\\BBScript_0.7.0_x86_64_Win\\BBScript_0.7.0_x86_64_Win\\BBS_SOLEF_105.bbsbin",
-                      std::ios_base::in | std::ios_base::binary);
-
-    auto solefBbsData = std::vector(std::istreambuf_iterator(solefBbs),
-                               std::istreambuf_iterator<char>());
-
-    std::ifstream cmnefBbs("H:\\BBScript_0.7.0_x86_64_Win\\BBScript_0.7.0_x86_64_Win\\BBS_CMNEF_104.bbsbin",
-                      std::ios_base::in | std::ios_base::binary);
-
-    auto cmnefBbsData = std::vector(std::istreambuf_iterator(cmnefBbs),
-                               std::istreambuf_iterator<char>());
+    size_t cmnefBbsSize = 0;
+    auto cmnefBbsData = SDL_LoadFile((std::string(SDL_GetBasePath()) + "\\assets\\BBS_CMNEF.bbsbin").data(), &cmnefBbsSize);
     
-    m_BBSFile[0][0] = CBBSFile(solBbsData.data(), solBbsData.size());
-    m_BBSFile[0][1] = CBBSFile(solBbsData.data(), solBbsData.size());
-    m_BBSFile[0][2] = CBBSFile(solBbsData.data(), solBbsData.size());
-    m_BBSFile[0][3] = CBBSFile(solBbsData.data(), solBbsData.size());
-    m_BBSFile[0][4] = CBBSFile(solBbsData.data(), solBbsData.size());
-    m_BBSFile[0][5] = CBBSFile(solBbsData.data(), solBbsData.size());
-    m_BBSFile[0][6] = CBBSFile(solBbsData.data(), solBbsData.size());
+    m_BBSFile[0][0] = CBBSFile(solBbsData, solBbsSize);
+    m_BBSFile[0][1] = CBBSFile(solBbsData, solBbsSize);
+    m_BBSFile[0][2] = CBBSFile(solBbsData, solBbsSize);
+    m_BBSFile[0][3] = CBBSFile(solBbsData, solBbsSize);
+    m_BBSFile[0][4] = CBBSFile(solBbsData, solBbsSize);
+    m_BBSFile[0][5] = CBBSFile(solBbsData, solBbsSize);
+    m_BBSFile[0][6] = CBBSFile(solBbsData, solBbsSize);
 
-    m_BBSFile[1][0] = CBBSFile(solefBbsData.data(), solefBbsData.size());
-    m_BBSFile[1][1] = CBBSFile(solefBbsData.data(), solefBbsData.size());
-    m_BBSFile[1][2] = CBBSFile(solefBbsData.data(), solefBbsData.size());
-    m_BBSFile[1][3] = CBBSFile(solefBbsData.data(), solefBbsData.size());
-    m_BBSFile[1][4] = CBBSFile(solefBbsData.data(), solefBbsData.size());
-    m_BBSFile[1][5] = CBBSFile(solefBbsData.data(), solefBbsData.size());
-    m_BBSFile[1][6] = CBBSFile(cmnefBbsData.data(), cmnefBbsData.size());
+    m_BBSFile[1][0] = CBBSFile(solefBbsData, solefBbsSize);
+    m_BBSFile[1][1] = CBBSFile(solefBbsData, solefBbsSize);
+    m_BBSFile[1][2] = CBBSFile(solefBbsData, solefBbsSize);
+    m_BBSFile[1][3] = CBBSFile(solefBbsData, solefBbsSize);
+    m_BBSFile[1][4] = CBBSFile(solefBbsData, solefBbsSize);
+    m_BBSFile[1][5] = CBBSFile(solefBbsData, solefBbsSize);
+    m_BBSFile[1][6] = CBBSFile(cmnefBbsData, cmnefBbsSize);
 }
 
 int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)

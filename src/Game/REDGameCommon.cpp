@@ -1,5 +1,6 @@
 #include "REDGameCommon.h"
 
+#include <AASystemRED.h>
 #include <Scene/scene_Battle.h>
 #include <Scene/scene_Boot.h>
 
@@ -110,7 +111,9 @@ void REDGameCommon::ChangeScene()
 
 void REDGameCommon::Tick(float DeltaSeconds)
 {
+    AASystemRED::GetInstance();
     m_CurrentScene->Tick(DeltaSeconds);
+    m_CurrentScene->UpdateOnEndTick(DeltaSeconds);
     if (!red::cmn::g_SceneChangeFinish)
-        REDGameCommon::GetInstance()->ChangeScene();
+        ChangeScene();
 }
