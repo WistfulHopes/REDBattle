@@ -1,5 +1,6 @@
 #pragma once
 #include "Base/sys_RandomManager.h"
+#include "Base/sys_CameraManager.h"
 
 enum ERondomType
 {
@@ -14,7 +15,7 @@ private:
 	AASystemRED();
 	~AASystemRED();
 protected:
-	//AA_CCameraManager m_CameraManager; // 0x10
+	AA_CCameraManager m_CameraManager; // 0x10
 	//AA_CInputManager m_InputManager; // 0xA0
 	AA_CRandomManager m_RandomManager; // 0x130
 	//AA_CTaskManager m_TaskManager; // 0x1C0
@@ -27,7 +28,7 @@ protected:
 public:
 	AASystemRED(const AASystemRED &) = delete;
 	void Update();
-	//AA_CCameraManager & GetCameraManager();
+	AA_CCameraManager & GetCameraManager() { return m_CameraManager; }
 	//AA_CInputManager & GetInputManager();
 	AA_CRandomManager & GetRandomManager() { return m_RandomManager; }
 	AA_CRandMT * GetRandom(ERondomType);

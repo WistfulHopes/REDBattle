@@ -25,6 +25,7 @@ void SCENE_CBattle::SetupBattle()
     BattleObjectManager->ScriptAnalyze();
     BattleObjectManager->BOM_MatchOneceInitialize(false);
     BattleObjectManager->BOM_RoundAndEasyResetInitialize(false);
+    ScreenManager->ResetScreenManager();
     State->Setup();
     EventManager->Setup();
 }

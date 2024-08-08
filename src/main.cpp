@@ -98,8 +98,6 @@ int SDL_AppIterate(void* appstate)
         REDGameCommon::GetInstance()->Tick(deltaSeconds);
         frameTime += deltaSeconds;
         app->Accumulator -= deltaSeconds;
-        SDL_Log("Update time: %f", SDL_GetTicks() / 1000.f - time);
-        time = SDL_GetTicks() / 1000.f;
     }
     
     auto red = (std::sin(time) + 1) / 2.0 * 255;

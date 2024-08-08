@@ -11,7 +11,10 @@ private:
 	uint32_t value; // 0x0
 public:
 	AA_Handle(uint32_t);
-	AA_Handle();
+	AA_Handle() 
+	{
+		value = 0;
+	}
 	void Set(uint32_t);
 	uint32_t Get();
 	bool IsValid();

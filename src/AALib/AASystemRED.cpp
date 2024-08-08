@@ -9,6 +9,9 @@ AASystemRED::AASystemRED()
 
 void AASystemRED::Initialize()
 {
+    auto cam = new AA_CCamera();
+    m_CameraManager.RegistInstance(cam);
+
     for (int i = 0; i < 2; i++)
     {
         auto rand = new AA_CRandMT();

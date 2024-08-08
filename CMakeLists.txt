@@ -26,6 +26,7 @@ target_sources(${EXECUTABLE_NAME}
 PRIVATE 
     src/main.cpp
 	src/AALib/AASystemRED.cpp
+	src/AALib/Base/sys_Camera.cpp
 	src/AALib/Base/sys_Collision.cpp
 	src/AALib/Base/sys_RandomManager.cpp
 	src/AALib/Base/Jon/JonCommon.cpp
@@ -35,6 +36,7 @@ PRIVATE
 	src/AALib/Common/tl_RandMT.cpp
 	src/Game/REDGameCommon.cpp
 	src/Game/Battle/battle_ObjectManager.cpp
+	src/Game/Battle/battle_ScreenManager.cpp
 	src/Game/Battle/battle_TeamManager.cpp
 	src/Game/Battle/BattleEventManager.cpp
 	src/Game/Battle/BattlePlayerResult.cpp
