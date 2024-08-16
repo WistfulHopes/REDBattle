@@ -8,7 +8,7 @@ class AA_Handle
 		INVALID_HANDLE = 255,
 	};
 private:
-	uint32_t value; // 0x0
+	uint32_t value {}; // 0x0
 public:
 	AA_Handle(uint32_t);
 	AA_Handle() 
@@ -27,9 +27,9 @@ template<typename T>
 class AA_Flag
 {
 private:
-	T m_Flag; // 0x0
+	T m_Flag {}; // 0x0
 public:
-	static const uint32_t BIT_NUM; // 0xFFFFFFFFFFFFFFFF
+	static const uint32_t BIT_NUM {}; // 0xFFFFFFFFFFFFFFFF
 	AA_Flag(T);
 	AA_Flag();
 	bool Check(T);

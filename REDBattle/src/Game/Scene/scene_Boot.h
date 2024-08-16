@@ -11,10 +11,10 @@ public:
 	virtual void TickState(float DeltaSeconds) override;
 
 private:
-	class REDBootSequenceInit * SeqInit; // 0x50
-	class REDBootSequenceStaticLoad * SeqStaticLoad; // 0x58
-	class REDBootSequencePreLoadData * SeqPreLoadData; // 0x68
-	class REDBootSequenceSaveDataRoot * SeqSaveData; // 0x70
+	class REDBootSequenceInit * SeqInit {}; // 0x50
+	class REDBootSequenceStaticLoad * SeqStaticLoad {}; // 0x58
+	class REDBootSequencePreLoadData * SeqPreLoadData {}; // 0x68
+	class REDBootSequenceSaveDataRoot * SeqSaveData {}; // 0x70
 };
 
 class REDBootSequenceInit : public REDStateMachine 
@@ -53,7 +53,7 @@ public:
 	virtual void TickState(float DeltaSeconds) override;
 
 private:
-    float TotalTickTime;
+    float TotalTickTime {};
 };
 
 class SCENE_CBoot : public SCENE_CBase 
@@ -67,5 +67,5 @@ public:
     virtual void Tick(float DeltaSeconds) override;
     
 private:
-    REDBootSequenceRoot* Sequencer;
+    REDBootSequenceRoot* Sequencer {};
 };

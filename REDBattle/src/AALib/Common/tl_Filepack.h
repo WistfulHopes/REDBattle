@@ -4,7 +4,7 @@
 class AA_Filepack_FPAC
 {
 private:
-	void * m_pData; // 0x0
+	void * m_pData {}; // 0x0
 public:
 	uint32_t SearchFileIDFromHash(uint32_t namehash);
 	AA_Filepack_FPAC();

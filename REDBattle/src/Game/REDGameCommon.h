@@ -157,23 +157,23 @@ public:
 	static REDGameCommon* GetInstance();
 
 private:
-	GAME_MODE m_GameMode;
-	GAME_MODE m_PrevGameMode;
+	GAME_MODE m_GameMode {};
+	GAME_MODE m_PrevGameMode {};
 
-	PAD_ID m_MainQuadrant;
-	SIDE_ID m_MainPlayerSide;
+	PAD_ID m_MainQuadrant {};
+	SIDE_ID m_MainPlayerSide {};
 
-	uint64_t m_FrameCounter;
-	uint64_t m_FrameCounterEx;
+	uint64_t m_FrameCounter {};
+	uint64_t m_FrameCounterEx {};
 
-	EBGMID m_BgmID;
+	EBGMID m_BgmID {};
 
-	std::unique_ptr<SCENE_CBase> m_CurrentScene;
-	SCENE_ID m_CurrentSceneID;
-	SCENE_ID m_PrevSceneID;
+	std::unique_ptr<SCENE_CBase> m_CurrentScene {};
+	SCENE_ID m_CurrentSceneID {};
+	SCENE_ID m_PrevSceneID {};
 
 private:
-	REDBattlePlayerInfo BattlePlayerInfo[2];
+	REDBattlePlayerInfo BattlePlayerInfo[2] {};
 
 public:
 	void SetGameMode(GAME_MODE gameMode) 

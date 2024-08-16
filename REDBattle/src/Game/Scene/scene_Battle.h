@@ -20,11 +20,11 @@ public:
     BattleEventManager* GetBattleEventManager() { return EventManager.get(); }
 
 protected:
-    std::unique_ptr<BATTLE_CObjectManager> BattleObjectManager;
-    std::unique_ptr<BATTLE_CScreenManager> ScreenManager;
-    std::unique_ptr<BattleSettings> Settings;
-    std::unique_ptr<BattleState> State;
-    std::unique_ptr<BattleEventManager> EventManager;
+    std::unique_ptr<BATTLE_CObjectManager> BattleObjectManager {};
+    std::unique_ptr<BATTLE_CScreenManager> ScreenManager {};
+    std::unique_ptr<BattleSettings> Settings {};
+    std::unique_ptr<BattleState> State {};
+    std::unique_ptr<BattleEventManager> EventManager {};
 
 private:
     void SetupBattle();

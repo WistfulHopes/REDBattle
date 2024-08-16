@@ -4,25 +4,25 @@
 class AA_CCamera
 {
 protected:
-	AA_Matrix m_ViewMatrix; // 0x10
-	AA_Matrix m_ProjMatrix; // 0x50
-	AA_Matrix m_ViewProjMatrix; // 0x90
-	AA_Matrix m_InvViewProjMatrix; // 0xD0
-	AA_Vector4 m_FOVLeftPlane; // 0x110
-	AA_Vector4 m_FOVRightPlane; // 0x120
-	AA_Vector4 m_FOVTopPlane; // 0x130
-	AA_Vector4 m_FOVBottomPlane; // 0x140
-	AA_Matrix m_ViewProjMatrixFinal; // 0x150
-	AA_Vector3 m_Pos; // 0x190
-	AA_Vector3 m_Up; // 0x19C
-	AA_Vector3 m_At; // 0x1A8
-	AA_Vector3 m_BasePos; // 0x1B4
-	AA_Vector3 m_BaseUp; // 0x1C0
-	AA_Vector3 m_BaseAt; // 0x1CC
-	float m_FOV; // 0x1D8
-	float m_FrontClip; // 0x1DC
-	float m_BackClip; // 0x1E0
-	float m_AspectRatio; // 0x1E4
+	AA_Matrix m_ViewMatrix {}; // 0x10
+	AA_Matrix m_ProjMatrix {}; // 0x50
+	AA_Matrix m_ViewProjMatrix {}; // 0x90
+	AA_Matrix m_InvViewProjMatrix {}; // 0xD0
+	AA_Vector4 m_FOVLeftPlane {}; // 0x110
+	AA_Vector4 m_FOVRightPlane {}; // 0x120
+	AA_Vector4 m_FOVTopPlane {}; // 0x130
+	AA_Vector4 m_FOVBottomPlane {}; // 0x140
+	AA_Matrix m_ViewProjMatrixFinal {}; // 0x150
+	AA_Vector3 m_Pos {}; // 0x190
+	AA_Vector3 m_Up {}; // 0x19C
+	AA_Vector3 m_At {}; // 0x1A8
+	AA_Vector3 m_BasePos {}; // 0x1B4
+	AA_Vector3 m_BaseUp {}; // 0x1C0
+	AA_Vector3 m_BaseAt {}; // 0x1CC
+	float m_FOV {}; // 0x1D8
+	float m_FrontClip {}; // 0x1DC
+	float m_BackClip {}; // 0x1E0
+	float m_AspectRatio {}; // 0x1E4
 	void PlaneFromPoint(AA_Vector3 *pP0, AA_Vector3 *pP1, AA_Vector3 *pP2, AA_Vector4 *pPlane);
 public:
 	AA_CCamera();
@@ -80,9 +80,9 @@ public:
 };
 struct AA_CCamera::FRollbackData
 {
-	AA_Vector3 m_Pos; // 0x0
-	AA_Vector3 m_Up; // 0xC
-	AA_Vector3 m_At; // 0x18
+	AA_Vector3 m_Pos {}; // 0x0
+	AA_Vector3 m_Up {}; // 0xC
+	AA_Vector3 m_At {}; // 0x18
 	FRollbackData();
 	AA_CCamera::FRollbackData & operator=(AA_CCamera::FRollbackData &);
 	AA_CCamera::FRollbackData & operator=(const AA_CCamera::FRollbackData &);

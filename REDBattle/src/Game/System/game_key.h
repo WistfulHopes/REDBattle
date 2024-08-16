@@ -9,11 +9,11 @@ public:
 	{
 		NUM = 30,
 	};
-	unsigned short m_PreRecFlg; // 0x0
-	unsigned short m_CurRecFlg; // 0x2
-	unsigned short m_RecFlgList[30]; // 0x4
-	unsigned short m_RecFlgTime[30]; // 0x40
-	unsigned short m_CurIndex; // 0x7C
+	unsigned short m_PreRecFlg {}; // 0x0
+	unsigned short m_CurRecFlg {}; // 0x2
+	unsigned short m_RecFlgList[30] {}; // 0x4
+	unsigned short m_RecFlgTime[30] {}; // 0x40
+	unsigned short m_CurIndex {}; // 0x7C
 	static const unsigned short RECFLGTIME_MAX; // 0xFFFFFFFFFFFFFFFF
 	void UpdateBattleInputAnalyzer(unsigned short);
 	bool CheckCommand(CMD_KeyCommandID, uint32_t);

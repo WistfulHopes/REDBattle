@@ -23,10 +23,10 @@ public:
 	void ChangeSubState(REDStateMachine* state);
 
 private:
-	float StateTime; // 0x28
-	uint32_t TickCounter; // 0x2C
-	int32_t Result; // 0x30
-	REDStateMachine* CurrentSubState; // 0x38
+	float StateTime {}; // 0x28
+	uint32_t TickCounter {}; // 0x2C
+	int32_t Result {}; // 0x30
+	REDStateMachine* CurrentSubState {}; // 0x38
 };
 
 class REDStateMachineRoot : public REDStateMachine
@@ -37,5 +37,5 @@ public:
 	virtual void EndState() override;
 
 private:
-    bool bStarted;
+    bool bStarted {};
 };

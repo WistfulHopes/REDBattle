@@ -12,10 +12,10 @@ enum TASKSTATUS
 class AA_TaskNode : public AA_ListNode
 {
 private:
-	uint32_t m_TaskID; // 0x18
-	uint32_t m_Priority; // 0x1C
-	uint32_t m_TaskStatus; // 0x20
-	CXXBYTE<32> m_TaskName; // 0x24
+	uint32_t m_TaskID {}; // 0x18
+	uint32_t m_Priority {}; // 0x1C
+	uint32_t m_TaskStatus {}; // 0x20
+	CXXBYTE<32> m_TaskName {}; // 0x24
 public:
 	AA_TaskNode(AA_TaskNode &);
 	AA_TaskNode(const AA_TaskNode &);
@@ -47,11 +47,11 @@ public:
 class AA_TaskList
 {
 private:
-	static uint32_t m_GlobalTaskID; // 0xFFFFFFFFFFFFFFFF
+	static uint32_t m_GlobalTaskID {}; // 0xFFFFFFFFFFFFFFFF
 protected:
 	uint32_t ProductGlobalTaskID();
 private:
-	AA_LooseList m_NodeList; // 0x8
+	AA_LooseList m_NodeList {}; // 0x8
 public:
 	AA_TaskList(const AA_TaskList &);
 	AA_TaskList();
@@ -69,7 +69,7 @@ public:
 class AA_TaskSearchEngine_ID : public AA_TaskSearchEngine
 {
 private:
-	uint32_t m_KeyID; // 0x8
+	uint32_t m_KeyID {}; // 0x8
 public:
 	AA_TaskSearchEngine_ID(AA_TaskSearchEngine_ID &);
 	AA_TaskSearchEngine_ID(const AA_TaskSearchEngine_ID &);
@@ -82,7 +82,7 @@ public:
 class AA_TaskSearchEngine_Name : public AA_TaskSearchEngine
 {
 private:
-	CXXBYTE<32> m_KeyName; // 0x8
+	CXXBYTE<32> m_KeyName {}; // 0x8
 public:
 	AA_TaskSearchEngine_Name(AA_TaskSearchEngine_Name &);
 	AA_TaskSearchEngine_Name(const AA_TaskSearchEngine_Name &);
@@ -95,7 +95,7 @@ public:
 class AA_TaskSearchEngine_PriorityEqual : public AA_TaskSearchEngine
 {
 private:
-	uint32_t m_KeyPriority; // 0x8
+	uint32_t m_KeyPriority {}; // 0x8
 public:
 	AA_TaskSearchEngine_PriorityEqual(AA_TaskSearchEngine_PriorityEqual &);
 	AA_TaskSearchEngine_PriorityEqual(const AA_TaskSearchEngine_PriorityEqual &);
@@ -108,7 +108,7 @@ public:
 class AA_TaskSearchEngine_PriorityMask : public AA_TaskSearchEngine
 {
 private:
-	uint32_t m_KeyPriority; // 0x8
+	uint32_t m_KeyPriority {}; // 0x8
 public:
 	AA_TaskSearchEngine_PriorityMask(AA_TaskSearchEngine_PriorityMask &);
 	AA_TaskSearchEngine_PriorityMask(const AA_TaskSearchEngine_PriorityMask &);

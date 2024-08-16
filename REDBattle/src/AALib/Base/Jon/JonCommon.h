@@ -71,13 +71,13 @@ enum _COLSHAPE
 };
 struct _sCollisionType
 {
-	const char * m_CollisionName; // 0x0
-	_COLSHAPE m_Shape; // 0x8
-	uint32_t m_Color; // 0xC
-	const char * m_CollisionDispName; // 0x10
+	const char * m_CollisionName {}; // 0x0
+	_COLSHAPE m_Shape {}; // 0x8
+	uint32_t m_Color {}; // 0xC
+	const char * m_CollisionDispName {}; // 0x10
 };
 class string256
 {
 public:
-	char m_Buffer[256]; // 0x0
+	char m_Buffer[256] {}; // 0x0
 };

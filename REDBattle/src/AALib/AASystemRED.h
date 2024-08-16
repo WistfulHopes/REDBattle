@@ -11,13 +11,13 @@ enum ERondomType
 class AASystemRED
 {
 private:
-	bool m_bInitialized; // 0x8
+	bool m_bInitialized {}; // 0x8
 	AASystemRED();
 	~AASystemRED();
 protected:
-	AA_CCameraManager m_CameraManager; // 0x10
+	AA_CCameraManager m_CameraManager {}; // 0x10
 	//AA_CInputManager m_InputManager; // 0xA0
-	AA_CRandomManager m_RandomManager; // 0x130
+	AA_CRandomManager m_RandomManager {}; // 0x130
 	//AA_CTaskManager m_TaskManager; // 0x1C0
 	//GAME_SystemKeyController * m_SystemKey; // 0x1F0
 	//GAME_BattleKeyController * m_BattleKey[4]; // 0x1F8
@@ -37,7 +37,7 @@ public:
 	//GAME_BattleKeyController * GetBattleKeyFromPadID(PAD_ID);
 	//GAME_KeyboardKeyController * GetKeyboardKey();
 private:
-	static inline AASystemRED * s_Instance; // 0xFFFFFFFFFFFFFFFF
+	static inline AASystemRED * s_Instance {}; // 0xFFFFFFFFFFFFFFFF
 public:
 	static AASystemRED * GetInstance() { return s_Instance; }
 	static void StaticInitialize();

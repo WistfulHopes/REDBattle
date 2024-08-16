@@ -20,13 +20,13 @@ namespace EAxis
 class AA_LinearColor
 {
 public:
-    float R, G, B, A;
+    float R, G, B, A {};
 };
 
 class AA_Vector2
 {
 public:
-    float X, Y;
+    float X, Y {};
 
     AA_Vector2()
     {
@@ -55,7 +55,7 @@ public:
 class AA_Vector3
 {
 public:
-    float X, Y, Z;
+    float X, Y, Z {};
 
     AA_Vector3()
     {
@@ -174,7 +174,7 @@ public:
 class AA_Vector4
 {
 public:
-    float X, Y, Z, W;
+    float X, Y, Z, W {};
 
     AA_Vector4()
     {
@@ -230,7 +230,7 @@ public:
 
 class AA_Rotator
 {
-    float X, Y, Z;
+    float Pitch, Yaw, Roll {};
 };
 
 class AA_Matrix
@@ -238,7 +238,7 @@ class AA_Matrix
 public:
     union
     {
-        float M[4][4];
+        float M[4][4] {};
     };
 
     AA_Matrix()

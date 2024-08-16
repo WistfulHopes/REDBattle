@@ -6,8 +6,8 @@ template <typename T, int Count>
 class AA_ManagerBase
 {
 protected:
-	T* m_Instances[Count]; // 0x8
-	uint32_t m_InstanceNum; // 0x88
+	T* m_Instances[Count] {}; // 0x8
+	uint32_t m_InstanceNum {}; // 0x88
 protected:
 	void Cleanup();
 public:

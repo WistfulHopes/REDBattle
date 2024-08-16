@@ -7,7 +7,7 @@ uint32_t AA_MakeHashEasy(const char* s);
 class U32KEY
 {
 private:
-    uint32_t m_Key; // 0x0
+    uint32_t m_Key {}; // 0x0
 public:
     bool operator==(const U32KEY&);
     bool operator<(const U32KEY&);
@@ -19,7 +19,7 @@ public:
 class CHashKey
 {
 public:
-    U32KEY m_Key; // 0x0
+    U32KEY m_Key {}; // 0x0
     uint32_t GetHash() { return m_Key.GetKey(); }
     void SetKey(uint32_t key) { m_Key.SetKey(key); }
 };
@@ -37,7 +37,7 @@ class CHashKeyC32BYTE : public CHashKey {};
 class CHashNodeC32BYTE : public CHashNode
 {
 private:
-    CHashKeyC32BYTE m_HashKey; // 0x8
+    CHashKeyC32BYTE m_HashKey {}; // 0x8
 public:
     virtual CHashKey* GetKey() override
     {
@@ -51,9 +51,9 @@ template <typename T>
 class CHashTable
 {
 protected:
-    T* m_Node;
-    uint32_t m_NodeCnt;
-    uint32_t m_NodeMax;
+    T* m_Node {};
+    uint32_t m_NodeCnt {};
+    uint32_t m_NodeMax {};
 
     uint32_t GetHash(CHashKey* hashKey)
     {
@@ -85,7 +85,7 @@ public:
 class CHashNodeC32BYTEtoU32 : public CHashNodeC32BYTE
 {
 private:
-    uint32_t m_Data; // 0x10
+    uint32_t m_Data {}; // 0x10
 public:
     CHashNodeC32BYTEtoU32()
     {
@@ -113,7 +113,7 @@ private:
 	unsigned short m_ElmCount {}; // 0x2
 	unsigned short m_HashTable[V2] {}; // 0x4
 	unsigned short m_LinkTable[V1] {}; // 0x1E4
-	T m_ElmTable[V1]; // 0x25C
+	T m_ElmTable[V1] {}; // 0x25C
 public:
 	int32_t GetCount();
 	void Release()

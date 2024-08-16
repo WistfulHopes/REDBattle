@@ -6,7 +6,7 @@ template <int Length>
 class CXXBYTE
 {
 private:
-    char m_Buf[Length];
+    char m_Buf[Length] {};
 
 public:
 	CXXBYTE()
@@ -109,20 +109,20 @@ class AA_EasyMap
 public:
     AA_EasyMap() {}
 private:
-    T1 m_pKeyList[V1];
-    T2 m_pItemList[V1];
-    int32_t m_PSortList[V1];
-    int32_t m_Cursor[V2];
-    bool m_IsOverWriteInsert;
+    T1 m_pKeyList[V1] {};
+    T2 m_pItemList[V1] {};
+    int32_t m_PSortList[V1] {};
+    int32_t m_Cursor[V2] {};
+    bool m_IsOverWriteInsert {};
 };
 
 class CCmnRect
 {
 public:
-	float m_X; // 0x0
-	float m_Y; // 0x4
-	float m_W; // 0x8
-	float m_H; // 0xC
+	float m_X {}; // 0x0
+	float m_Y {}; // 0x4
+	float m_W {}; // 0x8
+	float m_H {}; // 0xC
 	CCmnRect(float, float, float, float);
 	CCmnRect();
 	void SetRect(float, float, float, float);
@@ -142,7 +142,7 @@ class BitArrayRED_NoInit
     enum {
         NUM_OF_U32_DATA_ARRAY = Num / 4,
     };
-    uint32_t m_U32DataArray[NUM_OF_U32_DATA_ARRAY]; // 0x0
+    uint32_t m_U32DataArray[NUM_OF_U32_DATA_ARRAY] {}; // 0x0
 	uint32_t GetBufferPos(T);
 	uint32_t GetOffset(T);
 	static uint32_t NumOfBits(uint32_t);

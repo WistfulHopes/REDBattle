@@ -4,8 +4,8 @@
 class AA_ListNode
 {
 private:
-	AA_ListNode * m_Next; // 0x8
-	AA_ListNode * m_Prev; // 0x10
+	AA_ListNode * m_Next {}; // 0x8
+	AA_ListNode * m_Prev {}; // 0x10
 	void SetNext(AA_ListNode *);
 	void SetPrev(AA_ListNode *);
 public:
@@ -20,8 +20,8 @@ public:
 class AA_LooseList
 {
 private:
-	AA_ListNode * m_Top; // 0x8
-	AA_ListNode * m_Tail; // 0x10
+	AA_ListNode * m_Top {}; // 0x8
+	AA_ListNode * m_Tail {}; // 0x10
 public:
 	AA_LooseList(const AA_LooseList &);
 	AA_LooseList();
@@ -46,8 +46,8 @@ public:
 class AA_LooseRingList
 {
 private:
-	AA_ListNode * m_Current; // 0x8
-	uint32_t m_NodeNum; // 0x10
+	AA_ListNode * m_Current {}; // 0x8
+	uint32_t m_NodeNum {}; // 0x10
 public:
 	AA_LooseRingList(const AA_LooseRingList &);
 	AA_LooseRingList();
@@ -64,7 +64,7 @@ public:
 class AA_LinearListNode
 {
 private:
-	AA_LinearListNode * m_Next; // 0x0
+	AA_LinearListNode * m_Next {}; // 0x0
 public:
 	AA_LinearListNode();
 	~AA_LinearListNode();
@@ -74,7 +74,7 @@ public:
 class AA_LinearList
 {
 private:
-	AA_LinearListNode * m_Top; // 0x8
+	AA_LinearListNode * m_Top {}; // 0x8
 public:
 	AA_LinearList(const AA_LinearList &);
 	AA_LinearList();
