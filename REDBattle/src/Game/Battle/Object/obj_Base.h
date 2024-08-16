@@ -173,8 +173,8 @@ public:
     EMemberID m_MemberID;
     EMemberID m_FixedMemberID;
     EBattleScript m_ScriptType;
-    AA_CCollision_JON m_ClsnAnalyzer;
-    AA_Filepack_FPAC m_ColPack;
+    AA_CCollision_JON m_ClsnAnalyzer {};
+    AA_Filepack_FPAC m_ColPack {};
 
     uint32_t m_ObjFlag;
     uint32_t m_ObjFlag2;
@@ -369,7 +369,7 @@ public:
 	CXXBYTE<32> m_CellName {};
 	int32_t m_CellTime;
 	int32_t m_CellTimeReserve;
-	int32_t m_CellMax;
+	int32_t m_CellTimeMax;
 	
     CXXBYTE<32> m_PreActionName;
     CXXBYTE<32> m_CurActionName;
@@ -378,11 +378,15 @@ public:
 	OBJ_CBaseRelativePtr m_pControlObject;
 	
 	bool m_IfReturnVal;
+	bool m_IsCellTimeStop;
+	bool m_CellTimeStopOnece;
 	
     CActionRequestInfo m_ActionRequestInfo;
     CActionRequestInfo m_ActionRequestInfoReg;
 
 	CVoiceInfo m_VoiceInfo;
+
+	int32_t m_DebugActionChangeCount;
 	
 	sSoundReq m_SoundReq;
 	
@@ -407,6 +411,11 @@ public:
 	STOP_TYPE CheckForceStop();
 	STOP_TYPE CheckForceStopSub();
 
+	bool ControlPhase_FrameStep();
+	virtual bool ControlPhase_PreFrameStep();
+	bool ControlPhase_AfterFrameStep();
+	virtual bool SubControlPhase_ScriptFrameStep(int count);
+	
 	bool IsAir() { return m_ActionFlag & OBJ_ACT_AIR || m_PosY > 0; }
     virtual bool IsDead();
 
@@ -417,7 +426,14 @@ public:
 
 	uint32_t GetObjDir();
 
+	bool IsActionRequested();
+	void ScriptFrameStep();
+	
+	virtual int DoInterrupt(ON_XXXX_INTRPT);
+	virtual void OnActionEnd();
+
 private:
+	uint8_t* ExecuteCellBeginToCellEnd(uint8_t* addr);
 	uint8_t* ExecuteNestCommand(uint8_t* addr, int recCount, bool* jumpDone, bool bJumpCheckOnly, bool* pForceStop);
 	int ExecuteFunctionBlock(const class CXXBYTE<32> & funcName);
 	int FuncCallBySwitchCaseTable(uint8_t* addr);
@@ -426,6 +442,8 @@ private:
 public:
 	void FuncCall(const class CXXBYTE<32> & funcName);
 
+	void SetPosXRawinBattle(int val);
+	
 	void WorldCollision(int on);	
 	void ScreenCollision(int on);
 

@@ -1,5 +1,6 @@
 #include "obj_Base.h"
 #include <cstring>
+#include <dinput.h>
 #include <intrin.h>
 #include <Game/Scene/scene_Battle.h>
 
@@ -52,7 +53,6 @@ int OBJ_CBase::ReleaseResource()
 {
     if (m_IsPlayerObj)
     {
-
     }
 
     m_pParentObj.ClearPtr();
@@ -64,7 +64,7 @@ int OBJ_CBase::ReleaseResource()
     {
         child.ClearPtr();
     }
-    
+
     for (auto& slave : m_pAttackSlave)
     {
         slave.ClearPtr();
@@ -142,6 +142,63 @@ STOP_TYPE OBJ_CBase::CheckForceStopSub()
     return (STOP_TYPE)(prevObj->m_HitStopTime || prevObj->m_HitStopTimeBySousai);
 }
 
+bool OBJ_CBase::ControlPhase_FrameStep()
+{
+    bool scriptReturn;
+    do
+    {
+        scriptReturn = SubControlPhase_ScriptFrameStep(m_DebugActionChangeCount);
+        m_DebugActionChangeCount++;
+    }
+    while (m_DebugActionChangeCount != 10 && IsActionRequested() && scriptReturn);
+
+    return false;
+}
+
+bool OBJ_CBase::ControlPhase_PreFrameStep()
+{
+    if (m_IsPlayerObj)
+    {
+    }
+    return false;
+}
+
+bool OBJ_CBase::ControlPhase_AfterFrameStep()
+{
+    return false;
+}
+
+bool OBJ_CBase::SubControlPhase_ScriptFrameStep(int count)
+{
+    if (IsActionRequested() && m_ActionRequestInfo.m_RequestFlag & 0x10 && m_HitStopTime)
+    {
+        m_HitStopTimeReq = 0;
+        m_HitStopTimeReqLevel = 0;
+        m_HitStopTime = 0;
+        m_bSlowHitstop = false;
+        m_HitStopTimeMax = 0;
+    }
+
+    auto forceStop = CheckForceStopSub();
+    if (!forceStop || forceStop == STOP_TYPE_ANTEN && IsActionRequested() && m_CollisionFlag & (OBJ_CLSN_GUARD_IMPACT |
+        OBJ_CLSN_DAMAGE_IMPACT))
+    {
+        ScriptFrameStep();
+        if (m_IsPlayerObj)
+        {
+            auto playerObj = (OBJ_CCharBase*)m_pParentPly.GetPtr();
+            // TODO check dizzy
+            playerObj->DelPlayerFlag2(PLFLG2_KIZETSU_ANIME_X_2);
+        }
+        m_ActionTime++;
+
+        DoInterrupt(ON_IDLING);
+    }
+
+    // TODO finish
+    return false;
+}
+
 bool OBJ_CBase::IsDead()
 {
     auto hpPercent = 10000 * m_HitPoint / m_HitPointMax;
@@ -156,7 +213,7 @@ OBJ_CCharBase* OBJ_CBase::GetMainPlayerBase(SIDE_ID side)
 {
     const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
         GetBattleObjectManager();
-   return objManager->GetTeamManager(side)->GetMainPlayer();
+    return objManager->GetTeamManager(side)->GetMainPlayer();
 }
 
 int OBJ_CBase::GetPosY()
@@ -185,6 +242,160 @@ uint32_t OBJ_CBase::GetObjDir()
         finalObj = i;
 
     return finalObj->m_Direction;
+}
+
+bool OBJ_CBase::IsActionRequested()
+{
+    return m_ActionRequestInfo.m_RequestName.GetStr() != nullptr || m_ActionRequestInfo.m_SomeSkillIsRequested ||
+        m_ActionRequestInfo.m_RequestFlag & 0x400000;
+}
+
+void OBJ_CBase::ScriptFrameStep()
+{
+    if (*(uint32_t*)m_CurAddr == ID_ActionEnd || m_ScriptFlag & 0x20 || *(uint32_t*)m_CurAddr == ID_ReqActionEnd)
+    {
+        if (m_CellTime + 1 >= m_CellTimeMax && !m_IsCellTimeStop && m_CellTimeMax != 0x7FFFFFFF)
+        {
+            DoInterrupt(ON_ACTION_END);
+            OnActionEnd();
+        }
+    }
+    if (!(m_ScriptFlag & 1) && !m_IsCellTimeStop)
+    {
+        if (m_CellTimeStopOnece) m_CellTimeStopOnece = false;
+        else
+        {
+            if (m_CellTime != 0x7FFFFFFE)
+            {
+                m_CellTime++;
+                if (m_CellTime < 0) m_CellTime = 0;
+            }
+            else m_CellTime = 0x7FFFFFFE;
+        }
+    }
+
+    // TODO a bunch of stuff
+
+    if (m_ActionRequestInfo.m_RequestName.GetStr())
+    {
+        
+    }
+    
+    if (*(uint32_t*)m_CurAddr != ID_ActionEnd)
+    {
+        if (m_CellTime >= m_CellTimeMax && !m_IsCellTimeStop && m_CellTimeMax != 0x7FFFFFFF)
+        {
+        }
+    }
+}
+
+int OBJ_CBase::DoInterrupt(ON_XXXX_INTRPT)
+{
+    return 0;
+}
+
+void OBJ_CBase::OnActionEnd()
+{
+}
+
+uint8_t* OBJ_CBase::ExecuteCellBeginToCellEnd(uint8_t* addr)
+{
+    m_ScriptFlag &= 0xFFFFFFE1;
+    bool jumpDone = false;
+    uint8_t* returnAddr = nullptr;
+    do
+    {
+        auto cmd = *(uint32_t*)addr;
+        returnAddr = addr;
+        if (cmd == ID_ActionEnd || cmd == ID_ReqActionEnd)
+        {
+            m_ScriptFlag |= 0x10;
+        }
+        else
+        {
+            if (cmd < ID_IfBegin && m_ScriptFlag & 2)
+            {
+                m_ScriptFlag |= 4;
+                addr = returnAddr;
+                continue;
+            }
+
+            LONG64 bittestVal = 0xC00000020100000FuLL;
+            bool bIsNestCommand = cmd == ID_IfBegin || (cmd - 6 <= ID_CheckTeamMemberName && BitTest64(
+                &bittestVal,
+                cmd - 6)) || cmd - ID_IfBeginCoType <= 2 || cmd == ID_IfBeginGameMode || cmd == ID_IfBeginCharaID;
+
+            if (bIsNestCommand)
+            {
+                if (cmd != ID_ElseBegin)
+                {
+                    FuncCallBySwitchCaseTable(addr);
+                    auto newAddr = GetSkipBeginEndAddr(addr);
+                    if (m_IfReturnVal)
+                    {
+                        returnAddr = &addr[commandSizeTable[*(uint32_t*)addr]];
+                        if (returnAddr != newAddr)
+                        {
+                            do
+                            {
+                                returnAddr = ExecuteNestCommand(returnAddr, 1, &jumpDone, false, nullptr);
+                            }
+                            while (!(m_ScriptFlag & 8) && returnAddr != newAddr);
+                        }
+                        else
+                        {
+                            returnAddr = newAddr;
+                            if (*(uint32_t*)returnAddr == ID_ElseBegin)
+                            {
+                                returnAddr += 4;
+                                newAddr = GetSkipBeginEndAddr(returnAddr);
+                                do
+                                {
+                                    returnAddr = ExecuteNestCommand(returnAddr, 1, &jumpDone, false, nullptr);
+                                }
+                                while (!(m_ScriptFlag & 8) && !(m_ScriptFlag & 10) && returnAddr != newAddr);
+                            }
+                        }
+                        addr = returnAddr;
+                        continue;
+                    }
+                }
+
+                returnAddr = GetSkipBeginEndAddr(addr);
+                addr = returnAddr;
+                continue;
+            }
+
+            FuncCallBySwitchCaseTable(addr);
+            if (cmd == ID_InterruptBegin)
+            {
+                returnAddr = GetSkipBeginEndAddr(addr);
+                addr = returnAddr;
+                continue;
+            }
+
+            returnAddr = m_GotoForLoopAddr;
+            if (m_GotoForLoopAddr)
+                m_GotoForLoopAddr = nullptr;
+            else
+                m_GotoForLoopAddr = &addr[commandSizeTable[*(uint32_t*)addr]];
+
+            if (m_ScriptGotoAddr)
+            {
+                returnAddr = m_ScriptGotoAddr;
+                m_ScriptGotoAddr = nullptr;
+            }
+        }
+        addr = returnAddr;
+    }
+    while (!(m_ScriptFlag & 0x14));
+
+    returnAddr += 4;
+
+    if (*(uint32_t*)returnAddr != ID_CellEnd)
+        return returnAddr - 4;
+
+    return returnAddr;
 }
 
 uint8_t* OBJ_CBase::ExecuteNestCommand(uint8_t* addr, int recCount, bool* jumpDone, bool bJumpCheckOnly,
@@ -392,20 +603,20 @@ uint8_t* OBJ_CBase::GetSkipBeginEndAddr(uint8_t* addr)
         auto nestAdd = nestLv + 1;
 
         auto end = &BeginEndList[0][1];
-        
+
         if (beginEndFound == false)
         {
             nestAdd = nestLv;
         }
 
         bool endFound = true;
-        
+
         while (*end != *(int32_t*)addr)
         {
             end += 2;
             if (end >= &BeginEndList[0][1] + 0x88)
             {
-                endFound = false;   
+                endFound = false;
             }
         }
 
@@ -428,6 +639,14 @@ void OBJ_CBase::FuncCall(const CXXBYTE<32>& funcName)
     ExecuteFunctionBlock(funcName);
     m_TmpReg = tmpReg;
     objManager->PopFuncCallArg();
+}
+
+void OBJ_CBase::SetPosXRawinBattle(int val)
+{
+    m_PosX = val;
+    
+    const auto battleScene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene());
+    m_PosX += 1000 * battleScene->GetBattleScreenManager()->GetWorldSideMove() * battleScene->GetBattleScreenManager()->GetWorldSideMoveValue();
 }
 
 void OBJ_CBase::WorldCollision(int on)

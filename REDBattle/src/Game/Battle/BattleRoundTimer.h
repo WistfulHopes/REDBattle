@@ -25,7 +25,7 @@ public:
 	void AddOverwriteTime(int32_t);
 	void SetTimeInfinite() { m_Infinity = true; }
 	void ResetTimeInfinite() { m_Infinity = false; }
-	void SetPause(bool);
+	void SetPause(bool pause) { m_Pause = false; }
 	bool IsPause();
 	bool IsTimeup();
 	bool IsInfinite();

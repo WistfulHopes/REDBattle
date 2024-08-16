@@ -8,6 +8,8 @@
 #include <Game/Scene/scene_Battle.h>
 #include "AALib/AASystemRED.h"
 
+const int StartupPositionX[2][3] { -252000, -504000, -756000, 252000, 504000, 756000 };
+
 int32_t IsControlPrioritySmallSub_(const void * _a, const void * _b)
 {
     auto objA = *(OBJ_CCharBase**)_a;
@@ -108,6 +110,9 @@ BATTLE_CObjectManager::BATTLE_CObjectManager()
     int cmnefBbsSize = 0;
     auto cmnefBbsData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\BBS_CMNEF.bbsbin").data(), &cmnefBbsSize);
     
+    int solColSize = 0;
+    auto solColData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\COL_SOL.pac").data(), &solColSize);
+
     m_BBSFile[0][0] = CBBSFile(solBbsData, solBbsSize);
     m_BBSFile[0][1] = CBBSFile(solBbsData, solBbsSize);
     m_BBSFile[0][2] = CBBSFile(solBbsData, solBbsSize);
@@ -123,6 +128,9 @@ BATTLE_CObjectManager::BATTLE_CObjectManager()
     m_BBSFile[1][4] = CBBSFile(solefBbsData, solefBbsSize);
     m_BBSFile[1][5] = CBBSFile(solefBbsData, solefBbsSize);
     m_BBSFile[1][6] = CBBSFile(cmnefBbsData, cmnefBbsSize);
+
+    m_CharVector[0].m_ColPack.SetPackFile(solColData);
+    m_CharVector[3].m_ColPack.SetPackFile(solColData);
 }
 
 int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)
@@ -593,6 +601,108 @@ void BATTLE_CObjectManager::AllActiveCheck()
     qsort(m_SortedObjPtrVector, sortCount + 1, sizeof(uintptr_t), IsControlPriorityBig_);
 }
 
+void BATTLE_CObjectManager::DeleteCheck()
+{
+    
+}
+
+void BATTLE_CObjectManager::ControlBattleObject()
+{
+    const auto battleScene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene());
+    if (battleScene->GetBattleState()->IsBattleDoing())
+    {
+        if (m_RoundTimer < 0xFFFFFFF) m_RoundTimer++;
+    }
+    if (m_UsesObjPtrVectorNum)
+    {
+        for (int i = 0; i < m_UsesObjPtrVectorNum; i++)
+        {
+            const auto objPtr = m_ObjPtrVector[i];
+            switch (objPtr->m_ActiveState)
+            {
+            case ACTV_WAITING_BEGIN:
+                if (!objPtr->m_WatchedCount) objPtr->m_ActiveState = ACTV_NOT_ACTIVE;
+                break;
+            case ACTV_WAITING_1:
+                objPtr->m_ActiveState = ACTV_WAITING_BEGIN;
+                break;
+            case ACTV_WAITING_2:
+                objPtr->m_ActiveState = ACTV_WAITING_1;
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
+    // TODO world stop (super freeze) countdown
+
+    // TODO key renewal (input check)
+
+    m_DrawTimer++;
+
+    if (!battleScene->GetBattleState()->IsBattleTempStop())
+    {
+        battleScene->GetBattleState()->GetRoundTimer()->SetPause(false);
+    }
+
+    m_BOMFlag &= 0xFFFFFEDF;
+    m_DiffusionFilter2LevelMax = 0;
+    m_DiffusionFilter2SaturationMin = 1000;
+
+    // TODO world stop (super freeze) update;
+
+    for (int i = 0; i < m_ActiveObjectCount; i++)
+    {
+        if (!m_SortedObjPtrVector[i]) break;
+
+        m_SortedObjPtrVector[i]->ControlPhase_PreFrameStep();
+    }
+
+    for (int i = 0; i < m_ActiveObjectCount; i++)
+    {
+        if (!m_SortedObjPtrVector[i]) break;
+
+        m_SortedObjPtrVector[i]->m_ObjSignal &= 0xFFFFF1EF;
+    }
+    
+    for (int i = 0; i < m_ActiveObjectCount; i++)
+    {
+        if (!m_SortedObjPtrVector[i]) break;
+
+        m_SortedObjPtrVector[i]->m_ObjSignal &= ~0x10u;
+        m_SortedObjPtrVector[i]->ControlPhase_FrameStep();
+    }
+
+    battleScene->GetBattleScreenManager()->StopScreenPositionUpdate(false);
+    
+    for (int i = 0; i < m_ActiveObjectCount; i++)
+    {
+        if (!m_SortedObjPtrVector[i]) break;
+
+        m_SortedObjPtrVector[i]->ControlPhase_AfterFrameStep();
+    }
+
+    DeleteCheck();
+
+    // TODO apply hit stop time
+
+    AllActiveCheck();
+    ControlBattleObject_Move();
+    ControlBattleObject_HitCollision();
+    AllActiveCheck();
+
+    // TODO finish
+}
+
+void BATTLE_CObjectManager::ControlBattleObject_Move()
+{
+}
+
+void BATTLE_CObjectManager::ControlBattleObject_HitCollision()
+{
+}
+
 void BATTLE_CObjectManager::TransferAirActionCount(OBJ_CCharBase* dst, OBJ_CCharBase* src)
 {
     int v3;
@@ -621,6 +731,11 @@ void BATTLE_CObjectManager::TransferAirActionCount(OBJ_CCharBase* dst, OBJ_CChar
             m_MikiwameMoveCountMax = src->m_MikiwameMoveCount;
         dst->m_MikiwameMoveCount = m_MikiwameMoveCountMax;
     }
+}
+
+int32_t BATTLE_CObjectManager::GetStartupPositionXBase(SIDE_ID side, EMemberID memberId)
+{
+    return StartupPositionX[side][memberId];
 }
 
 void BATTLE_CObjectManager::PushFuncCallArg(int arg0, int arg1, int arg2, int arg3)

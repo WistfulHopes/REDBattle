@@ -393,6 +393,7 @@ public:
 	short GetForceChangeCDT() { return ply_CDT_ForceChange; }
 	short GetInnerCDT() { return ply_CDT_Inner; }
 	bool CheckPlayerFlag(PLAYER_FLAG flag) { return m_PlayerFlag & flag; }
+	void DelPlayerFlag2(PLAYER_FLAG2 flag) { m_PlayerFlag2 &= ~flag; }
 	void AddPlayerFlag4(PLAYER_FLAG4 flag) { m_PlayerFlag4 |= flag; }
 	void DelPlayerFlag4(PLAYER_FLAG4 flag) { m_PlayerFlag4 &= ~flag; }
 	bool CheckPlayerFlag4(PLAYER_FLAG4 flag) { return m_PlayerFlag4 & flag; }

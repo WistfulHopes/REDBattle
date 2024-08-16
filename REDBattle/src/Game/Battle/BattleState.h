@@ -36,7 +36,7 @@ public:
 	void RoundStart();
 	void RoundReset();
 	void RoundEnd();
-	RoundTimer * GetRoundTimer();
+	RoundTimer * GetRoundTimer() { return &m_Timer; }
 	PlayerResult * GetPlayerResult(SIDE_ID);
 	PlayerResult GetPlayerResultTmp(SIDE_ID);
 	void SetFinalRound();

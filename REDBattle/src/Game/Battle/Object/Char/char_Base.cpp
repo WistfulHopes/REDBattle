@@ -2,6 +2,8 @@
 
 #include <Game/Scene/scene_Battle.h>
 
+#include "char_ActCmn.h"
+
 void OBJ_CCharBase::ObjectConstructor_ForPlayer()
 {
     const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
@@ -12,6 +14,26 @@ void OBJ_CCharBase::ObjectConstructor_ForPlayer()
 
 void OBJ_CCharBase::PlayerInitializeOnEasyReset()
 {
+    FuncCall("cmn_SkillInit");
+    FuncCall("cmn_VoiceInit");
+    FuncCall(FN_RoundInit);
+    FuncCall("cmnPositiveBonusEnd");
+
+    int startPosition = 0;
+    
+    const auto battleScene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene());
+    if (battleScene->GetBattleObjectManager())
+    {
+        startPosition = battleScene->GetBattleObjectManager()->GetStartupPositionXBase(m_SideID, m_MemberID);
+    }
+
+    SetPosXRawinBattle(startPosition);
+    if (GetMainPlayerBase(m_SideID) == this)
+    {
+        ActionRequestForce(AN_CmnActStand);
+        m_EntryBattle = true;
+        m_EntryBattleDoing = true;
+    }
 }
 
 bool OBJ_CCharBase::IsDead()

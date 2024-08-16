@@ -27,7 +27,7 @@ void RaylibState::UpdateCamera()
     cam3D.target.x = sysCamera->GetLookAt().X;
     cam3D.target.y = sysCamera->GetLookAt().Y;
     cam3D.target.z = sysCamera->GetLookAt().Z;
-    cam3D.fovy = atanf(sysCamera->GetFOV()) * 57.2957795;
+    cam3D.fovy = atanf(sysCamera->GetFOV()) * 57.2957795f;
 }
 
 void RaylibState::Draw()

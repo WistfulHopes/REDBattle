@@ -211,15 +211,15 @@ public:
 	uint32_t GetFlag();
 	bool RequestShake(float, float);
 	BATTLE_ScreenCameraControl * GetScreenCameraControl() { return &m_ScreenCameraControl; }
-	void StopScreenPositionUpdate(bool);
+	void StopScreenPositionUpdate(bool stop) { m_bStopScreenPositionUpdate = stop; } 
 	void StopZoomCamera(bool);
 	void ResetWorldSideMove(unsigned char);
 	int32_t GetWorldSideCountMax();
 	void AddWorldSideMove(int32_t);
-	int32_t GetWorldSideMove();
+	int32_t GetWorldSideMove() { return m_WorldSideMoveValue; }
 	int32_t GetWorldSideMoveDir();
 	int32_t GetWorldSideMoveResetDir();
-	int32_t GetWorldSideMoveValue();
+	int32_t GetWorldSideMoveValue() { return 1600; }
 	int32_t GetWorldSideMove_ObjOffsetX();
 	const AA_Matrix & GetOffsetMatrix();
 	AA_Vector3 ApplyOffsetMatrix(AA_Vector3 *, AA_Rotator *);

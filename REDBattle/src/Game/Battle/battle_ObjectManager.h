@@ -418,7 +418,7 @@ public:
 	void SetTensGaugeColor(int32_t, uint32_t, uint32_t);
 	bool IsPlayingCutScene();
 	void TransferAirActionCount(OBJ_CCharBase* dst, OBJ_CCharBase* src);
-	int32_t GetStartupPositionXBase(SIDE_ID, EMemberID);
+	int32_t GetStartupPositionXBase(SIDE_ID side, EMemberID memberId);
 	void TransferMemberIndexInTrainingMode();
 	void SetStartupPositionInTrainingMode();
 	void SetInitVitalSettingInTrainingMode();
