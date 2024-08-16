@@ -1,2 +1,15 @@
 build/
 .vscode/
+bin/
+
+.vs/
+
+.idea/
+
+REDBattle.sln
+
+REDBattle.vcxproj
+
+REDBattle.vcxproj.filters
+
+REDBattle.vcxproj.user
