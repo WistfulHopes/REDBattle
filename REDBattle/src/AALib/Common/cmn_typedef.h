@@ -17,8 +17,8 @@ public:
     CXXBYTE(const char* str);
     CXXBYTE& operator=(const char* str);
     CXXBYTE& operator+=(const char* str);
-    const char* GetStr() const { return m_Buf; }
-    char* GetStrV() const { return m_Buf; }
+    [[nodiscard]] const char* GetStr() const { return m_Buf; }
+    [[nodiscard]] char* GetStrV() { return m_Buf; }
 };
 
 template <int Length>

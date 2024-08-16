@@ -200,8 +200,8 @@ public:
 	void SetPosW(int32_t);
 	void ResetCamera();
 	AA_Handle & GetLinkCamera();
-	float GetLinkMagn();
-	float GetLinkMagnRecip();
+	float GetLinkMagn() { return m_LinkMagn; }
+	float GetLinkMagnRecip() { return m_LinkMagnRecip; }
 	AA_CCamera * GetLinkCameraInstance();
 	void ResetFlag();
 	void AddFlag(uint32_t);

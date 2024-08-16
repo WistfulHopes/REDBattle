@@ -304,8 +304,8 @@ public:
         : AA_Matrix(
             AA_Vector4(MultFOVX / tanf(HalfFOVX), 0.0f, 0.0f, 0.0f),
             AA_Vector4(0.0f, MultFOVY / tanf(HalfFOVY), 0.0f, 0.0f),
-            AA_Vector4(0.0f, 0.0f, ((MinZ == MaxZ) ? (1.0f - Z_PRECISION) : MaxZ / (MaxZ - MinZ)), 1.0f),
-            AA_Vector4(0.0f, 0.0f, -MinZ * ((MinZ == MaxZ) ? (1.0f - Z_PRECISION) : MaxZ / (MaxZ - MinZ)), 0.0f)
+            AA_Vector4(0.0f, 0.0f, MinZ == MaxZ ? 1.0f - Z_PRECISION : MaxZ / (MaxZ - MinZ), 1.0f),
+            AA_Vector4(0.0f, 0.0f, -MinZ * (MinZ == MaxZ ? 1.0f - Z_PRECISION : MaxZ / (MaxZ - MinZ)), 0.0f)
         )
     {
     }

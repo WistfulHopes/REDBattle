@@ -3,7 +3,7 @@
 
 void AA_CCamera::PlaneFromPoint(AA_Vector3* pP0, AA_Vector3* pP1, AA_Vector3* pP2, AA_Vector4* pPlane)
 {
-    auto v0 = (*pP2 - *pP0) ^ (*pP1 - *pP0);
+    auto v0 = *pP2 - *pP0 ^ *pP1 - *pP0;
     auto v1 = v0.GetSafeNormal();
     pPlane->SetX(v1.GetX());
     pPlane->SetY(v1.GetY());
@@ -50,15 +50,15 @@ void AA_CCamera::CreateFOVPlane()
     auto p2 = AA_Vector3(-(tangent * m_BackClip * m_AspectRatio), m_BackClip * tangent, m_BackClip);
     PlaneFromPoint(&p0, &p1, &p2, &m_FOVLeftPlane);
 
-    p1 = AA_Vector3((tangent * m_BackClip * m_AspectRatio), m_BackClip * tangent, m_BackClip);
-    p2 = AA_Vector3((tangent * m_BackClip * m_AspectRatio), -m_BackClip * tangent, m_BackClip);
+    p1 = AA_Vector3(tangent * m_BackClip * m_AspectRatio, m_BackClip * tangent, m_BackClip);
+    p2 = AA_Vector3(tangent * m_BackClip * m_AspectRatio, -m_BackClip * tangent, m_BackClip);
     PlaneFromPoint(&p0, &p1, &p2, &m_FOVRightPlane);
 
     p1 = AA_Vector3(-(tangent * m_BackClip * m_AspectRatio), m_BackClip * tangent, m_BackClip);
-    p2 = AA_Vector3((tangent * m_BackClip * m_AspectRatio), m_BackClip * tangent, m_BackClip);
+    p2 = AA_Vector3(tangent * m_BackClip * m_AspectRatio, m_BackClip * tangent, m_BackClip);
     PlaneFromPoint(&p0, &p1, &p2, &m_FOVTopPlane);
 
-    p1 = AA_Vector3((tangent * m_BackClip * m_AspectRatio), -m_BackClip * tangent, m_BackClip);
+    p1 = AA_Vector3(tangent * m_BackClip * m_AspectRatio, -m_BackClip * tangent, m_BackClip);
     p2 = AA_Vector3(-(tangent * m_BackClip * m_AspectRatio), -m_BackClip * tangent, m_BackClip);
     PlaneFromPoint(&p0, &p1, &p2, &m_FOVBottomPlane);
 }

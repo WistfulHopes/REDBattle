@@ -2693,7 +2693,7 @@ unsigned char* CBBSFileAnalyzeData::GetFuncAddrBase(const CXXBYTE<32>& funcName,
 
     while (true)
     {
-        auto index = (count + prevCount) >> 1;
+        auto index = count + prevCount >> 1;
         node = &pTable->m_Node[index];
         auto key = node->GetKey();
         if (key->GetHash() == hash) break;

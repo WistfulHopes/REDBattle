@@ -17,6 +17,10 @@ private:
 public:
 	AA_CCollision_JON();
 	bool AnalyzeCollisionFile(const void * col);
+	uint32_t GetImageFileNum() { return m_ImageFileNum; }
+	const char * GetImageFileName(int32_t idx) { return m_ImageFileName[idx]; }
 	const wchar_t * GetAnimeName();
 	int32_t GetAnimeFrame();
+	CCmnRect GetViewTextureRect(int32_t idx) { return m_ViewAddr[idx].m_TextureRect; }
+	CCmnRect GetViewWorldRect(int32_t idx)  { return m_ViewAddr[idx].m_WorldRect; }
 };

@@ -207,9 +207,9 @@ uint8_t* OBJ_CBase::ExecuteNestCommand(uint8_t* addr, int recCount, bool* jumpDo
             }
         }
         uint64_t bits = 0xC00000020100000F;
-        bool isIfBegin = command == ID_IfBegin || (command - 6) <= ID_CheckTeamMemberName &&
+        bool isIfBegin = command == ID_IfBegin || command - 6 <= ID_CheckTeamMemberName &&
             _bittest64((const __int64*)&bits, (unsigned __int16)(command - 6))
-            || (command - ID_IfBeginCoType) <= 2
+            || command - ID_IfBeginCoType <= 2
             || command == ID_IfBeginGameMode
             || command == ID_IfBeginCharaID;
 

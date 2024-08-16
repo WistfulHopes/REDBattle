@@ -1,16 +1,22 @@
-﻿#include "RenderState.h"
+﻿#include "RaylibState.h"
+
+#include "RaylibActor.h"
 #include "AALib/Base/sys_Camera.h"
 
-void RenderState::Init()
+void RaylibState::Init()
 {
     cam3D.up = {0, 1, 0};
     cam3D.fovy = 54;
     cam3D.projection = CAMERA_PERSPECTIVE;
 }
 
-void RenderState::UpdateCamera()
+void RaylibState::UpdateCamera()
 {
     if (!sysCamera) return;
+
+    cam.offset = Vector2 { 160, 200 };
+    cam.target = Vector2 { sysCamera->GetPos().X, sysCamera->GetPos().Y };
+    cam.rotation = 0;
     
     cam3D.position.x = sysCamera->GetPos().X;
     cam3D.position.y = sysCamera->GetPos().Y;
@@ -24,7 +30,7 @@ void RenderState::UpdateCamera()
     cam3D.fovy = atanf(sysCamera->GetFOV()) * 57.2957795;
 }
 
-void RenderState::Draw()
+void RaylibState::Draw()
 {
     UpdateCamera();
 
@@ -39,4 +45,19 @@ void RenderState::Draw()
     DrawCubeWiresV({0, 50, 0}, {10, 10, 10}, MAROON);
 
     EndMode3D();
+
+    BeginMode2D(cam);
+
+    for (auto actor : actors)
+    {
+        actor->Draw();
+    }
+    
+    EndMode2D();
+}
+
+void RaylibState::AddRaylibActor(OBJ_CBase* obj)
+{
+    actors.push_back(new RaylibActor(obj));
+    actors.back()->LoadSprites();
 }

@@ -361,7 +361,7 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
         *teamMemberIndex = memberID;
 
         memberID = MemberID_03;
-        if ((charObj)->IsEntry()) memberID = (charObj)->m_FixedMemberID;
+        if (charObj->IsEntry()) memberID = charObj->m_FixedMemberID;
         *(teamMemberIndex + 1) = memberID;
 
         m_TeamManager->RoundReset();

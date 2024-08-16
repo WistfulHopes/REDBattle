@@ -10,7 +10,7 @@ bool AA_CRandMT::Init(uint32_t start)
 
     for (int i = 1; i < 624; i++)
     {
-        *state = (i + 1812433253 * (*(state - 1) ^ (*(state - 1) >> 30)));
+        *state = i + 1812433253 * (*(state - 1) ^ *(state - 1) >> 30);
     }
 
     m_Left = 1;

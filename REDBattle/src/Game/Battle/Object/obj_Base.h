@@ -365,6 +365,11 @@ public:
 	uint8_t* m_TopAddr;
 	uint8_t* m_CurAddr;
 	uint8_t* m_CurActionTopAddr;
+
+	CXXBYTE<32> m_CellName {};
+	int32_t m_CellTime;
+	int32_t m_CellTimeReserve;
+	int32_t m_CellMax;
 	
     CXXBYTE<32> m_PreActionName;
     CXXBYTE<32> m_CurActionName;
@@ -402,7 +407,7 @@ public:
 	STOP_TYPE CheckForceStop();
 	STOP_TYPE CheckForceStopSub();
 
-	bool IsAir() { return (m_ActionFlag & OBJ_ACT_AIR) || m_PosY > 0; }
+	bool IsAir() { return m_ActionFlag & OBJ_ACT_AIR || m_PosY > 0; }
     virtual bool IsDead();
 
 	OBJ_CCharBase* GetMainPlayerBase(SIDE_ID side);
@@ -432,7 +437,7 @@ public:
 	
 	bool IsDamage()
 	{
-		return (m_CollisionFlag & OBJ_CLSN_DAMAGE_IMPACT) && (m_CollisionFlag & OBJ_CLSN_DAMAGE);
+		return m_CollisionFlag & OBJ_CLSN_DAMAGE_IMPACT && m_CollisionFlag & OBJ_CLSN_DAMAGE;
 	}
 
 	void ZLine(ZLINE line, ZLINE_LEVEL level);

@@ -21,7 +21,7 @@ uint32_t AA_Filepack_FPAC::SearchFileIDFromHash(uint32_t namehash)
         }
         while (true)
         {
-            result = ((count + unk) >> 1);
+            result = count + unk >> 1;
             auto hash = *(int32_t*)&offset[16 * (int)result + 12];
             if (hash == namehash) return result;
             auto unk2 = result + 1;
@@ -43,7 +43,7 @@ uint32_t AA_Filepack_FPAC::SearchFileIDFromHash(uint32_t namehash)
         }
         while (true)
         {
-            result = ((count + unk) >> 1);
+            result = count + unk >> 1;
             auto hash = *(int32_t*)&offset[80 * (int)result + 76];
             if (hash == namehash) return result;
             auto unk2 = result + 1;
@@ -65,7 +65,7 @@ uint32_t AA_Filepack_FPAC::SearchFileIDFromHash(uint32_t namehash)
         }
         while (true)
         {
-            result = ((count + unk) >> 1);
+            result = count + unk >> 1;
             auto hash = *(int32_t*)&offset[48 * (int)result + 44];
             if (hash == namehash) return result;
             auto unk2 = result + 1;
@@ -93,11 +93,12 @@ void* AA_Filepack_FPAC::GetPackOffsetAddr(uint32_t num)
     if (header->numFile < num) return nullptr;
     auto stylePack = header->stylePack;
     if ((int)stylePack >= 0)
-        return (char*)m_pData + (uint32_t)((char*)m_pData + num * (((header->maxlenName + 12) & 0xFFFFFFF0) + 16) + header->maxlenName + 36) + header->sizeHeader;
+        return (char*)m_pData + (uint32_t)((char*)m_pData + num * ((header->maxlenName + 12 & 0xFFFFFFF0) + 16) + header
+            ->maxlenName + 36) + header->sizeHeader;
     if ((stylePack & FPACST_ID_ONLY) != 0)
         return (char*)m_pData + ((uint32_t*)m_pData)[4 * num + 9] + header->sizeHeader;
 
-    uint64_t offset = 0;
+    uint64_t offset;
 
     if ((stylePack & FPACST_LONGNAME) != 0)
         offset = ((uint32_t*)m_pData)[20 * num + 25];
@@ -105,6 +106,27 @@ void* AA_Filepack_FPAC::GetPackOffsetAddr(uint32_t num)
         offset = ((uint32_t*)m_pData)[12 * num + 17];
 
     return (char*)m_pData + offset + header->sizeHeader;
+}
+
+uint32_t AA_Filepack_FPAC::GetPackOffsetFileSize(uint32_t num)
+{
+    auto header = (FILEPACK_HEADER*)m_pData;
+    if (header->numFile < num) return 0;
+    auto stylePack = header->stylePack;
+    if ((int)stylePack >= 0)
+        return (uint32_t)m_pData + (uint32_t)((char*)m_pData + num * ((header->maxlenName + 12 & 0xFFFFFFF0) + 16) +
+            header->maxlenName + 37) + header->sizeHeader;
+    if ((stylePack & FPACST_ID_ONLY) != 0)
+        return (uint32_t)m_pData + ((uint32_t*)m_pData)[4 * num + 10] + header->sizeHeader;
+
+    uint32_t offset;
+
+    if ((stylePack & FPACST_LONGNAME) != 0)
+        offset = ((uint32_t*)m_pData)[20 * num + 26];
+    else
+        offset = ((uint32_t*)m_pData)[12 * num + 18];
+
+    return (uint32_t)m_pData + offset + header->sizeHeader;
 }
 
 const char* AA_Filepack_FPAC::GetPackFileNum2FileName(uint32_t num)
@@ -115,8 +137,8 @@ const char* AA_Filepack_FPAC::GetPackFileNum2FileName(uint32_t num)
     auto stylePack = header->stylePack;
     if ((stylePack & FPACST_ID_ONLY) != 0) return nullptr;
 
-    if (stylePack >= 0)
-        return (char*)m_pData + num * (((header->maxlenName + 12) & 0xFFFFFFF0) + 16) + 32;
+    if ((int32_t)stylePack >= 0)
+        return (char*)m_pData + num * ((header->maxlenName + 12 & 0xFFFFFFF0) + 16) + 32;
 
     char* offset = (char*)m_pData + 32;
     int index;
@@ -142,7 +164,7 @@ uint32_t AA_Filepack_FPAC::SearchFileID(const char* pFileName)
         while (true)
         {
             if ((stylePack & FPACST_ID_ONLY) != 0) unk = 0;
-            else 
+            else
             {
                 auto offset = 0;
                 if ((int)stylePack < 0)
@@ -151,14 +173,14 @@ uint32_t AA_Filepack_FPAC::SearchFileID(const char* pFileName)
                     if ((stylePack & FPACST_LONGNAME) == 0) tempOffset = 3 * index;
                     offset = 16 * tempOffset;
                 }
-                else offset = index * ((header->maxlenName + 12) & 0xFFFFFFF0) + 16;
+                else offset = index * (header->maxlenName + 12 & 0xFFFFFFF0) + 16;
 
                 unk = (char*)m_pData + offset + 32;
             }
             auto start = pFileName - unk;
             auto offset = 0;
             auto final = 0;
-            do 
+            do
             {
                 offset = start[unk];
                 final = *(uint8_t*)(unk - offset);
@@ -172,7 +194,7 @@ uint32_t AA_Filepack_FPAC::SearchFileID(const char* pFileName)
         }
         return index;
     }
-    
+
     return -1;
 }
 

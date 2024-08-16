@@ -4,10 +4,10 @@
 #include <vector>
 #include <raylib.h>
 
-#include "RenderState.h"
+#include "raylib_interface/RaylibState.h"
 #include "AALib/AASystemRED.h"
 
-#define ONE_FRAME 1.f / 60.f
+#define ONE_FRAME (1.f / 60.f)
 
 int main()
 {
@@ -16,7 +16,7 @@ int main()
     InitWindow(screenWidth, screenHeight, "REDBattle");
     SetTargetFPS(60);
     const RenderTexture2D renderTexture = LoadRenderTexture(screenWidth, screenHeight);
-    RenderState renderState{};
+    RaylibState raylibState{};
 
     float elapsedTime = 0.f;
 
@@ -32,14 +32,14 @@ int main()
         }
 
         if (AASystemRED::GetInstance()) {
-            renderState.SetSysCamera(AASystemRED::GetInstance()->GetCameraManager().Get(0));
+            raylibState.SetSysCamera(AASystemRED::GetInstance()->GetCameraManager().Get(0));
         }
 
         BeginDrawing();
 
         BeginTextureMode(renderTexture);
         ClearBackground(RAYWHITE);
-        renderState.Draw();
+        raylibState.Draw();
         EndTextureMode();
 
         DrawTexturePro(
