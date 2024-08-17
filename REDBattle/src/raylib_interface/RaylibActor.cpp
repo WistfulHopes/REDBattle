@@ -87,26 +87,26 @@ void RaylibActor::Draw()
     else dest.x -= parentObj->m_ClsnAnalyzer.GetViewWorldRect(0).m_X * scene->GetBattleScreenManager()->GetLinkMagn();
     dest.y += parentObj->m_ClsnAnalyzer.GetViewWorldRect(0).m_Y * scene->GetBattleScreenManager()->GetLinkMagn();
 
-    Vector2 texcoords[4];
+    Vector2 texCoords[4];
 
     if (parentObj->GetObjDir() == 0)
     {
-        texcoords[0] = Vector2{
+        texCoords[0] = Vector2{
             parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_X / (float)textures[imgName].width,
             -parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_Y / (float)textures[imgName].height
         };
-        texcoords[1] = Vector2{
+        texCoords[1] = Vector2{
             parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_X / (float)textures[imgName].width,
             -(parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_Y + parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_H)
             / (float)textures[imgName].height
         };
-        texcoords[2] = Vector2{
+        texCoords[2] = Vector2{
             (parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_X + parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_W)
             / (float)textures[imgName].width,
             -(parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_Y + parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_H)
             / (float)textures[imgName].height
         };
-        texcoords[3] = Vector2{
+        texCoords[3] = Vector2{
             (parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_X + parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_W)
             / (float)textures[imgName].width,
             -parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_Y / (float)textures[imgName].height
@@ -114,27 +114,27 @@ void RaylibActor::Draw()
     }
     else
     {
-        texcoords[0] = Vector2{
+        texCoords[0] = Vector2{
             (parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_X + parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_W)
             / (float)textures[imgName].width,
             -parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_Y / (float)textures[imgName].height
         };
-        texcoords[1] = Vector2{
+        texCoords[1] = Vector2{
             (parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_X + parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_W)
             / (float)textures[imgName].width,
             -(parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_Y + parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_H)
             / (float)textures[imgName].height
         };
-        texcoords[2] = Vector2{
+        texCoords[2] = Vector2{
             parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_X / (float)textures[imgName].width,
             -(parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_Y + parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_H)
             / (float)textures[imgName].height
         };
-        texcoords[3] = Vector2{
+        texCoords[3] = Vector2{
             parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_X / (float)textures[imgName].width,
             -parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_Y / (float)textures[imgName].height
         };
     }
 
-    DrawTexturePlane(textures[imgName], dest, size, texcoords, WHITE);
+    DrawTexturePlane(textures[imgName], dest, size, texCoords, WHITE);
 }

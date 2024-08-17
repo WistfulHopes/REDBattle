@@ -37,10 +37,9 @@ namespace red
     {
         inline void GamePos2RaylibPos(const int32_t& x, const int32_t& y, const int32_t& z, Vector3& v)
         {
-            auto scene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene());
-            if (scene)
+            if (const auto scene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene()))
             {
-                auto linkMagn = scene->GetBattleScreenManager()->GetLinkMagn();
+                const auto linkMagn = scene->GetBattleScreenManager()->GetLinkMagn();
                 v.x = (float)x * 0.001f * linkMagn;
                 v.y = (float)y * 0.001f * linkMagn;
                 v.z = (float)z * 0.001f * linkMagn;

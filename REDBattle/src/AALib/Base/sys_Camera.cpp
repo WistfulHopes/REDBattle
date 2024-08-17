@@ -31,10 +31,8 @@ AA_CCamera::AA_CCamera()
 
 bool AA_CCamera::Update()
 {
-    auto halfFOV = m_FOV * 0.5f;
-
     m_ViewMatrix = AA_Matrix(m_Pos, m_At, m_Up);
-    m_ProjMatrix = AA_Matrix(halfFOV, halfFOV, 1, 1, m_FrontClip, m_BackClip);
+    m_ProjMatrix = AA_Matrix(m_FOV, m_AspectRatio, m_FrontClip, m_BackClip);
     m_ViewProjMatrix = m_ViewMatrix.Mult(m_ProjMatrix);
     m_InvViewProjMatrix = m_ViewProjMatrix.Inverse();
     CreateFOVPlane();

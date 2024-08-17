@@ -292,14 +292,11 @@ public:
         *this = *(AA_Matrix*)&matrix;
     }
 
-    AA_Matrix(float HalfFOVX, float HalfFOVY, float MultFOVX, float MultFOVY, float MinZ, float MaxZ)
-        : AA_Matrix(
-            AA_Vector4(MultFOVX / tanf(HalfFOVX), 0.0f, 0.0f, 0.0f),
-            AA_Vector4(0.0f, MultFOVY / tanf(HalfFOVY), 0.0f, 0.0f),
-            AA_Vector4(0.0f, 0.0f, MinZ == MaxZ ? 1.0f - Z_PRECISION : MaxZ / (MaxZ - MinZ), 1.0f),
-            AA_Vector4(0.0f, 0.0f, -MinZ * (MinZ == MaxZ ? 1.0f - Z_PRECISION : MaxZ / (MaxZ - MinZ)), 0.0f)
-        )
+    AA_Matrix(float FOVY, float AspectRatio, float MinZ, float MaxZ)
     {
+        auto matrix = MatrixPerspective(FOVY, AspectRatio, MinZ, MaxZ);
+
+        *this = *(AA_Matrix*)&matrix;        
     }
 
     void Set(AA_Vector4 a, AA_Vector4 b, AA_Vector4 c, AA_Vector4 d)

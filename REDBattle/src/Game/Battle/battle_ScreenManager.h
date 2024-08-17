@@ -150,7 +150,7 @@ private:
         void Initialize();
     };
 	OBJ_BOX m_ObjBox; // 0x210
-	const OBJ_BOX * ObjBox();
+	const OBJ_BOX * ObjBox() { return &m_ObjBox; }
 	void ResetWorldSide();
 	void SetWorldSideScale(int32_t, int32_t);
 	void SetWorldSide(int32_t, int32_t, int32_t);
@@ -202,7 +202,7 @@ public:
 	AA_Handle & GetLinkCamera();
 	float GetLinkMagn() { return m_LinkMagn; }
 	float GetLinkMagnRecip() { return m_LinkMagnRecip; }
-	AA_CCamera * GetLinkCameraInstance();
+	AA_CCamera * GetLinkCameraInstance() { return m_pCamera; }
 	void ResetFlag();
 	void AddFlag(uint32_t);
 	void DelFlag(uint32_t);

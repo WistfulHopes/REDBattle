@@ -2,7 +2,7 @@
 
 #include "rlgl.h"
 
-void DrawTexturePlane(Texture2D texture, Vector3 pos, Vector2 size, Vector2 texcoords[4], Color color)
+void DrawTexturePlane(const Texture2D& texture, Vector3 pos, Vector2 size, Vector2 texCoords[4], Color color)
 {
     rlSetTexture(texture.id);
     
@@ -14,13 +14,13 @@ void DrawTexturePlane(Texture2D texture, Vector3 pos, Vector2 size, Vector2 texc
     rlColor4ub(color.r, color.g, color.b, color.a);
     rlNormal3f(0.0f, 1.0f, 0.0f);
 
-    rlTexCoord2f(texcoords[0].x, texcoords[0].y);
+    rlTexCoord2f(texCoords[0].x, texCoords[0].y);
     rlVertex3f(-0.5f, -0.5f, 0.f);
-    rlTexCoord2f(texcoords[1].x, texcoords[1].y);
+    rlTexCoord2f(texCoords[1].x, texCoords[1].y);
     rlVertex3f(-0.5f, 0.5f, 0.0f);
-    rlTexCoord2f(texcoords[2].x, texcoords[2].y);
+    rlTexCoord2f(texCoords[2].x, texCoords[2].y);
     rlVertex3f(0.5f, 0.5f, 0.0f);
-    rlTexCoord2f(texcoords[3].x, texcoords[3].y);
+    rlTexCoord2f(texCoords[3].x, texCoords[3].y);
     rlVertex3f(0.5f, -0.5f, 0.0f);
     rlEnd();
     rlSetTexture(0);
