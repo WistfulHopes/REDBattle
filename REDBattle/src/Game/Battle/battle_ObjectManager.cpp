@@ -129,8 +129,12 @@ BATTLE_CObjectManager::BATTLE_CObjectManager()
     m_BBSFile[1][5] = CBBSFile(solefBbsData, solefBbsSize);
     m_BBSFile[1][6] = CBBSFile(cmnefBbsData, cmnefBbsSize);
 
-    m_CharVector[0].m_ColPack.SetPackFile(solColData);
-    m_CharVector[3].m_ColPack.SetPackFile(solColData);
+    m_CharVector[0].m_ColPac.SetPackFile(solColData);
+    m_CharVector[1].m_ColPac.SetPackFile(solColData);
+    m_CharVector[2].m_ColPac.SetPackFile(solColData);
+    m_CharVector[3].m_ColPac.SetPackFile(solColData);
+    m_CharVector[4].m_ColPac.SetPackFile(solColData);
+    m_CharVector[5].m_ColPac.SetPackFile(solColData);
 }
 
 int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)
@@ -291,7 +295,7 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
         auto obj = m_ObjPtrVector[i];
         if (!obj) break;
         obj->ReleaseResource();
-        if (obj->m_IsDirty)
+        // if (obj->m_IsDirty)
         {
             obj->ObjectConstructor_ForObject();
             if (obj->m_IsPlayerObj) ((OBJ_CCharBase*)obj)->ObjectConstructor_ForPlayer();
@@ -518,6 +522,8 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
     m_BOMFlag &= ~10;
     m_IchigekiBGMRequestSideID = SIDE_ID_INVALID;
     m_StartInputTimeAC15 = 0;
+
+    m_CharVector[3].m_Direction = 1;
     
     return 0;
 }
@@ -570,7 +576,7 @@ void BATTLE_CObjectManager::AllActiveCheck()
     m_NoActiveObjectCount = (int32_t)objVector.size();
     m_EtcActiveObjectCount = inactiveCount;
 
-    objVector.push_back(&m_ObjVector[100]);
+    objVector.push_back(&m_ObjVector[OBJECT_NUM - 1]);
 
     for (int i = 0; i < objVector.size() - 1; i++)
     {
@@ -769,4 +775,20 @@ void BATTLE_CObjectManager::ScriptAnalyze()
         m_BBSFileAnalyzeData[0][i].BBSAnalyzeExe((unsigned char*)m_BBSFile[0][i].m_pData, m_BBSFile[0][i].m_DataSize);
         m_BBSFileAnalyzeData[1][i].BBSAnalyzeExe((unsigned char*)m_BBSFile[1][i].m_pData, m_BBSFile[1][i].m_DataSize);
     }
+
+    m_CharVector[0].m_pBBSFile = &m_BBSFileAnalyzeData[0][0];
+    m_CharVector[0].m_CurAddr = m_CharVector[0].m_TopAddr = m_BBSFileAnalyzeData[0][0].m_ScriptTopAddr;
+    m_CharVector[1].m_pBBSFile = &m_BBSFileAnalyzeData[0][1];
+    m_CharVector[1].m_CurAddr = m_CharVector[1].m_TopAddr = m_BBSFileAnalyzeData[0][1].m_ScriptTopAddr;
+    m_CharVector[2].m_pBBSFile = &m_BBSFileAnalyzeData[0][2];
+    m_CharVector[2].m_CurAddr = m_CharVector[2].m_TopAddr = m_BBSFileAnalyzeData[0][2].m_ScriptTopAddr;
+    m_CharVector[3].m_pBBSFile = &m_BBSFileAnalyzeData[0][3];
+    m_CharVector[3].m_CurAddr = m_CharVector[3].m_TopAddr = m_BBSFileAnalyzeData[0][3].m_ScriptTopAddr;
+    m_CharVector[4].m_pBBSFile = &m_BBSFileAnalyzeData[0][4];
+    m_CharVector[4].m_CurAddr = m_CharVector[4].m_TopAddr = m_BBSFileAnalyzeData[0][4].m_ScriptTopAddr;
+    m_CharVector[5].m_pBBSFile = &m_BBSFileAnalyzeData[0][5];
+    m_CharVector[5].m_CurAddr = m_CharVector[5].m_TopAddr = m_BBSFileAnalyzeData[0][5].m_ScriptTopAddr;
+
+    m_ObjVector[OBJECT_NUM - 1].m_pBBSFile = &m_BBSFileAnalyzeData[1][6];
+    m_ObjVector[OBJECT_NUM - 1].m_CurAddr = m_ObjVector[OBJECT_NUM - 1].m_TopAddr = m_BBSFileAnalyzeData[1][6].m_ScriptTopAddr;
 }

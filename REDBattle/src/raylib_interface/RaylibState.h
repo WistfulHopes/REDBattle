@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 
+class SCENE_CBase;
 class OBJ_CBase;
 class RaylibActor;
 class AA_CCamera;
@@ -16,7 +17,7 @@ class RaylibState
     std::vector<RaylibActor*> actors;
     
 public:
-    void Init();
+    void Init(SCENE_CBase* scene);
     void SetSysCamera(AA_CCamera* inSysCamera) { sysCamera = inSysCamera; }
     void UpdateCamera();
     void Draw();

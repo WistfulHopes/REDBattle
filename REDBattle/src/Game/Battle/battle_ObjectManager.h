@@ -259,7 +259,7 @@ public:
 	OBJ_CBase * GetNoActiveObject(const OBJ_CBase *);
 	OBJ_CBase * SearchLowPriorityObject(const OBJ_CBase *);
 	static int32_t GetPlayerIndex(SIDE_ID, EMemberID);
-	OBJ_CCharBase * GetPlayer(SIDE_ID, EMemberID);
+	OBJ_CCharBase * GetPlayer(SIDE_ID side, EMemberID memberID) { return &m_CharVector[side * 3 + memberID]; }
 	OBJ_CCharBase * GetPlayerObjFromIndex(int32_t);
 	OBJ_CCharBase * GetMainPlayer(SIDE_ID);
 	OBJ_CCharBase * GetSubMember(SIDE_ID, ESubMemberID);
@@ -329,8 +329,8 @@ public:
 	void ResetUniqIDGenerator();
 	int32_t GetAtkHitCount();
 	void SetAtkHitCount(int32_t);
-	uint32_t GetActionChangeCount();
-	void SetActionChangeCount(uint32_t);
+	uint32_t GetActionChangeCount() { return m_ActionChangeCount; }
+	void SetActionChangeCount(uint32_t count) { m_ActionChangeCount = count; }
 	int32_t m_AttackHitUniqIDGen; // 0x12D0
 private:
 	uint32_t m_UniqIDGen; // 0x12D4

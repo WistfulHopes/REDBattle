@@ -4,12 +4,16 @@
 
 #include "char_ActCmn.h"
 
+OBJ_CCharBase::OBJ_CCharBase()
+{
+    ObjectConstructor_ForPlayer();
+}
+
 void OBJ_CCharBase::ObjectConstructor_ForPlayer()
 {
-    const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
-        GetBattleObjectManager();
-
-    m_pBBSFile = objManager->GetScriptData(m_SideID, m_MemberID, ScriptData_Body);
+    m_IsPlayerObj = true;
+    m_pParentPly.SetPtr(this);
+    m_ActiveState = ACTV_ACTIVE;
 }
 
 void OBJ_CCharBase::PlayerInitializeOnEasyReset()
@@ -34,6 +38,24 @@ void OBJ_CCharBase::PlayerInitializeOnEasyReset()
         m_EntryBattle = true;
         m_EntryBattleDoing = true;
     }
+}
+
+const char* OBJ_CCharBase::GetContextActionName(const CXXBYTE<32>& actName)
+{
+    if (strncmp(actName.GetStr(), ANCX_Neutral.GetStr(), 0x20) != 0) return nullptr;
+
+    if (IsLeaveRequest())
+    {
+        if (IsDead()) return AN_CmnActHizakuzure.GetStr();
+        if (m_PlayerFlag3 & PLFLG3_MOM_TEMP_DIE) return AN_CmnActHizakuzure.GetStr();
+        return AN_CmnActChangeLeave.GetStr();
+    }
+
+    if (m_ActionFlag & OBJ_ACT_AIR || GetPosY() > 0) return AN_CmnActJump.GetStr();
+    if (m_ExKizetsu) return "ExKizetsu";
+    if (m_KizetsuTime) return AN_CmnActKizetsu.GetStr();
+    if (m_PlayerFlag & PLFLG_CROUCH) return AN_CmnActCrouch.GetStr();
+    return AN_CmnActStand.GetStr();
 }
 
 bool OBJ_CCharBase::IsDead()

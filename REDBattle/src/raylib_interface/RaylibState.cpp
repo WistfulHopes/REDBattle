@@ -2,21 +2,35 @@
 
 #include "RaylibActor.h"
 #include "AALib/Base/sys_Camera.h"
+#include "Game/Scene/scene_Battle.h"
 
-void RaylibState::Init()
+void RaylibState::Init(SCENE_CBase* scene)
 {
+    for (auto actor : actors)
+    {
+        delete actor;
+    }
+    actors.clear();
+    
     cam3D.up = {0, 1, 0};
     cam3D.fovy = 54;
     cam3D.projection = CAMERA_PERSPECTIVE;
+
+    if (auto battleScene = dynamic_cast<SCENE_CBattle*>(scene))
+    {
+        AddRaylibActor(battleScene->GetBattleObjectManager()->GetPlayer(SIDE_1P, MemberID_01));
+        AddRaylibActor(battleScene->GetBattleObjectManager()->GetPlayer(SIDE_2P, MemberID_01));
+    }
 }
 
 void RaylibState::UpdateCamera()
 {
     if (!sysCamera) return;
 
-    cam.offset = Vector2 { 160, 200 };
-    cam.target = Vector2 { sysCamera->GetPos().X, sysCamera->GetPos().Y };
+    cam.offset = Vector2 { 640, 360 };
+    cam.target = Vector2 { sysCamera->GetPos().X, -sysCamera->GetPos().Y + 135 };
     cam.rotation = 0;
+    cam.zoom = 1;
     
     cam3D.position.x = sysCamera->GetPos().X;
     cam3D.position.y = sysCamera->GetPos().Y;

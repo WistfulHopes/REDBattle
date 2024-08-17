@@ -143,6 +143,14 @@ enum RCELMFLG
 	RCELMFLG_GUARD = 4,
 };
 
+struct FDamageCellEX
+{
+	CXXBYTE<32> DamageCellExName {}; // 0x0
+	CXXBYTE<32> ExCellName {}; // 0x20
+	FDamageCellEX() {}
+	void Init();
+};
+
 class OBJ_CCharBase : public OBJ_CBase
 {
     enum BTN_ID
@@ -344,6 +352,60 @@ private:
 	CHAR_ATTR_TYPE ply_AttrType; // 0x9968
 	int32_t ply_Weight; // 0x996C
 
+public:
+	CXXBYTE<32> ply_DamageCell[57]; // 0x9970
+	FDamageCellEX ply_DamageCellEx[128]; // 0xA090
+	uint32_t m_ComboCount; // 0xC090
+	uint32_t m_ComboBreakTime; // 0xC094
+	uint32_t m_ComboCountAddTime; // 0xC098
+	uint32_t m_ComboCountAddTimeWithStop; // 0xC09C
+	int32_t m_ComboDamage; // 0xC0A0
+	int32_t m_ComboDamageFromBSCA; // 0xC0A4
+	int32_t m_ComboDamageTotal; // 0xC0A8
+	int32_t m_ComboDamageDisp; // 0xC0AC
+	int32_t m_ComboPreDamage; // 0xC0B0
+	int32_t m_ComboTime; // 0xC0B4
+	int32_t m_ComboTimeWithOutAnten; // 0xC0B8
+	int32_t m_ComboHoseiOnceDone; // 0xC0BC
+	int32_t m_ComboDamageRate; // 0xC0C0
+	int32_t m_ComboDamageRomanCancel; // 0xC0C4
+	float m_ComboDamageRedF01; // 0xC0C8
+	uint32_t m_OwnComboCount; // 0xC0CC
+	CXXBYTE<32> m_ComboAcceptActionName; // 0xC0D0
+	CXXBYTE<32> m_ComboLastDamageActionName; // 0xC0F0
+	bool m_IsImperfectCombo; // 0xC110
+	bool m_IsImperfectComboAddFlag; // 0xC111
+	bool m_UkemiMiss; // 0xC112
+	bool m_NagenukeMiss; // 0xC113
+	bool m_ComboNoDie; // 0xC114
+	int32_t m_ImperfectComboLog[3]; // 0xC118
+	int32_t m_KizetsuPoint; // 0xC124
+	int32_t m_KizetsuMax; // 0xC128
+	int32_t m_KizetsuTime; // 0xC12C
+	int32_t m_KizetsuTimeMax; // 0xC130
+	int32_t m_KizetsuDecForTutorial; // 0xC134
+	int32_t m_GuardSustain; // 0xC138
+	int32_t m_GuardOshikomareSustain; // 0xC13C
+	int32_t m_GuardOshikomareCount; // 0xC140
+	int32_t m_ThrowResistTime; // 0xC144
+	int32_t m_LockRejectInputTime; // 0xC148
+	int32_t m_LockRejectDisableTime; // 0xC14C
+	bool m_LockRejectIsRenda; // 0xC150
+	int32_t m_JustGuardAutoKeyBackTime; // 0xC154
+	int32_t m_TensionVal; // 0xC158
+	int32_t m_TensionLimitTime; // 0xC15C
+	bool m_IsOldBarrier; // 0xC160
+	int32_t m_AccelVal; // 0xC164
+	int32_t m_KeyBackMaintain; // 0xC168
+	int32_t m_GuardDirectionWithMekuri; // 0xC16C
+	int32_t m_MekuriMaintain; // 0xC170
+	bool m_IamLeft; // 0xC174
+	bool m_IamLeftPrev; // 0xC175
+	ID_CMNACT m_CurCommonActionID; // 0xC178
+
+public:
+	int32_t m_ExKizetsu; // 0xC64C
+
 private:
 	bool m_Entry; // 0xE940
 	bool m_EntryBattle; // 0xE941
@@ -384,6 +446,7 @@ public:
 	VAR_Type m_VoiceCond_Var[10]; // 0xF118
 
 public:
+	OBJ_CCharBase();
 	void ObjectConstructor_ForPlayer();
 	void PlayerInitializeOnEasyReset();
 	
@@ -398,13 +461,18 @@ public:
 	void DelPlayerFlag4(PLAYER_FLAG4 flag) { m_PlayerFlag4 &= ~flag; }
 	bool CheckPlayerFlag4(PLAYER_FLAG4 flag) { return m_PlayerFlag4 & flag; }
 	bool CheckAttackFlag(PLATTACK_FLAG flag) { return m_AttackFlag & flag; }
-	virtual bool IsDead() override;
+
+	const char* GetContextActionName(const CXXBYTE<32>& actName) override;
+
+    bool IsDead() override;
 	void SetEntry(bool entry) { m_Entry = entry; }
 	bool IsEntry() { return m_Entry; }
 	void SetCallingChar(EMemberID memberID) { m_callingChar = memberID; }
 	void SetCalledChar(EMemberID memberID) { m_calledChar = memberID; }
 	
 	void SetImmLeaveRequest(bool bImmidiate) { m_LeaveRequestImm = bImmidiate; }
+
+	bool IsLeaveRequest() { return !(m_ObjFlag2 & OBJ_FLG_2_LINK_MATCH_RESULT_CAMERA) && m_LeaveRequest; }
 	
 	void ChangeEnterRequest() { m_ChangeRequestCategory = CRC_EnterNormal; }
 	void ChangeEnterAttackRequest() { m_ChangeRequestCategory = CRC_EnterAttack; }

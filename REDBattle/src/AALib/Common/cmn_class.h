@@ -30,18 +30,18 @@ private:
 	T m_Flag {}; // 0x0
 public:
 	static const uint32_t BIT_NUM {}; // 0xFFFFFFFFFFFFFFFF
-	AA_Flag(T);
-	AA_Flag();
+	AA_Flag(T flag) { m_Flag = flag; }
+	AA_Flag() {}
 	bool Check(T);
 	bool CheckN(T);
 	bool CheckAll(T);
 	bool CheckAny();
-	void Set(T);
+	void Set(T flag) { m_Flag &= flag; }
 	void SetN(T);
 	T Get();
-	void Add(T);
+	void Add(T flag) { m_Flag |= flag; }
 	void AddN(T);
-	void Del(T);
+	void Del(T flag) { m_Flag &= ~flag; }
 	void DelN(T);
 	void Reset();
 	operator T();

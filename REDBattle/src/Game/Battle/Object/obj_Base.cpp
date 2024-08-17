@@ -2,10 +2,14 @@
 #include <cstring>
 #include <dinput.h>
 #include <intrin.h>
+#include <iostream>
 #include <Game/Scene/scene_Battle.h>
 
 #include "obj_Flag.h"
+#include "Char/char_ActCmn.h"
 #include "Char/char_Base.h"
+
+const char* nullstr = "\x0";
 
 void OBJ_CBaseRelativePtr::SetPtr(OBJ_CBase* ptr)
 {
@@ -18,6 +22,11 @@ void OBJ_CBaseRelativePtr::ClearPtr()
     if (!m_Ptr) return;
     --GetPtr()->m_WatchedCount;
     m_Ptr = nullptr;
+}
+
+OBJ_CBase::OBJ_CBase()
+{
+    ObjectConstructor_ForObject();
 }
 
 int OBJ_CBase::ObjectInitializeOnActivate(const CInitializeObjectExArg* arg)
@@ -96,9 +105,9 @@ void OBJ_CBase::ObjectConstructor_ForObject()
 {
 }
 
-bool OBJ_CBase::ActionRequestForce(const class CXXBYTE<32>& actionName)
+bool OBJ_CBase::ActionRequestForce(const CXXBYTE<32>& actionName)
 {
-    return ActionRequestEx(actionName, 9, nullptr, CXXBYTE<32>(""), 0);
+    return ActionRequestEx(actionName, 9, nullptr, CXXBYTE<32>(nullstr), 0);
 }
 
 bool OBJ_CBase::ActionRequestEx(const CXXBYTE<32>& actionName, unsigned int flag, OBJ_CBase* pEnemy, CXXBYTE<32> label,
@@ -186,7 +195,7 @@ bool OBJ_CBase::SubControlPhase_ScriptFrameStep(int count)
         ScriptFrameStep();
         if (m_IsPlayerObj)
         {
-            auto playerObj = (OBJ_CCharBase*)m_pParentPly.GetPtr();
+            auto playerObj = (OBJ_CCharBase*)this;
             // TODO check dizzy
             playerObj->DelPlayerFlag2(PLFLG2_KIZETSU_ANIME_X_2);
         }
@@ -276,17 +285,138 @@ void OBJ_CBase::ScriptFrameStep()
 
     // TODO a bunch of stuff
 
-    if (m_ActionRequestInfo.m_RequestName.GetStr())
+    if (m_ActionRequestInfo.m_RequestName.GetStr()[0] != '\0')
     {
+        m_CurAddr = GetActionAddr(m_ActionRequestInfo.m_RequestName, nullptr);
+        ExecuteCellBeginToCellEnd(m_CurAddr);
         
+        if (!strncmp(m_ActionRequestInfoReg.m_RequestGotoLabel.GetStr(), nullstr, 0x20)) return;
+
+        m_CurAddr = m_pBBSFile->GetGotoAddrBBSF(m_CurActionTopAddr, m_ActionRequestInfoReg.m_RequestGotoLabel);
+        m_GotoTimes = 0;
+        m_CurAddr = ExecuteCellBeginToCellEnd(m_CurAddr);
+        return;
     }
     
     if (*(uint32_t*)m_CurAddr != ID_ActionEnd)
     {
         if (m_CellTime >= m_CellTimeMax && !m_IsCellTimeStop && m_CellTimeMax != 0x7FFFFFFF)
         {
+            m_CurAddr = ExecuteCellBeginToCellEnd(m_CurAddr);
         }
     }
+}
+
+void OBJ_CBase::BBST_OnActionBegin(const CXXBYTE<32>& actName)
+{
+    const auto battleScene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene());
+
+    m_ActionChangeID = battleScene->GetBattleObjectManager()->GetActionChangeCount();
+    battleScene->GetBattleObjectManager()->SetActionChangeCount(m_ActionChangeID + 1);
+    this->m_ScriptFlag &= 0xFFFFFFDE;
+
+    if (m_IsPlayerObj)
+    {
+        m_pLinkObject_PushCollision.ClearPtr();
+        m_pLinkObject_Angle.ClearPtr();
+        m_pLinkObject_Position.ClearPtr();
+        m_pLinkObject_Direction.ClearPtr();
+        m_pLinkObject_DamageToEliminate.ClearPtr();
+        m_pLinkObject_ChangeToEliminate.ClearPtr();
+        m_pLinkObject_Stop.ClearPtr();
+        m_pLinkObject_PositionCenter.ClearPtr();
+        m_pLinkObject_Scale.ClearPtr();
+        m_pLinkObject_Z.ClearPtr();
+        m_pLinkObject_Collision.ClearPtr();
+    }
+    m_pControlObject.ClearPtr();
+    
+    m_IsCellTimeStop = false;
+    m_CellTimeStopOnece = false;
+    m_CellBeginCount = 0;
+    DoInterrupt(ON_FINALIZE);
+    m_ValidInterruptFlag[0][0].Del(2);
+    m_ValidInterruptFlag[1][0].Del(2);
+    m_ValidInterruptFlag[2][0].Del(2);
+    m_ValidInterruptFlag[3][0].Del(2);
+    m_ValidInterruptFlag[4][0].Del(2);
+    FuncCall(FN_OnFinalize);
+
+    m_CurActionTopAddr = GetActionAddr(actName, nullptr);
+    m_CellTime = 0;
+    m_CellTimeMax = 0;
+    m_CellNoStopCellNum = 0;
+
+    m_ActionRequestInfo.m_RequestName = "\00";
+    m_ActionRequestInfo.m_RequestFlag = 0;
+    m_ActionRequestInfo.m_RequestGotoLabel = "\00";
+    m_ActionRequestInfo.m_RequestSkillID = -1;
+    m_ActionRequestInfo.m_SomeSkillIsRequested = false;
+    m_ActionRequestInfo.m_SomeSkillIsRequestReserved = false;
+    m_ActionRequestInfo.m_RequestGCSkill = -1;
+
+    m_PreActionName = m_CurActionName;
+    m_CurActionName = actName;
+
+    for (auto& interruptFlag0 : m_ValidInterruptFlag)
+    {
+        for (auto& interruptFlag1 : interruptFlag0)
+        {
+            interruptFlag1 = 0;
+        }
+    }
+
+    auto addr = &m_CurActionTopAddr[commandSizeTable[*(uint32_t*)this->m_CurActionTopAddr]];
+    auto cmd = *(uint32_t*)addr;
+    if (cmd != ID_ActionEnd)
+    {
+        while (cmd != ID_InterruptBegin || *(uint32_t*)(addr + 4))
+        {
+            auto nestLevel = 0;
+            do
+            {
+                cmd = *(uint32_t*)addr;
+                auto beginVal = BeginEndList;
+                auto beginFound = true;
+                
+                while (*(uint32_t*)beginVal != cmd)
+                {
+                    if ((int64_t)++beginVal >= (int64_t)&BeginEndList + 0x88)
+                    {
+                        beginFound = false;
+                        break;
+                    }
+                }
+
+                if (beginFound) nestLevel++;
+
+                auto endVal = &BeginEndList[0][1];
+                auto endFound = true;
+                while (*(uint32_t*)endVal != cmd)
+                {
+                    if ((int64_t)++endVal >= (int64_t)&BeginEndList[0][1] + 0x88)
+                    {
+                        endFound = false;
+                        break;
+                    }
+                }
+
+                if (endFound) nestLevel--;
+
+                addr += commandSizeTable[cmd];
+            }
+            while (nestLevel);
+        }
+
+        if (cmd != ID_ActionEnd) FuncCallBySwitchCaseTable(addr);
+    }
+
+    if (m_IsPlayerObj)
+    {
+        // TODO initialize player action by category
+    }
+
+    DoInterrupt(ON_INITIALIZE);
 }
 
 int OBJ_CBase::DoInterrupt(ON_XXXX_INTRPT)
@@ -294,15 +424,109 @@ int OBJ_CBase::DoInterrupt(ON_XXXX_INTRPT)
     return 0;
 }
 
+void OBJ_CBase::OnActionBegin(const CXXBYTE<32>& actName)
+{
+    const char* plyActName = nullptr;
+    if (m_IsPlayerObj)
+    {
+        plyActName = actName.GetStr();
+    }
+
+    m_ActionFlag2 &= ~OBJ_ACT_AFTER_IMAGE;
+    m_HideFlag &= 0xF0FF00FF;
+    m_ObjFlag &= ~OBJ_FLG_SHADOW_OFF;
+    m_ObjFlag3 &= 0x4FFFFE84u;
+    m_ObjFlag4 &= ~OBJ_FLG_4_IGNORE_ZLINE;
+    m_ObjFlag5 &= 0xFFFFFFFC;
+    m_CollisionFlag2 &= 0xC0BFFFFF;
+    m_ObjFlag2 &= 0x4B7FBFFF;
+    m_NaguruSignal = ON_SIGNAL_NULL;
+    m_KowareDone = false;
+    m_KowareCur = 0;
+    m_KowareMax = 1;
+    m_KowareOnEnemyDamage = 0;
+    m_KowareOnEnemyGuard = 0;
+    m_KowareOnSousai = 0;
+    m_KowareOnDamageCollision = 0;
+    m_KowareTenmetsuTime = 0;
+    m_KowareOnDamageOnly = 0;
+    m_KowareDispGauge = false;
+    m_KowareDispOffsetX = 0;
+    m_KowareDispOffsetY = 0;
+    m_KowareDispWidth = 0;
+
+    // TODO lots more obj initialization
+
+    FuncCall(FN_OnActionBeginPre);
+    BBST_OnActionBegin(actName);
+
+    FuncCall(FN_OnActionBegin);
+}
+
 void OBJ_CBase::OnActionEnd()
 {
+}
+
+void OBJ_CBase::OnCellBegin(const CXXBYTE<32>& name, int time)
+{
+    m_ScriptFlag |= 2;
+    ++m_CellBeginCount;
+    m_CellTime = 0;
+    m_CellNoStopCellNum = 0;
+    m_CellTimeReserve = time;
+    m_CellTimeMax = time;
+    OnCellChange(name, true);
+    m_CollisionFlag &= ~OBJ_CLSN_NO_ATTACK_CELL;
+}
+
+void OBJ_CBase::OnCellChange(const CXXBYTE<32>& name, bool isUsePrimary)
+{
+    if (!strncmp(name.GetStr(), CN_Null.GetStr(), 0x20))
+    {
+        m_ClsnAnalyzer.AnalyzeCollisionFile(nullptr);
+        m_ClsnAnalyzer.SetCollisionFileName(nullptr);
+        m_CellName = name;
+    }
+    if (!strncmp(name.GetStr(), CN_Keep.GetStr(), 0x20)) return;
+
+    const auto fileId = (int32_t)m_ColPac.SearchFileID(name.GetStr());
+    if (fileId != -1)
+    {
+        const auto offset = m_ColPac.GetPackOffsetAddr(fileId);
+        m_ClsnAnalyzer.AnalyzeCollisionFile(offset);
+        m_ClsnAnalyzer.SetCollisionFileName(m_ColPac.GetPackFileNum2FileName(fileId));
+
+        m_CellName = name;
+    }
+}
+
+void OBJ_CBase::ActionBegin(const CXXBYTE<32>& actName)
+{
+    OnActionBegin(actName);
+}
+
+void OBJ_CBase::CellBegin(const CXXBYTE<32>& name, int time)
+{
+    if (!strncmp(name.GetStr(), AN_CmnActLockWait.GetStr(), 0x20)) m_ScriptFlag |= 1;
+    else OnCellBegin(name, time);
+
+    if (m_MemberID != MemberID_01) return;
+    
+    std::cout << "m_SideID: " << m_SideID << std::endl;
+    std::cout << "m_CellName: " << m_CellName.GetStr() << std::endl;
+}
+
+void OBJ_CBase::Goto(CXXBYTE<32> label)
+{
+    m_ScriptFlag |= 8;
+    m_ScriptGotoAddr = m_pBBSFile->GetGotoAddrBBSF(m_CurActionTopAddr, label);
 }
 
 uint8_t* OBJ_CBase::ExecuteCellBeginToCellEnd(uint8_t* addr)
 {
     m_ScriptFlag &= 0xFFFFFFE1;
     bool jumpDone = false;
-    uint8_t* returnAddr = nullptr;
+    uint8_t* returnAddr;
     do
     {
         auto cmd = *(uint32_t*)addr;
@@ -375,10 +599,10 @@ uint8_t* OBJ_CBase::ExecuteCellBeginToCellEnd(uint8_t* addr)
             }
 
             returnAddr = m_GotoForLoopAddr;
-            if (m_GotoForLoopAddr)
+            if (returnAddr)
                 m_GotoForLoopAddr = nullptr;
             else
-                m_GotoForLoopAddr = &addr[commandSizeTable[*(uint32_t*)addr]];
+                returnAddr = &addr[commandSizeTable[*(uint32_t*)addr]];
 
             if (m_ScriptGotoAddr)
             {
@@ -390,10 +614,8 @@ uint8_t* OBJ_CBase::ExecuteCellBeginToCellEnd(uint8_t* addr)
     }
     while (!(m_ScriptFlag & 0x14));
 
-    returnAddr += 4;
-
-    if (*(uint32_t*)returnAddr != ID_CellEnd)
-        return returnAddr - 4;
+    if (*(uint32_t*)returnAddr == ID_CellEnd)
+        return returnAddr + 4;
 
     return returnAddr;
 }
@@ -468,7 +690,6 @@ uint8_t* OBJ_CBase::ExecuteNestCommand(uint8_t* addr, int recCount, bool* jumpDo
         {
             return GetSkipBeginEndAddr(addr);
         }
-        addr = m_GotoForLoopAddr;
         if (m_GotoForLoopAddr)
         {
             m_GotoForLoopAddr = nullptr;
@@ -581,8 +802,30 @@ int OBJ_CBase::ExecuteFunctionBlock(const CXXBYTE<32>& funcName)
 
 int OBJ_CBase::FuncCallBySwitchCaseTable(uint8_t* addr)
 {
-    // TODO implement instructions
-    return 0;
+    m_TmpArgAddr = addr;
+    auto id = *(BBS_COMMAND_ID*)addr;
+    auto obj = this;
+    if (m_pControlObject && id != ID_ControlObjectEnd) obj = m_pControlObject;
+
+    switch (id)
+    {
+    case ID_ActionBegin:
+        ActionBegin(*(const CXXBYTE<32>*)(addr + 4));
+        return 0;
+    case ID_ActionEnd:
+        return 0;
+    case ID_CellBegin:
+        CellBegin(*(const CXXBYTE<32>*)(addr + 4), *(int32_t*)(addr + 36));
+        return 0;
+    case ID_Goto:
+        Goto(*(const CXXBYTE<32>*)(addr + 4));
+        return 0;
+    case ID_InitCharName:
+        InitCharName(*(const CXXBYTE<16>*)(addr + 4));
+        return 0;
+    default:
+        return 0;
+    }
 }
 
 uint8_t* OBJ_CBase::GetSkipBeginEndAddr(uint8_t* addr)
@@ -627,6 +870,39 @@ uint8_t* OBJ_CBase::GetSkipBeginEndAddr(uint8_t* addr)
     }
     while (nestLv);
     return addr;
+}
+
+uint8_t* OBJ_CBase::GetActionAddr(const CXXBYTE<32> actionName, int* pOutIndex)
+{
+    auto s = actionName;
+    if (actionName.GetStr()[0] == '_')
+    {
+        auto contextActionName = GetContextActionName(actionName);
+        if (contextActionName) s = contextActionName;
+    }
+
+    auto hash = AA_MakeHash(s.GetStr());
+    const auto key = new CHashKey();
+    key->SetKey(hash);
+
+    auto node = m_pBBSFile->m_ActIndexTable->SearchNode(key);
+
+    if (!node || &m_pBBSFile->m_ScriptTopAddr[node->GetData()] == nullptr)
+    {
+        hash = AA_MakeHash(AN_CmnActStand.GetStr());
+        key->SetKey(hash);
+
+        node = m_pBBSFile->m_ActIndexTable->SearchNode(key);
+
+        m_ActionRequestInfo.m_RequestName = AN_CmnActStand;
+    }
+
+    return &m_pBBSFile->m_ScriptTopAddr[node->GetData()];
+}
+
+const char* OBJ_CBase::GetContextActionName(const CXXBYTE<32>& actName)
+{
+    return nullptr;
 }
 
 void OBJ_CBase::FuncCall(const CXXBYTE<32>& funcName)
@@ -684,6 +960,11 @@ void OBJ_CBase::Voice(const class CXXBYTE<16>& name)
         m_SoundReq.m_RandomChannel = -1;
         m_SoundReq.m_Bank = SND_BANK_INVALID;
     }
+}
+
+void OBJ_CBase::InitCharName(const CXXBYTE<16>& name)
+{
+    ((OBJ_CCharBase*)m_pParentPly.GetPtr())->m_CharName = name;
 }
 
 void OBJ_CBase::ResetAirDashCount()

@@ -42,5 +42,6 @@ void SCENE_CBattle::UpdateBattle(float DeltaSeconds, bool bUpdateDraw)
             if (BattleObjectManager->m_FinishStopCount > 0) BattleObjectManager->m_FinishStopCount--;
         }
         BattleObjectManager->ExecuteObjectManagerEvent(EventManager.get());
+        BattleObjectManager->ControlBattleObject();
     }
 }

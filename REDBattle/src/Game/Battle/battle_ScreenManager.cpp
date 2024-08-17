@@ -75,23 +75,17 @@ BATTLE_CScreenManager::BATTLE_CScreenManager()
     m_PrevCameraMatrix.Set(a, b, c, d);
 }
 
-float CalcBattleCameraLinkMagn(AA_CCamera * cam, AA_Vector3 & pos0, AA_Vector3 & pos1)
+float CalcBattleCameraLinkMagn(AA_CCamera* cam, AA_Vector3& pos0, AA_Vector3& pos1)
 {
-    auto BaseMatrix = AA_Matrix::CreateIdentity().Mult(cam->GetViewMatrix());
-    BaseMatrix = BaseMatrix.Mult(cam->GetProjMatrix());
     auto vecPos0 = AA_Vector4(pos0, 1);
-    vecPos0 = BaseMatrix.TransformFVector4(vecPos0);
-    vecPos0 /= BaseMatrix.M[3][3];
+    vecPos0 = cam->GetViewProjMatrix().TransformFVector4(vecPos0);
+    vecPos0 /= vecPos0.W;
     auto vecPos1 = AA_Vector4(pos1, 1);
-    vecPos1 = BaseMatrix.TransformFVector4(vecPos1);
-    vecPos1 /= BaseMatrix.M[3][3];
+    vecPos1 = cam->GetViewProjMatrix().TransformFVector4(vecPos1);
+    vecPos1 /= vecPos1.W;
 
-    auto ScreenMatrix = AA_Matrix::CreateIdentity();
-    ScreenMatrix.Set(0, 0, 640);
-    ScreenMatrix.Set(0, 3, 640);
-
-    auto sx = ScreenMatrix.TransformFVector4(vecPos0).GetX();
-    auto sy = ScreenMatrix.TransformFVector4(vecPos1).GetY();
+    auto sx = (vecPos0.X * 0.5f + 0.5f) * 640.f * 0.01;
+    auto sy = (vecPos1.Y * 0.5f + 0.5f) * 360.f * 0.01;
 
     return 1.f / sqrtf(sx * sx + sy * sy) * (pos0 - pos1).Size();
 }

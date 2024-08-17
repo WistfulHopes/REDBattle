@@ -75,7 +75,7 @@ uint32_t AA_Filepack_FPAC::SearchFileIDFromHash(uint32_t namehash)
                 unk2 = unk;
             }
             unk = unk2;
-            if (unk2 > count) return -1;
+            if ((int)unk2 > (int)count) return -1;
         }
     }
 
@@ -114,19 +114,19 @@ uint32_t AA_Filepack_FPAC::GetPackOffsetFileSize(uint32_t num)
     if (header->numFile < num) return 0;
     auto stylePack = header->stylePack;
     if ((int)stylePack >= 0)
-        return (uint32_t)m_pData + (uint32_t)((char*)m_pData + num * ((header->maxlenName + 12 & 0xFFFFFFF0) + 16) +
-            header->maxlenName + 37) + header->sizeHeader;
+        return (uint32_t)((char*)m_pData + num * ((header->maxlenName + 12 & 0xFFFFFFF0) + 16) +
+            header->maxlenName + 37);
     if ((stylePack & FPACST_ID_ONLY) != 0)
-        return (uint32_t)m_pData + ((uint32_t*)m_pData)[4 * num + 10] + header->sizeHeader;
+        return ((uint32_t*)m_pData)[4 * num + 10];
 
-    uint32_t offset;
+    uint32_t size;
 
     if ((stylePack & FPACST_LONGNAME) != 0)
-        offset = ((uint32_t*)m_pData)[20 * num + 26];
+        size = ((uint32_t*)m_pData)[20 * num + 26];
     else
-        offset = ((uint32_t*)m_pData)[12 * num + 18];
+        size = ((uint32_t*)m_pData)[12 * num + 18];
 
-    return (uint32_t)m_pData + offset + header->sizeHeader;
+    return size;
 }
 
 const char* AA_Filepack_FPAC::GetPackFileNum2FileName(uint32_t num)

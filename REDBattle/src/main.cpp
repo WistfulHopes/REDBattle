@@ -16,7 +16,8 @@ int main()
     InitWindow(screenWidth, screenHeight, "REDBattle");
     SetTargetFPS(60);
     const RenderTexture2D renderTexture = LoadRenderTexture(screenWidth, screenHeight);
-    RaylibState raylibState{};
+    RaylibState raylibState {};
+    SCENE_ID curSceneId {};
 
     float elapsedTime = 0.f;
 
@@ -31,6 +32,12 @@ int main()
             elapsedTime -= ONE_FRAME;
         }
 
+        if (curSceneId != REDGameCommon::GetInstance()->GetSceneID())
+        {
+            raylibState.Init(REDGameCommon::GetInstance()->GetScene());
+            curSceneId = REDGameCommon::GetInstance()->GetSceneID();
+        }
+        
         if (AASystemRED::GetInstance()) {
             raylibState.SetSysCamera(AASystemRED::GetInstance()->GetCameraManager().Get(0));
         }

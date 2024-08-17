@@ -283,21 +283,13 @@ public:
 
     AA_Matrix(const AA_Vector3 EyePosition, const AA_Vector3 LookDirection, const AA_Vector3 UpVector)
     {
-        const AA_Vector3 ZAxis = LookDirection.GetSafeNormal();
-        const AA_Vector3 XAxis = (UpVector ^ ZAxis).GetSafeNormal();
-        const AA_Vector3 YAxis = ZAxis ^ XAxis;
+        auto pos = *(Vector3*)&EyePosition;
+        auto target = *(Vector3*)&LookDirection;
+        auto up = *(Vector3*)&UpVector;
 
-        for (uint32_t RowIndex = 0; RowIndex < 3; RowIndex++)
-        {
-            M[RowIndex][0] = (&XAxis.X)[RowIndex];
-            M[RowIndex][1] = (&YAxis.X)[RowIndex];
-            M[RowIndex][2] = (&ZAxis.X)[RowIndex];
-            M[RowIndex][3] = 0.0f;
-        }
-        M[3][0] = -EyePosition | XAxis;
-        M[3][1] = -EyePosition | YAxis;
-        M[3][2] = -EyePosition | ZAxis;
-        M[3][3] = 1.0f;
+        auto matrix = MatrixLookAt(pos, target, up);
+
+        *this = *(AA_Matrix*)&matrix;
     }
 
     AA_Matrix(float HalfFOVX, float HalfFOVY, float MultFOVX, float MultFOVY, float MinZ, float MaxZ)

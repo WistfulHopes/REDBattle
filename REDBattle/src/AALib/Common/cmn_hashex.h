@@ -12,7 +12,7 @@ public:
     bool operator==(const U32KEY&);
     bool operator<(const U32KEY&);
     operator bool();
-    uint32_t GetKey() { return m_Key; }
+    uint32_t GetKey() const { return m_Key; }
     void SetKey(uint32_t key) { m_Key = key; }
 };
 
@@ -20,7 +20,7 @@ class CHashKey
 {
 public:
     U32KEY m_Key {}; // 0x0
-    uint32_t GetHash() { return m_Key.GetKey(); }
+    uint32_t GetHash() const { return m_Key.GetKey(); }
     void SetKey(uint32_t key) { m_Key.SetKey(key); }
 };
 
@@ -61,12 +61,35 @@ protected:
     }
 
 public:
-    CHashTable(uint32_t HashTableNum)
+    explicit CHashTable(uint32_t HashTableNum)
     {
         m_Node = new T[HashTableNum];
         m_NodeMax = HashTableNum;
         m_NodeCnt = 0;
     }
+
+    T* SearchNode(const CHashKey* key)
+    {
+        int32_t val = m_NodeCnt - 1;
+        int32_t val2 = 0;
+
+        if (val <= 0) return nullptr;
+        
+        while (true)
+        {
+            auto idx = val + val2 >> 1;
+            auto node = &m_Node[idx];
+            auto newKey = node->GetKey();
+            if (newKey->GetHash() == key->GetHash()) return node;
+
+            if (newKey->GetHash() > key->GetHash()) val = idx - 1;
+
+            if (newKey->GetHash() < key->GetHash()) val2 = idx + 1;
+
+            if (val2 > val) return nullptr;
+        }
+    }
+    
     void ClearAllNode()
     {
         m_NodeCnt = 0;

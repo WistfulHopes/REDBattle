@@ -9,4 +9,8 @@ protected:
     void SetCollisionFileAddr(const void* addr) { m_CollisionFileAddr = addr; }
 public:
 	AA_CCollision();
+
+	const void* GetCollisionFileAddr() { return m_CollisionFileAddr; }
+	void SetCollisionFileName(const char * name) { m_ColFileName = name; }
+	const char* GetCollisionFileName() { return m_ColFileName; }
 };

@@ -7,14 +7,15 @@ class OBJ_CBase;
 class RaylibActor
 {
     OBJ_CBase* parentObj {};
-    AA_Filepack_FPAC imgPack {};
-    Texture2D texture;
+    AA_Filepack_FPAC imgPac {};
+    Texture2D texture {};
+    char curSpriteName[0x20];
     
 public:
     RaylibActor() {}
     RaylibActor(OBJ_CBase* inObj);
 
     void LoadSprites();
-    void SetSprite();
+    bool SetSprite();
     void Draw();
 };

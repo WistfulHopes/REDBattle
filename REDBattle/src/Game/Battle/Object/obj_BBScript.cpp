@@ -2636,9 +2636,9 @@ void CBBSFileAnalyzeData::BBSAnalyzeExe(unsigned char* addr, uint32_t size)
     for (int i = 0; i < m_ActionBeginCount; i++)
     {
         m_ActIndexTable->m_NodeCnt++;
-        auto node = m_ActIndexTable->m_Node[m_ActIndexTable->m_NodeCnt - 1];
-        node.SetData(m_ActionBeginListAddr[i].m_OffsetAddr);
-        node.SetKey(AA_MakeHash(m_ActionBeginListAddr[i].m_ActionName.GetStr()));
+        auto node = &m_ActIndexTable->m_Node[m_ActIndexTable->m_NodeCnt - 1];
+        node->SetData(m_ActionBeginListAddr[i].m_OffsetAddr);
+        node->SetKey(AA_MakeHash(m_ActionBeginListAddr[i].m_ActionName.GetStr()));
     }
 
     if (m_ActIndexTable->m_NodeCnt)
@@ -2661,10 +2661,10 @@ void CBBSFileAnalyzeData::BBSAnalyzeExe(unsigned char* addr, uint32_t size)
                 {
                     auto name = (const char*)(begin + offset + 4);
                     pAddrTable->m_NodeCnt++;
-                    auto node = pAddrTable->m_Node[pAddrTable->m_NodeCnt - 1];
-                    node.SetData(data);
-                    node.SetKey(AA_MakeHash(name));
-                    hashes.push_back(*(CHashKeyC32BYTE*)node.GetKey());
+                    auto node = &pAddrTable->m_Node[pAddrTable->m_NodeCnt - 1];
+                    node->SetData(data);
+                    node->SetKey(AA_MakeHash(name));
+                    hashes.push_back(*(CHashKeyC32BYTE*)node->GetKey());
                 }
                 data += commandSizeTable[command];
                 offset = data;
@@ -2685,30 +2685,10 @@ unsigned char* CBBSFileAnalyzeData::GetFuncAddrBase(const CXXBYTE<32>& funcName,
                                                     CHashTable<CHashNodeC32BYTEtoU32>* pTable)
 {
     auto hash = AA_MakeHash(funcName.GetStr());
-    auto count = pTable->m_NodeCnt - 1;
-    auto prevCount = pTable->m_NodeCnt;
-    CHashNodeC32BYTEtoU32* node = nullptr;
+    const auto key = new CHashKey();
+    key->SetKey(hash);
 
-    if ((int32_t)count < 0) return nullptr;
-
-    while (true)
-    {
-        auto index = count + prevCount >> 1;
-        node = &pTable->m_Node[index];
-        auto key = node->GetKey();
-        if (key->GetHash() == hash) break;
-
-        auto temp = count + 1;
-
-        if (key->GetHash() >= hash)
-        {
-            count = index - 1;
-            temp = prevCount;
-        }
-        prevCount = temp;
-        if (temp > count) return nullptr;
-    }
-    if (node) return &m_ScriptTopAddr[node->GetData()];
+    if (const auto node = pTable->SearchNode(key)) return &m_ScriptTopAddr[node->GetData()];
     return nullptr;
 }
 
@@ -2721,7 +2701,7 @@ unsigned char* CBBSFileAnalyzeData::GetGotoAddrBBSF(unsigned char* curActionTop,
         {
             command = *(uint32_t*)curActionTop;
             if (command != 11) break;
-            char* str = *(char**)(curActionTop + 4);
+            char* str = (char*)(curActionTop + 4);
             if (!strncmp(str, gotoLabel.GetStr(), 0x20)) return curActionTop;
             curActionTop += commandSizeTable[*(uint32_t*)curActionTop];
         }

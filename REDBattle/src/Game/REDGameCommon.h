@@ -189,6 +189,7 @@ public:
 	}
 
 	SCENE_CBase* GetScene() { return m_CurrentScene.get(); }
+	SCENE_ID GetSceneID() { return m_CurrentSceneID; }
 	GAME_MODE GetGameMode() { return m_GameMode; }
 
 	void ChangeScene();
