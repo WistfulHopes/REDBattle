@@ -52,7 +52,7 @@ public:
 	int32_t TmpWinCount; // 0x74
 	int32_t TmpLoseCount; // 0x78
 	wchar_t EntryName[4]; // 0x7C
-	enum BATTLE_DRAMA_ID BattleDramaID; // 0x84
+    BATTLE_DRAMA_ID BattleDramaID; // 0x84
 	bool bStylishMode; // 0x88
 	bool bSelectMySet; // 0x89
 	float PauseMenuLeftTime; // 0x8C

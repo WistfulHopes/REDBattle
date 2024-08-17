@@ -15,13 +15,13 @@ void DrawTexturePlane(const Texture2D& texture, Vector3 pos, Vector2 size, Vecto
     rlNormal3f(0.0f, 1.0f, 0.0f);
 
     rlTexCoord2f(texCoords[0].x, texCoords[0].y);
-    rlVertex3f(-0.5f, -0.5f, 0.f);
+    rlVertex3f(-0.5f, 0.0f, 0.f);
     rlTexCoord2f(texCoords[1].x, texCoords[1].y);
-    rlVertex3f(-0.5f, 0.5f, 0.0f);
+    rlVertex3f(-0.5f, 1.0f, 0.0f);
     rlTexCoord2f(texCoords[2].x, texCoords[2].y);
-    rlVertex3f(0.5f, 0.5f, 0.0f);
+    rlVertex3f(0.5f, 1.0f, 0.0f);
     rlTexCoord2f(texCoords[3].x, texCoords[3].y);
-    rlVertex3f(0.5f, -0.5f, 0.0f);
+    rlVertex3f(0.5f, 0.0f, 0.0f);
     rlEnd();
     rlSetTexture(0);
     rlPopMatrix();

@@ -6,7 +6,7 @@
 
 void RaylibState::Init(SCENE_CBase* scene)
 {
-    for (auto actor : actors)
+    for (const auto actor : actors)
     {
         delete actor;
     }
@@ -16,7 +16,7 @@ void RaylibState::Init(SCENE_CBase* scene)
     cam3D.fovy = 40;
     cam3D.projection = CAMERA_PERSPECTIVE;
 
-    if (auto battleScene = dynamic_cast<SCENE_CBattle*>(scene))
+    if (const auto battleScene = dynamic_cast<SCENE_CBattle*>(scene))
     {
         AddRaylibActor(battleScene->GetBattleObjectManager()->GetPlayer(SIDE_1P, MemberID_01));
         AddRaylibActor(battleScene->GetBattleObjectManager()->GetPlayer(SIDE_2P, MemberID_01));

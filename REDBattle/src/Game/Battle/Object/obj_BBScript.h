@@ -1914,8 +1914,8 @@ extern const uint16_t commandSizeTable[2596];
 
 struct sActionBegin
 {
-	CXXBYTE<32> m_ActionName; // 0x0
-	uint32_t m_OffsetAddr; // 0x20
+	CXXBYTE<32> m_ActionName{}; // 0x0
+	uint32_t m_OffsetAddr{}; // 0x20
 	sActionBegin();
 };
 
@@ -1930,12 +1930,12 @@ class CInterruptInfo
 public:
 	CInterruptInfo();
 	void InitCInterruptInfo();
-	unsigned char* m_BeginAddr; // 0x0
-	CXXBYTE<32> m_ActionName; // 0x8
-	int32_t m_IIParam0; // 0x28
-	int32_t m_IIParam1; // 0x2C
-	CXXBYTE<32> m_GotoLabel; // 0x30
-	uint32_t m_IntFlg; // 0x50
+	unsigned char* m_BeginAddr{}; // 0x0
+	CXXBYTE<32> m_ActionName{}; // 0x8
+	int32_t m_IIParam0{}; // 0x28
+	int32_t m_IIParam1{}; // 0x2C
+	CXXBYTE<32> m_GotoLabel{}; // 0x30
+	uint32_t m_IntFlg{}; // 0x50
 };
 
 enum INTERRUPT_PARAM
@@ -1962,13 +1962,13 @@ public:
 		m_SomeSkillIsRequestReserved = false;
 		m_RequestGCSkill = -1;
 	}
-	CXXBYTE<32> m_RequestName; // 0x0
-	uint32_t m_RequestFlag; // 0x20
-	CXXBYTE<32> m_RequestGotoLabel; // 0x24
-	int32_t m_RequestSkillID; // 0x44
-	bool m_SomeSkillIsRequested; // 0x48
-	bool m_SomeSkillIsRequestReserved; // 0x49
-	int32_t m_RequestGCSkill; // 0x4C
+	CXXBYTE<32> m_RequestName{}; // 0x0
+	uint32_t m_RequestFlag{}; // 0x20
+	CXXBYTE<32> m_RequestGotoLabel{}; // 0x24
+	int32_t m_RequestSkillID{}; // 0x44
+	bool m_SomeSkillIsRequested{}; // 0x48
+	bool m_SomeSkillIsRequestReserved{}; // 0x49
+	int32_t m_RequestGCSkill{}; // 0x4C
 };
 
 class CBBSFile 
@@ -1983,8 +1983,8 @@ public:
 		memcpy(m_pData, data, size);
 	}
 	
-	void* m_pData;
-	uint32_t m_DataSize;
+	void* m_pData{};
+	uint32_t m_DataSize{};
 };
 
 class CBBSFileAnalyzeData
@@ -2026,15 +2026,15 @@ public:
 			m_PostFuncAddrTable = nullptr;
 		}
 	}
-	unsigned char* m_DataTopAddr; // 0x0
-	unsigned char* m_ScriptTopAddr; // 0x8
-	int32_t m_ActionBeginCount; // 0x10
-	sActionBegin* m_ActionBeginListAddr; // 0x18
-	std::shared_ptr<CHashTable<CHashNodeC32BYTEtoU32>> m_ActIndexTable; // 0x20
-	std::shared_ptr<CHashTable<CHashNodeC32BYTEtoU32>> m_FuncAddrTable; // 0x30
-	std::shared_ptr<CHashTable<CHashNodeC32BYTEtoU32>> m_PreFuncAddrTable; // 0x40
-	std::shared_ptr<CHashTable<CHashNodeC32BYTEtoU32>> m_PostFuncAddrTable; // 0x50
-	bool m_bAllocate; // 0x60
+	unsigned char* m_DataTopAddr{}; // 0x0
+	unsigned char* m_ScriptTopAddr{}; // 0x8
+	int32_t m_ActionBeginCount{}; // 0x10
+	sActionBegin* m_ActionBeginListAddr{}; // 0x18
+	std::shared_ptr<CHashTable<CHashNodeC32BYTEtoU32>> m_ActIndexTable{}; // 0x20
+	std::shared_ptr<CHashTable<CHashNodeC32BYTEtoU32>> m_FuncAddrTable{}; // 0x30
+	std::shared_ptr<CHashTable<CHashNodeC32BYTEtoU32>> m_PreFuncAddrTable{}; // 0x40
+	std::shared_ptr<CHashTable<CHashNodeC32BYTEtoU32>> m_PostFuncAddrTable{}; // 0x50
+	bool m_bAllocate{}; // 0x60
 	void BBSAnalyzeExe(unsigned char* addr, uint32_t size);
 	unsigned char* GetFuncAddrBase(const CXXBYTE<32>& funcName, CHashTable<CHashNodeC32BYTEtoU32>* pTable);
 	unsigned char* GetGotoAddrBBSF(unsigned char* curActionTop, const CXXBYTE<32>& gotoLabel);

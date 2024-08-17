@@ -1,5 +1,8 @@
+#pragma once
+
 #include <cstdint>
 #include "game_key_cmdtbl.h"
+
 class CBattleInputAnalyzer
 {
 public:

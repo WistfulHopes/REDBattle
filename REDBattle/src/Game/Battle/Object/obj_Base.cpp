@@ -934,7 +934,7 @@ void OBJ_CBase::ScreenCollision(int on)
         m_ObjFlag &= ~OBJ_FLG_PUSH_OBJ2SCRN;
 }
 
-void OBJ_CBase::CommonSE(const class CXXBYTE<32>& name)
+void OBJ_CBase::CommonSE(const CXXBYTE<32>& name)
 {
     // TODO soundrequestforobj
     m_SoundReq.m_Volume = 100;
@@ -944,7 +944,7 @@ void OBJ_CBase::CommonSE(const class CXXBYTE<32>& name)
     m_SoundReq.m_Bank = SND_BANK_INVALID;
 }
 
-void OBJ_CBase::Voice(const class CXXBYTE<16>& name)
+void OBJ_CBase::Voice(const CXXBYTE<16>& name)
 {
     if (!IsDead() && (m_VoiceInfo.m_IgnoreForceVoicePlay || m_VoiceInfo.m_ForceVoicePlay))
     {

@@ -165,12 +165,19 @@ enum APFLG5
 };
 struct AtkShakeCameraParam
 {
-	CXXBYTE<32> patternName; // 0x0
-	int32_t scale; // 0x20
-	int32_t inFrame; // 0x24
-	int32_t stayFrame; // 0x28
-	int32_t outFrame; // 0x2C
+	CXXBYTE<32> patternName{}; // 0x0
+	int32_t scale{}; // 0x20
+	int32_t inFrame{}; // 0x24
+	int32_t stayFrame{}; // 0x28
+	int32_t outFrame{}; // 0x2C
 	AtkShakeCameraParam();
+};
+enum AtkEasyGuardReadyFlg
+{
+	EASY_GUARD_NONE = 0,
+	EASY_GUARD_READY_OK = 1,
+	EASY_GUARD_READY_AIRONLY = 2,
+	EASY_GUARD_READY_INVALID = 3,
 };
 class CAtkParam
 {
@@ -207,143 +214,143 @@ public:
 	void DelAtkFlag5(APFLG5);
 	void OnOffAtkFlag5(APFLG5, bool);
 	uint32_t CheckAtkFlag5(APFLG5);
-	int32_t m_AtkType; // 0x0
-	int32_t m_AtkLevel; // 0x4
-	int32_t m_AtkLevelForSousai; // 0x8
-	int32_t m_AtkDamage; // 0xC
-	int32_t m_AtkFlag; // 0x10
-	int32_t m_AtkFlag2; // 0x14
-	int32_t m_AtkFlag3; // 0x18
-	int32_t m_AtkFlag4; // 0x1C
-	int32_t m_AtkFlag5; // 0x20
-	int32_t m_AtkHitStopTimeEnemyAddition[3]; // 0x24
-	int32_t m_AtkHitStopTime; // 0x30
-	int32_t m_AtkLockWaitTime; // 0x34
-	int32_t m_AtkGuardTime; // 0x38
-	int32_t m_AtkAirGuardTimeAddition; // 0x3C
-	int32_t m_AtkRangeMaxX; // 0x40
-	int32_t m_AtkRangeMaxY; // 0x44
-	int32_t m_AtkRangeMinX; // 0x48
-	int32_t m_AtkRangeMinY; // 0x4C
-	int32_t m_AtkPushRangeX; // 0x50
-	CXXBYTE<32> m_AtkLockAction; // 0x54
-	CXXBYTE<32> m_AtkDamageEffectName; // 0x74
-	CXXBYTE<32> m_AtkGuardEffectName; // 0x94
-	int32_t m_AtkBarrierDamageRate; // 0xB4
-	int32_t m_AtkEffectScale; // 0xB8
-	CXXBYTE<32> m_AtkNextHitActionName; // 0xBC
-	int32_t m_AtkHitPositionX; // 0xDC
-	int32_t m_AtkHitPositionY; // 0xE0
-	int32_t m_AtkExHitParamAddVal; // 0xE4
-	COperand m_AtkExHitParamOperand; // 0xE8
-	int32_t m_AtkExHitParamMax; // 0xF0
-	int32_t m_AtkExHitParamMin; // 0xF4
-	int32_t m_AtkPoisonTime; // 0xF8
-	int32_t m_AtkPoisonDamage; // 0xFC
-	int32_t m_AtkLockRejectType; // 0x100
-	int32_t m_AtkFixDamageRate; // 0x104
-	int32_t m_AtkKizetsuDamage; // 0x108
-	CXXBYTE<32> m_AtkGGThrowCell; // 0x10C
-	int32_t m_AtkHitBack; // 0x12C
-	int32_t m_AtkFDMinHitBack; // 0x130
-	int32_t m_AtkHitBackGuardBreak; // 0x134
-	int32_t m_AtkHitBackForHit; // 0x138
-	int32_t m_AtkWallPushBack; // 0x13C
-	int32_t m_AtkLandStunTimeCrouchAddition; // 0x140
-	int32_t m_AtkAirStunTime_FromLandAddition; // 0x144
-	int32_t m_AtkAngle; // 0x148
-	int32_t m_AtkJitabataTime; // 0x14C
-	int32_t m_AtkTensionGG; // 0x150
-	CXXBYTE<32> m_AtkHitCommonSE; // 0x154
-	CXXBYTE<32> m_AtkHitCommonSEAppend[3]; // 0x174
-	CXXBYTE<32> m_AtkGuardCommonSE; // 0x1D4
-	CXXBYTE<32> m_AtkGuardCommonSEAppend[3]; // 0x1F4
-	int32_t m_AtkLevelForGuard; // 0x254
-	int32_t m_AtkGuardBalance; // 0x258
-	int32_t m_AtkHosei; // 0x25C
-	int32_t m_AtkHoseiRateFirst; // 0x260
-	int32_t m_AtkHoseiRateForce; // 0x264
-	int32_t m_AtkHoseiFirst; // 0x268
-	int32_t m_AtkHoseiOnece; // 0x26C
-	int32_t m_AtkKezuriGG; // 0x270
-	int32_t m_AtkKezuriRate; // 0x274
-	int32_t m_AtkNoBurstTime; // 0x278
-	int32_t m_AtkMutekiTime; // 0x27C
-	int32_t m_AtkDustMutekiTime; // 0x280
-	int32_t m_AtkDrain; // 0x284
-	CXXBYTE<32> m_AtkTrialName; // 0x288
-	CXXBYTE<32> m_AtkTrialDrawName; // 0x2A8
-	int32_t m_AtkSuikomiPowerX; // 0x2C8
-	int32_t m_AtkSuikomiPowerY; // 0x2CC
-	int32_t m_AtkRecoverDamageRate; // 0x2D0
-	int32_t m_AtkAdditionalHitCount; // 0x2D4
-	int32_t m_AtkRushSousaiJizokuFrame; // 0x2D8
-	int32_t m_ExplosionFinishActCountLimit; // 0x2DC
-	int32_t m_AtkGuardBalanceHosei; // 0x2E0
-	int32_t m_AtkFixBoundSpeed; // 0x2E4
-	int32_t m_AtkHitBackAir; // 0x2E8
-	int32_t m_AtkAirGuardVectorX; // 0x2EC
-	int32_t m_AtkAirGuardVectorY; // 0x2F0
-	int32_t m_AtkDmgActCount; // 0x2F4
-	int32_t m_AtkDmgActCountFirst; // 0x2F8
-	int32_t m_AtkGuardGravity; // 0x2FC
-	int32_t m_AtkAngleGuardForce; // 0x300
-	int32_t m_AtkHajikareTime; // 0x304
-	int32_t m_AtkDmgActCountRateX; // 0x308
-	int32_t m_AtkDmgActCountRateY; // 0x30C
-	int32_t m_AtkFixBoundSpeed2; // 0x310
-	int32_t m_AtkFixWallBoundSpeed; // 0x314
-	int32_t m_AtkFixWallBoundSpeed2; // 0x318
-	int32_t m_AtkConsiderVectorPerX; // 0x31C
-	int32_t m_AtkConsiderVectorPerY; // 0x320
-	int32_t m_AtkSameAttackNum; // 0x324
-	int32_t m_AtkSameAttackGravity; // 0x328
-	int32_t m_AtkPreGuardRangeDot; // 0x32C
-	int32_t m_AtkPreGuardRangeDotY; // 0x330
-	CXXBYTE<32> m_AtkWallBoundNextAction; // 0x334
-	CXXBYTE<32> m_AtkLandBoundNextAction; // 0x354
-	AtkShakeCameraParam m_ShakeCamera; // 0x374
-	SKILL_CATEGORY m_AtkSkillCategory; // 0x3A4
-	enum CHT_TYPE m_AtkCounterHitType; // 0x3A8
-	enum HIT_EFFECT m_AtkDamageEffectType; // 0x3A9
-	enum HIT_EFFECT m_AtkGuardEffectType; // 0x3AA
-	enum ATK_FRONT m_AtkFrontDirection; // 0x3AB
-	enum KILL_TYPE m_AtkKillType; // 0x3AC
-	enum FINISH_BG m_AtkFinishBG; // 0x3AD
-	enum HIT_POSITION_TYPE m_AtkHitPositionType; // 0x3AE
-	enum CO_TYPE m_AtkExHitParamObjType; // 0x3AF
-	enum ATKDAN m_AtkDan; // 0x3B0
-	enum DMG_CELL m_AtkDamageCell; // 0x3B1
-	enum EDT_TYPE m_AtkExDamageType; // 0x3B2
-	enum POS_TYPE m_AtkSuikomiPos; // 0x3B3
-	enum FACE_TYPE m_AtkDamageFace; // 0x3B4
-	enum ESoundBank m_AtkHitSEBankId; // 0x3B5
-	enum ESoundBank m_AtkGuardSEBankId; // 0x3B6
-	enum EDestructionFinish m_AtkDestFinish; // 0x3B7
-	enum EDestructionFinishEffect m_AtkDestFinishEffect; // 0x3B8
-	enum AtkEasyGuardReadyFlg m_AtkEasyGuardReady; // 0x3B9
-	enum CHT_PROCESS m_AtkCounterHitProcess; // 0x3BA
-	char m_AtkShotLevel; // 0x3BB
-	unsigned char m_AtkEffectLimit; // 0x3BC
-	unsigned char m_AtkExHitParamFlag; // 0x3BD
-	OBJ_CBase * m_AtkTargetObj; // 0x3C0
-	CXXBYTE<32> m_AtkDamageCellEx; // 0x3C8
-	unsigned char m_AtkDamageMouthType; // 0x3E8
-	unsigned char m_AtkHead; // 0x3E9
-	unsigned char m_AtkDownTuigekiAvailable; // 0x3EA
-	unsigned char m_AtkTensionAddOnlyEnemy; // 0x3EB
-	unsigned char m_AtkGuardCancel; // 0x3EC
-	unsigned char m_AtkBlowOffGravityIsZero; // 0x3ED
-	unsigned char m_AtkHitOnceInCombo; // 0x3EE
-	unsigned char m_AtkHitNoTensionSelfDamage; // 0x3EF
-	unsigned char m_AtkSuikomiBasePos; // 0x3F0
-	unsigned char m_AtkDamageToRecovery; // 0x3F1
-	unsigned char m_AtkInitialLeft; // 0x3F2
-	unsigned char m_AtkSubObjectSousai; // 0x3F3
-	bool m_bAtkHitBankSEFromSet; // 0x3F4
-	bool m_bAtkHitBankSEOverwrite; // 0x3F5
-	bool m_bAtkGuardBankSEFromSet; // 0x3F6
-	bool m_bAtkGuardBankSEOverwrite; // 0x3F7
+	int32_t m_AtkType{}; // 0x0
+	int32_t m_AtkLevel{}; // 0x4
+	int32_t m_AtkLevelForSousai{}; // 0x8
+	int32_t m_AtkDamage{}; // 0xC
+	int32_t m_AtkFlag{}; // 0x10
+	int32_t m_AtkFlag2{}; // 0x14
+	int32_t m_AtkFlag3{}; // 0x18
+	int32_t m_AtkFlag4{}; // 0x1C
+	int32_t m_AtkFlag5{}; // 0x20
+	int32_t m_AtkHitStopTimeEnemyAddition[3]{}; // 0x24
+	int32_t m_AtkHitStopTime{}; // 0x30
+	int32_t m_AtkLockWaitTime{}; // 0x34
+	int32_t m_AtkGuardTime{}; // 0x38
+	int32_t m_AtkAirGuardTimeAddition{}; // 0x3C
+	int32_t m_AtkRangeMaxX{}; // 0x40
+	int32_t m_AtkRangeMaxY{}; // 0x44
+	int32_t m_AtkRangeMinX{}; // 0x48
+	int32_t m_AtkRangeMinY{}; // 0x4C
+	int32_t m_AtkPushRangeX{}; // 0x50
+	CXXBYTE<32> m_AtkLockAction{}; // 0x54
+	CXXBYTE<32> m_AtkDamageEffectName{}; // 0x74
+	CXXBYTE<32> m_AtkGuardEffectName{}; // 0x94
+	int32_t m_AtkBarrierDamageRate{}; // 0xB4
+	int32_t m_AtkEffectScale{}; // 0xB8
+	CXXBYTE<32> m_AtkNextHitActionName{}; // 0xBC
+	int32_t m_AtkHitPositionX{}; // 0xDC
+	int32_t m_AtkHitPositionY{}; // 0xE0
+	int32_t m_AtkExHitParamAddVal{}; // 0xE4
+	COperand m_AtkExHitParamOperand{}; // 0xE8
+	int32_t m_AtkExHitParamMax{}; // 0xF0
+	int32_t m_AtkExHitParamMin{}; // 0xF4
+	int32_t m_AtkPoisonTime{}; // 0xF8
+	int32_t m_AtkPoisonDamage{}; // 0xFC
+	int32_t m_AtkLockRejectType{}; // 0x100
+	int32_t m_AtkFixDamageRate{}; // 0x104
+	int32_t m_AtkKizetsuDamage{}; // 0x108
+	CXXBYTE<32> m_AtkGGThrowCell{}; // 0x10C
+	int32_t m_AtkHitBack{}; // 0x12C
+	int32_t m_AtkFDMinHitBack{}; // 0x130
+	int32_t m_AtkHitBackGuardBreak{}; // 0x134
+	int32_t m_AtkHitBackForHit{}; // 0x138
+	int32_t m_AtkWallPushBack{}; // 0x13C
+	int32_t m_AtkLandStunTimeCrouchAddition{}; // 0x140
+	int32_t m_AtkAirStunTime_FromLandAddition{}; // 0x144
+	int32_t m_AtkAngle{}; // 0x148
+	int32_t m_AtkJitabataTime{}; // 0x14C
+	int32_t m_AtkTensionGG{}; // 0x150
+	CXXBYTE<32> m_AtkHitCommonSE{}; // 0x154
+	CXXBYTE<32> m_AtkHitCommonSEAppend[3]{}; // 0x174
+	CXXBYTE<32> m_AtkGuardCommonSE{}; // 0x1D4
+	CXXBYTE<32> m_AtkGuardCommonSEAppend[3]{}; // 0x1F4
+	int32_t m_AtkLevelForGuard{}; // 0x254
+	int32_t m_AtkGuardBalance{}; // 0x258
+	int32_t m_AtkHosei{}; // 0x25C
+	int32_t m_AtkHoseiRateFirst{}; // 0x260
+	int32_t m_AtkHoseiRateForce{}; // 0x264
+	int32_t m_AtkHoseiFirst{}; // 0x268
+	int32_t m_AtkHoseiOnece{}; // 0x26C
+	int32_t m_AtkKezuriGG{}; // 0x270
+	int32_t m_AtkKezuriRate{}; // 0x274
+	int32_t m_AtkNoBurstTime{}; // 0x278
+	int32_t m_AtkMutekiTime{}; // 0x27C
+	int32_t m_AtkDustMutekiTime{}; // 0x280
+	int32_t m_AtkDrain{}; // 0x284
+	CXXBYTE<32> m_AtkTrialName{}; // 0x288
+	CXXBYTE<32> m_AtkTrialDrawName{}; // 0x2A8
+	int32_t m_AtkSuikomiPowerX{}; // 0x2C8
+	int32_t m_AtkSuikomiPowerY{}; // 0x2CC
+	int32_t m_AtkRecoverDamageRate{}; // 0x2D0
+	int32_t m_AtkAdditionalHitCount{}; // 0x2D4
+	int32_t m_AtkRushSousaiJizokuFrame{}; // 0x2D8
+	int32_t m_ExplosionFinishActCountLimit{}; // 0x2DC
+	int32_t m_AtkGuardBalanceHosei{}; // 0x2E0
+	int32_t m_AtkFixBoundSpeed{}; // 0x2E4
+	int32_t m_AtkHitBackAir{}; // 0x2E8
+	int32_t m_AtkAirGuardVectorX{}; // 0x2EC
+	int32_t m_AtkAirGuardVectorY{}; // 0x2F0
+	int32_t m_AtkDmgActCount{}; // 0x2F4
+	int32_t m_AtkDmgActCountFirst{}; // 0x2F8
+	int32_t m_AtkGuardGravity{}; // 0x2FC
+	int32_t m_AtkAngleGuardForce{}; // 0x300
+	int32_t m_AtkHajikareTime{}; // 0x304
+	int32_t m_AtkDmgActCountRateX{}; // 0x308
+	int32_t m_AtkDmgActCountRateY{}; // 0x30C
+	int32_t m_AtkFixBoundSpeed2{}; // 0x310
+	int32_t m_AtkFixWallBoundSpeed{}; // 0x314
+	int32_t m_AtkFixWallBoundSpeed2{}; // 0x318
+	int32_t m_AtkConsiderVectorPerX{}; // 0x31C
+	int32_t m_AtkConsiderVectorPerY{}; // 0x320
+	int32_t m_AtkSameAttackNum{}; // 0x324
+	int32_t m_AtkSameAttackGravity{}; // 0x328
+	int32_t m_AtkPreGuardRangeDot{}; // 0x32C
+	int32_t m_AtkPreGuardRangeDotY{}; // 0x330
+	CXXBYTE<32> m_AtkWallBoundNextAction{}; // 0x334
+	CXXBYTE<32> m_AtkLandBoundNextAction{}; // 0x354
+	AtkShakeCameraParam m_ShakeCamera{}; // 0x374
+	SKILL_CATEGORY m_AtkSkillCategory{}; // 0x3A4
+	CHT_TYPE m_AtkCounterHitType{}; // 0x3A8
+	HIT_EFFECT m_AtkDamageEffectType{}; // 0x3A9
+	HIT_EFFECT m_AtkGuardEffectType{}; // 0x3AA
+	ATK_FRONT m_AtkFrontDirection{}; // 0x3AB
+	KILL_TYPE m_AtkKillType{}; // 0x3AC
+	FINISH_BG m_AtkFinishBG{}; // 0x3AD
+	HIT_POSITION_TYPE m_AtkHitPositionType{}; // 0x3AE
+	CO_TYPE m_AtkExHitParamObjType{}; // 0x3AF
+	ATKDAN m_AtkDan{}; // 0x3B0
+	DMG_CELL m_AtkDamageCell{}; // 0x3B1
+	EDT_TYPE m_AtkExDamageType{}; // 0x3B2
+	POS_TYPE m_AtkSuikomiPos{}; // 0x3B3
+	FACE_TYPE m_AtkDamageFace{}; // 0x3B4
+	ESoundBank m_AtkHitSEBankId{}; // 0x3B5
+	ESoundBank m_AtkGuardSEBankId{}; // 0x3B6
+	EDestructionFinish m_AtkDestFinish{}; // 0x3B7
+	EDestructionFinishEffect m_AtkDestFinishEffect{}; // 0x3B8
+	AtkEasyGuardReadyFlg m_AtkEasyGuardReady{}; // 0x3B9
+	CHT_PROCESS m_AtkCounterHitProcess{}; // 0x3BA
+	char m_AtkShotLevel{}; // 0x3BB
+	unsigned char m_AtkEffectLimit{}; // 0x3BC
+	unsigned char m_AtkExHitParamFlag{}; // 0x3BD
+	OBJ_CBase * m_AtkTargetObj{}; // 0x3C0
+	CXXBYTE<32> m_AtkDamageCellEx{}; // 0x3C8
+	unsigned char m_AtkDamageMouthType{}; // 0x3E8
+	unsigned char m_AtkHead{}; // 0x3E9
+	unsigned char m_AtkDownTuigekiAvailable{}; // 0x3EA
+	unsigned char m_AtkTensionAddOnlyEnemy{}; // 0x3EB
+	unsigned char m_AtkGuardCancel{}; // 0x3EC
+	unsigned char m_AtkBlowOffGravityIsZero{}; // 0x3ED
+	unsigned char m_AtkHitOnceInCombo{}; // 0x3EE
+	unsigned char m_AtkHitNoTensionSelfDamage{}; // 0x3EF
+	unsigned char m_AtkSuikomiBasePos{}; // 0x3F0
+	unsigned char m_AtkDamageToRecovery{}; // 0x3F1
+	unsigned char m_AtkInitialLeft{}; // 0x3F2
+	unsigned char m_AtkSubObjectSousai{}; // 0x3F3
+	bool m_bAtkHitBankSEFromSet{}; // 0x3F4
+	bool m_bAtkHitBankSEOverwrite{}; // 0x3F5
+	bool m_bAtkGuardBankSEFromSet{}; // 0x3F6
+	bool m_bAtkGuardBankSEOverwrite{}; // 0x3F7
 	int32_t CalcAtkDamage(int32_t, uint32_t, const OBJ_CBase *);
 	int32_t CalcAtkHitStopTime(int32_t, uint32_t);
 	int32_t CalcAtkGuardTime(int32_t, uint32_t);

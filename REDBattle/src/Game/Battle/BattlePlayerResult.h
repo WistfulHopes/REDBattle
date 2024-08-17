@@ -36,10 +36,10 @@ enum ROUND_RESULT_EX
 class PlayerResult
 {
 private:
-	ROUND_RESULT m_Result[10]; // 0x0
-	uint32_t m_WinCount; // 0x28
-	uint32_t m_WinCountMax; // 0x2C
-	ROUND_RESULT_EX m_ResultRounds[20]; // 0x30
+	ROUND_RESULT m_Result[10] {}; // 0x0
+	uint32_t m_WinCount {}; // 0x28
+	uint32_t m_WinCountMax {}; // 0x2C
+	ROUND_RESULT_EX m_ResultRounds[20] {}; // 0x30
 	void InitParam();
 public:
 	PlayerResult() {}

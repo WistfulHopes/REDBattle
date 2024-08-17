@@ -79,7 +79,7 @@ void RaylibActor::Draw()
 
     Vector3 dest;
     dest.x = -raylibPos.x + (parentObj->GetObjDir() == 0 ? size.x / 2 : -size.x / 2);
-    dest.y = raylibPos.y + size.y;
+    dest.y = raylibPos.y + size.y / 2;
     dest.z = raylibPos.z;
 
     if (parentObj->GetObjDir() == 0) dest.x += parentObj->m_ClsnAnalyzer.GetViewWorldRect(0).m_X * scene->

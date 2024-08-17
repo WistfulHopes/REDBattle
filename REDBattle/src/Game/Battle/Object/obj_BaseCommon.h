@@ -16,16 +16,16 @@ enum EACCType
 class LoopedFloatParam
 {
 public:
-	float Value; // 0x0
-	float Speed; // 0x4
+	float Value{}; // 0x0
+	float Speed{}; // 0x4
 private:
-	float BeginValue; // 0x8
-	float EndValue; // 0xC
-	int32_t LoopCount; // 0x10
-	int32_t FrameCounter; // 0x14
-	int32_t FrameCountMax; // 0x18
-	float MINVALUE; // 0x1C
-	float MAXVALUE; // 0x20
+	float BeginValue{}; // 0x8
+	float EndValue{}; // 0xC
+	int32_t LoopCount{}; // 0x10
+	int32_t FrameCounter{}; // 0x14
+	int32_t FrameCountMax{}; // 0x18
+	float MINVALUE{}; // 0x1C
+	float MAXVALUE{}; // 0x20
 public:
 	LoopedFloatParam(float, float);
 	LoopedFloatParam();
@@ -47,10 +47,10 @@ public:
 	AA_LinearColor GetColor();
 	void SetColor(AA_LinearColor);
 	void Stop();
-	LoopedFloatParam R; // 0x0
-	LoopedFloatParam G; // 0x24
-	LoopedFloatParam B; // 0x48
-	LoopedFloatParam A; // 0x6C
+	LoopedFloatParam R{}; // 0x0
+	LoopedFloatParam G{}; // 0x24
+	LoopedFloatParam B{}; // 0x48
+	LoopedFloatParam A{}; // 0x6C
 	bool IgnoreStop; // 0x90
 };
 
@@ -64,13 +64,13 @@ public:
 	void SetVal(float beginVal, float destVal, int time);
 	void SetPause(bool pause) { m_bPause = pause; }
 	bool IsSet() { return m_bSet; }
-	float m_Val; // 0x0
-	float m_BeginVal; // 0x4
-	float m_DestVal; // 0x8
-	int32_t m_DestTimer; // 0xC
-	int32_t m_DestTimerMax; // 0x10
-	bool m_bSet; // 0x14
-	bool m_bPause; // 0x15
+	float m_Val{}; // 0x0
+	float m_BeginVal{}; // 0x4
+	float m_DestVal{}; // 0x8
+	int32_t m_DestTimer{}; // 0xC
+	int32_t m_DestTimerMax{}; // 0x10
+	bool m_bSet{}; // 0x14
+	bool m_bPause{}; // 0x15
 };
 
 class CVectorWithTimer
@@ -82,10 +82,10 @@ public:
 	float GetVal(uint32_t);
 	void SetVal(uint32_t, float, uint32_t);
 	bool IsSet();
-	float m_Val[4]; // 0x0
-	float m_BeginVal[4]; // 0x10
-	float m_DestVal[4]; // 0x20
-	int32_t m_DestTimer[4]; // 0x30
-	int32_t m_DestTimerMax[4]; // 0x40
-	bool m_bSet; // 0x50
+	float m_Val[4]{}; // 0x0
+	float m_BeginVal[4]{}; // 0x10
+	float m_DestVal[4]{}; // 0x20
+	int32_t m_DestTimer[4]{}; // 0x30
+	int32_t m_DestTimerMax[4]{}; // 0x40
+	bool m_bSet{}; // 0x50
 };
