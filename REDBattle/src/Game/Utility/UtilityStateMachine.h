@@ -33,8 +33,8 @@ class REDStateMachineRoot : public REDStateMachine
 {
 public:
     REDStateMachineRoot() {}
-	virtual void BeginState() override;
-	virtual void EndState() override;
+    void BeginState() override;
+    void EndState() override;
 
 private:
     bool bStarted {};

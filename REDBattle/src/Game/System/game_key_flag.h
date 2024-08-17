@@ -124,7 +124,7 @@ inline EGAMEKEY_NUM GKFtoGKN(uint32_t gkf)
     v4 = ((v3 | v3 >> 16) & 0x55555555) + ((v3 | v3 >> 16) >> 1 & 0x55555555);
     v5 = ((v4 & 0x33333333) + (v4 >> 2 & 0x33333333) & 0xF0F0F0F)
         + ((v4 & 0x33333333) + (v4 >> 2 & 0x33333333) >> 4 & 0xF0F0F0F);
-    return (EGAMEKEY_NUM)(((v5 & 0xFF00FF) + (v5 >> 8 & 0xFF00FF) >> 16) + (unsigned __int16)((unsigned __int8)v5 + (v5 << 24 >> 24)) - 1);
+    return (EGAMEKEY_NUM)(((v5 & 0xFF00FF) + (v5 >> 8 & 0xFF00FF) >> 16) + (uint16_t)((uint8_t)v5 + (v5 << 24 >> 24)) - 1);
 }
 
 enum GAMEKEY_FLAG

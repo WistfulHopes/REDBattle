@@ -10,7 +10,6 @@ class AA_CCamera;
 
 class RaylibState
 {
-    Camera2D cam {};
     Camera3D cam3D {};
     AA_CCamera* sysCamera {};
 

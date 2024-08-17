@@ -11,8 +11,8 @@ class SCENE_CBattle : public SCENE_CBase
 public:
     SCENE_CBattle();
 
-    virtual void SceneInitialize() override;
-    virtual void Tick(float DeltaSeconds) override;
+    void SceneInitialize() override;
+    void Tick(float DeltaSeconds) override;
     BATTLE_CObjectManager* GetBattleObjectManager() { return BattleObjectManager.get(); }
     BATTLE_CScreenManager* GetBattleScreenManager() { return ScreenManager.get(); }
     BattleSettings* GetBattleSettings() { return Settings.get(); }

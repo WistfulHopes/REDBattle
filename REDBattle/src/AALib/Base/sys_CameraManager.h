@@ -7,7 +7,8 @@ class AA_CCameraManager : public AA_ManagerBase<AA_CCamera,16>
 public:
 	AA_CCameraManager() {}
 	virtual ~AA_CCameraManager() {}
-	virtual void Update() override 
+
+	void Update() override 
 	{
 		for (uint32_t i = 0; i < m_InstanceNum; i++)
 		{

@@ -39,11 +39,12 @@ class CHashNodeC32BYTE : public CHashNode
 private:
     CHashKeyC32BYTE m_HashKey {}; // 0x8
 public:
-    virtual CHashKey* GetKey() override
+    CHashKey* GetKey() override
     {
         return &m_HashKey;
     }
-    virtual void SetKey(uint32_t key) override { m_HashKey.SetKey(key); }
+
+    void SetKey(uint32_t key) override { m_HashKey.SetKey(key); }
     CHashNodeC32BYTE() {}
 };
 

@@ -13,7 +13,11 @@ int main()
 {
     const int screenWidth = 1280;
     const int screenHeight = 720;
-    InitWindow(screenWidth, screenHeight, "REDBattle");
+
+    int windowWidth = 2560;
+    int windowHeight = 1440;
+    
+    InitWindow(windowWidth, windowHeight, "REDBattle");
     SetTargetFPS(60);
     const RenderTexture2D renderTexture = LoadRenderTexture(screenWidth, screenHeight);
     RaylibState raylibState {};
@@ -52,7 +56,7 @@ int main()
         DrawTexturePro(
             renderTexture.texture,
             {0.0f, 0.0f, (float)screenWidth, -(float)screenHeight},
-            {0.0f, 0.0f, (float)screenWidth, (float)screenHeight},
+            {0.0f, 0.0f, (float)windowWidth, (float)windowHeight},
             {0.0f, 0.0f},
             0.0f, WHITE
         );
