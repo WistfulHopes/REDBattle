@@ -9,13 +9,16 @@ class OBJ_CBase;
 
 class RaylibActor
 {
-    OBJ_CBase* parentObj {};
-    AA_Filepack_FPAC imgPac {};
+    OBJ_CBase* parentObj{};
+    AA_Filepack_FPAC imgPac{};
     std::pmr::unordered_map<std::string, Texture> textures{};
-    char curSpriteName[0x20];
-    
+    char curSpriteName[0x20]{};
+
 public:
-    RaylibActor() {}
+    RaylibActor()
+    {
+    }
+
     RaylibActor(OBJ_CBase* inObj);
 
     void LoadSprites();
