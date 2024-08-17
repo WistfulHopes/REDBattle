@@ -8,6 +8,14 @@ RaylibActor::RaylibActor(OBJ_CBase* inObj) : parentObj(inObj)
 {
 }
 
+RaylibActor::~RaylibActor()
+{
+    for (auto kv : textures)
+    {
+        UnloadTexture(kv.second);
+    }
+}
+
 void RaylibActor::LoadSprites()
 {
     int imgPacSize = 0;
@@ -38,10 +46,10 @@ bool RaylibActor::SetSprite(const char* imgName)
 
     strcpy(curSpriteName, imgName);
 
-    auto offset = imgPac.GetPackOffsetAddr(idx);
-    auto size = imgPac.GetPackOffsetFileSize(idx);
+    const auto offset = imgPac.GetPackOffsetAddr(idx);
+    const auto size = imgPac.GetPackOffsetFileSize(idx);
 
-    auto img = LoadImageFromMemory(".png", (unsigned char*)offset, size);
+    const auto img = LoadImageFromMemory(".png", (unsigned char*)offset, size);
 
     auto texture = LoadTextureFromImage(img);
     UnloadImage(img);

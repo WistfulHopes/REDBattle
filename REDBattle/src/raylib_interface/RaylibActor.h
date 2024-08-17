@@ -21,6 +21,8 @@ public:
 
     RaylibActor(OBJ_CBase* inObj);
 
+    ~RaylibActor();
+    
     void LoadSprites();
     bool SetSprite(const char* imgName);
     void Draw();
