@@ -195,9 +195,9 @@ int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)
     m_LastLoadedCharID[0] = REDGameCommon::GetInstance()->GetBattleCharaID(SIDE_BEGIN, MemberID_Begin);
     m_LastLoadedCharID[1] = REDGameCommon::GetInstance()->GetBattleCharaID(SIDE_2P, MemberID_Begin);
 
-    for (int i = 0; i < CHARA_OBJECT_NUM; i++)
+    for (auto& chara : m_CharVector)
     {
-        m_CharVector->SetEntry(true);
+        chara.SetEntry(true);
     }
     for (int i = 0; i < 2; i++)
     {
@@ -578,7 +578,7 @@ void BATTLE_CObjectManager::AllActiveCheck()
 
     objVector.push_back(&m_ObjVector[OBJECT_NUM - 1]);
 
-    for (int i = 0; i < objVector.size() - 1; i++)
+    for (uint32_t i = 0; i < objVector.size() - 1; i++)
     {
         if (objVector[i]->m_ActiveState == ACTV_REQ_NO_ACTIVE)
         {
@@ -621,7 +621,7 @@ void BATTLE_CObjectManager::ControlBattleObject()
     }
     if (m_UsesObjPtrVectorNum)
     {
-        for (int i = 0; i < m_UsesObjPtrVectorNum; i++)
+        for (uint32_t i = 0; i < m_UsesObjPtrVectorNum; i++)
         {
             const auto objPtr = m_ObjPtrVector[i];
             switch (objPtr->m_ActiveState)
