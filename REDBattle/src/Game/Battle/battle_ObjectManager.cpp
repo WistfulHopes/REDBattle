@@ -8,7 +8,7 @@
 #include <Game/Scene/scene_Battle.h>
 #include "AALib/AASystemRED.h"
 
-const int StartupPositionX[2][3] { -252000, -504000, -756000, 252000, 504000, 756000 };
+constexpr int StartupPositionX[2][3] {{-252000, -504000, -756000}, {252000, 504000, 756000}};
 
 int32_t IsControlPrioritySmallSub_(const void * _a, const void * _b)
 {

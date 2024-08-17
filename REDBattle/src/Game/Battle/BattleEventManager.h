@@ -116,10 +116,10 @@ enum SCRIPTEVENT_TYPE
 };
 struct BOMEventInfo
 {
-	BOM_EVENT eventID; // 0x0
-	int32_t param0; // 0x4
-	int32_t param1; // 0x8
-	int32_t param2; // 0xC
+	BOM_EVENT eventID {}; // 0x0
+	int32_t param0 {}; // 0x4
+	int32_t param1 {}; // 0x8
+	int32_t param2 {}; // 0xC
 	void Reset()
 	{
 		eventID = BOM_EVENT_ENTRY_EVENT_SETUP;
@@ -130,8 +130,8 @@ struct BOMEventInfo
 };
 struct DemoEndCheck
 {
-	bool isDemoEnd[2]; // 0x0
-	bool isMemberDemoEnd[3][2]; // 0x2
+	bool isDemoEnd[2] {}; // 0x0
+	bool isMemberDemoEnd[3][2] {}; // 0x2
 	DemoEndCheck();
 	void Reset();
 };
@@ -139,13 +139,13 @@ struct DemoEndCheck
 class BattleEventBase
 {
 private:
-	bool m_Started; // 0x8
-	bool m_CounterReset; // 0x9
-	uint32_t m_Counter; // 0xC
-	int32_t m_DemoTimeoutCounter; // 0x10
-	int32_t m_SubState; // 0x14
-	DemoEndCheck m_DemoEndCheck; // 0x18
-	bool m_EnableDemoEndCheck; // 0x20
+	bool m_Started {}; // 0x8
+	bool m_CounterReset {}; // 0x9
+	uint32_t m_Counter {}; // 0xC
+	int32_t m_DemoTimeoutCounter {}; // 0x10
+	int32_t m_SubState {}; // 0x14
+	DemoEndCheck m_DemoEndCheck {}; // 0x18
+	bool m_EnableDemoEndCheck {}; // 0x20
 	enum START_RESULT
 	{
 		START_RESULT_EXECUTE = 0,
@@ -162,7 +162,7 @@ public:
 	BattleEventBase(const char *);
 	~BattleEventBase() {}
 	BEM_STATE ExecuteEvent(BattleEventManager *);
-	BattleEventBase::START_RESULT Start(BattleEventManager *);
+	START_RESULT Start(BattleEventManager *);
 	BEM_STATE Execute(BattleEventManager *);
 	uint32_t Counter();
 	void ResetCounter();
@@ -186,16 +186,16 @@ private:
 	BOMEventInfo m_BOMEvent[10] {}; // 0x8
 	uint32_t m_BOMEventCount {}; // 0xA8
 	BattleEventBase * m_pBattleEvent {}; // 0xB0
-	int32_t m_EventArg[4]; // 0xB8
-	bool m_bFinishUIEnd; // 0xC8
-	bool m_bEnableMatchWinSecondAction; // 0xC9
-	bool m_bEndMatchWinSecondAction; // 0xCA
-	int32_t m_MatchWinFadeOutTime; // 0xCC
-	bool m_PlayingMatchResultVoice; // 0xD0
-	bool m_bEnterMatchResult; // 0xD1
-	int32_t m_DramaSkipInputDisableTime; // 0xD4
-	BEM_STATE m_CurrentBEMState; // 0xD8
-	BEM_STATE m_LastBEMState; // 0xDC
+	int32_t m_EventArg[4] {}; // 0xB8
+	bool m_bFinishUIEnd {}; // 0xC8
+	bool m_bEnableMatchWinSecondAction {}; // 0xC9
+	bool m_bEndMatchWinSecondAction {}; // 0xCA
+	int32_t m_MatchWinFadeOutTime {}; // 0xCC
+	bool m_PlayingMatchResultVoice {}; // 0xD0
+	bool m_bEnterMatchResult {}; // 0xD1
+	int32_t m_DramaSkipInputDisableTime {}; // 0xD4
+	BEM_STATE m_CurrentBEMState {}; // 0xD8
+	BEM_STATE m_LastBEMState {}; // 0xDC
 	void SavePrevStateInfo();
 	void InitParam();
 	void Reset();

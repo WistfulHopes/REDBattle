@@ -7,21 +7,21 @@
 class BattleState
 {
 private:
-	RoundTimer m_Timer; // 0x8
-	PlayerResult m_PlayerResult[2]; // 0x18
-	uint32_t m_RoundCount; // 0x118
-	uint32_t m_RoundMax; // 0x11C
-	bool m_FinalRound; // 0x120
-	bool m_IsBattleDoing; // 0x121
-	bool m_IsStartedBattle; // 0x122
-	SIDE_ID m_Winner; // 0x124
-	bool m_PauseUpdate; // 0x128
-	bool m_RematchBattle; // 0x129
-	uint32_t m_RematchRound; // 0x12C
-	bool m_IsBattleTempStop; // 0x130
-	SIDE_ID m_timerForcePauseSide; // 0x134
-	bool m_BattleQuickEnd; // 0x138
-	bool m_TimeLimitForceFinish; // 0x139
+	RoundTimer m_Timer {}; // 0x8
+	PlayerResult m_PlayerResult[2] {}; // 0x18
+	uint32_t m_RoundCount {}; // 0x118
+	uint32_t m_RoundMax {}; // 0x11C
+	bool m_FinalRound {}; // 0x120
+	bool m_IsBattleDoing {}; // 0x121
+	bool m_IsStartedBattle {}; // 0x122
+	SIDE_ID m_Winner {}; // 0x124
+	bool m_PauseUpdate {}; // 0x128
+	bool m_RematchBattle {}; // 0x129
+	uint32_t m_RematchRound {}; // 0x12C
+	bool m_IsBattleTempStop {}; // 0x130
+	SIDE_ID m_timerForcePauseSide {}; // 0x134
+	bool m_BattleQuickEnd {}; // 0x138
+	bool m_TimeLimitForceFinish {}; // 0x139
 	void InitParam();
 	void SetWinner(SIDE_ID);
 	void SetWinnerDraw();

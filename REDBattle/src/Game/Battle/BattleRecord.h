@@ -66,66 +66,66 @@ public:
 	~CBattleRecord() {}
     struct Battle_Record
     {
-        unsigned short m_LightAtk; // 0x0
-        unsigned short m_MiddleAtk; // 0x2
-        unsigned short m_HeavyAtk; // 0x4
-        unsigned short m_chudanAtk; // 0x6
-        unsigned short m_SpecialAtk; // 0x8
-        unsigned short m_ExSpecialAtk; // 0xA
-        unsigned short m_UltimateAtk; // 0xC
-        unsigned short m_MeteoUltimateAtk; // 0xE
-        unsigned short m_Special; // 0x10
-        unsigned short m_ExSpecial; // 0x12
-        unsigned short m_Ultimate; // 0x14
-        unsigned short m_MeteoUltimate; // 0x16
-        unsigned short m_GuardCancelAttack; // 0x18
-        unsigned short m_Shot; // 0x1A
-        unsigned short m_Sousai; // 0x1C
-        unsigned short m_ShotSousai; // 0x1E
-        unsigned short m_HomingDashAtk; // 0x20
-        unsigned short m_HomingDash; // 0x22
-        unsigned short m_MikiwameMoveAtk; // 0x24
-        unsigned short m_MikiwameMove; // 0x26
-        unsigned short m_ShotReflect; // 0x28
-        unsigned short m_ZReverse; // 0x2A
-        unsigned short m_RushStart; // 0x2C
-        unsigned short m_RushRush; // 0x2E
-        unsigned short m_RushChange; // 0x30
-        unsigned short m_RushSousai; // 0x32
-        unsigned short m_RushDamage; // 0x34
-        unsigned short m_Burst; // 0x36
-        unsigned short m_SparkingBurst; // 0x38
-        unsigned short m_Assist; // 0x3A
-        unsigned short m_Change; // 0x3C
-        unsigned short m_GuardCancelChange; // 0x3E
-        unsigned short m_UltimateChange; // 0x40
-        unsigned short m_FirstAtk; // 0x42
-        unsigned short m_Counter; // 0x44
-        unsigned short m_CounterDamage; // 0x46
-        unsigned short m_Guard; // 0x48
-        unsigned short m_ChudanGuard; // 0x4A
-        unsigned short m_GedanGuard; // 0x4C
-        unsigned short m_Shenlong; // 0x4E
-        unsigned short m_Down; // 0x50
-        unsigned short m_EnemyDown; // 0x52
-        unsigned short m_SpecialAtkFinish; // 0x54
-        unsigned short m_ExSpecialAtkFinish; // 0x56
-        unsigned short m_UltimateFinish; // 0x58
-        unsigned short m_MeteoUltimateFinish; // 0x5A
-        unsigned short m_FuttobiFinish; // 0x5C
-        unsigned short m_DestructionFinish; // 0x5E
-        unsigned short m_DramaticFinish; // 0x60
-        unsigned short m_BGDestroy; // 0x62
-        unsigned short m_GroundDestroy; // 0x64
-        unsigned short m_FrontWalkFrame; // 0x66
+        unsigned short m_LightAtk {}; // 0x0
+        unsigned short m_MiddleAtk {}; // 0x2
+        unsigned short m_HeavyAtk {}; // 0x4
+        unsigned short m_chudanAtk {}; // 0x6
+        unsigned short m_SpecialAtk {}; // 0x8
+        unsigned short m_ExSpecialAtk {}; // 0xA
+        unsigned short m_UltimateAtk {}; // 0xC
+        unsigned short m_MeteoUltimateAtk {}; // 0xE
+        unsigned short m_Special {}; // 0x10
+        unsigned short m_ExSpecial {}; // 0x12
+        unsigned short m_Ultimate {}; // 0x14
+        unsigned short m_MeteoUltimate {}; // 0x16
+        unsigned short m_GuardCancelAttack {}; // 0x18
+        unsigned short m_Shot {}; // 0x1A
+        unsigned short m_Sousai {}; // 0x1C
+        unsigned short m_ShotSousai {}; // 0x1E
+        unsigned short m_HomingDashAtk {}; // 0x20
+        unsigned short m_HomingDash {}; // 0x22
+        unsigned short m_MikiwameMoveAtk {}; // 0x24
+        unsigned short m_MikiwameMove {}; // 0x26
+        unsigned short m_ShotReflect {}; // 0x28
+        unsigned short m_ZReverse {}; // 0x2A
+        unsigned short m_RushStart {}; // 0x2C
+        unsigned short m_RushRush {}; // 0x2E
+        unsigned short m_RushChange {}; // 0x30
+        unsigned short m_RushSousai {}; // 0x32
+        unsigned short m_RushDamage {}; // 0x34
+        unsigned short m_Burst {}; // 0x36
+        unsigned short m_SparkingBurst {}; // 0x38
+        unsigned short m_Assist {}; // 0x3A
+        unsigned short m_Change {}; // 0x3C
+        unsigned short m_GuardCancelChange {}; // 0x3E
+        unsigned short m_UltimateChange {}; // 0x40
+        unsigned short m_FirstAtk {}; // 0x42
+        unsigned short m_Counter {}; // 0x44
+        unsigned short m_CounterDamage {}; // 0x46
+        unsigned short m_Guard {}; // 0x48
+        unsigned short m_ChudanGuard {}; // 0x4A
+        unsigned short m_GedanGuard {}; // 0x4C
+        unsigned short m_Shenlong {}; // 0x4E
+        unsigned short m_Down {}; // 0x50
+        unsigned short m_EnemyDown {}; // 0x52
+        unsigned short m_SpecialAtkFinish {}; // 0x54
+        unsigned short m_ExSpecialAtkFinish {}; // 0x56
+        unsigned short m_UltimateFinish {}; // 0x58
+        unsigned short m_MeteoUltimateFinish {}; // 0x5A
+        unsigned short m_FuttobiFinish {}; // 0x5C
+        unsigned short m_DestructionFinish {}; // 0x5E
+        unsigned short m_DramaticFinish {}; // 0x60
+        unsigned short m_BGDestroy {}; // 0x62
+        unsigned short m_GroundDestroy {}; // 0x64
+        unsigned short m_FrontWalkFrame {}; // 0x66
     };
 private:
-	CBattleRecord::Battle_Record m_Record[2]; // 0x8
-	const CSkillInfo * m_pSkill[2]; // 0xD8
+	Battle_Record m_Record[2] {}; // 0x8
+	const CSkillInfo * m_pSkill[2] {}; // 0xD8
 	void Initialize();
 public:
 	void ResetRecord();
-	CBattleRecord::Battle_Record * GetRecord(SIDE_ID);
+	Battle_Record* GetRecord(SIDE_ID);
 	unsigned short GetRecordVal(SIDE_ID, BATTLE_RECORD_TYPE);
 	void SetSkill(SIDE_ID, const CSkillInfo *, bool);
 	const CSkillInfo * GetSkill(SIDE_ID);

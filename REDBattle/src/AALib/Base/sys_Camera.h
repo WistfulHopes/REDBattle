@@ -74,8 +74,8 @@ public:
 	const AA_Vector4 & GetFOVTopPlane();
 	const AA_Vector4 & GetFOVBottomPlane();
 	struct FRollbackData;
-	void MakeRollbackData(AA_CCamera::FRollbackData &);
-	void ApplyRollbackData(const AA_CCamera::FRollbackData &);
+	void MakeRollbackData(FRollbackData&);
+	void ApplyRollbackData(const FRollbackData&);
 	AA_CCamera & operator=(const AA_CCamera &);
 };
 struct AA_CCamera::FRollbackData
@@ -84,6 +84,6 @@ struct AA_CCamera::FRollbackData
 	AA_Vector3 m_Up {}; // 0xC
 	AA_Vector3 m_At {}; // 0x18
 	FRollbackData();
-	AA_CCamera::FRollbackData & operator=(AA_CCamera::FRollbackData &);
-	AA_CCamera::FRollbackData & operator=(const AA_CCamera::FRollbackData &);
+	FRollbackData& operator=(FRollbackData&);
+	FRollbackData& operator=(const FRollbackData&);
 };

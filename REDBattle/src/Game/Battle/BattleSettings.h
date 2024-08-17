@@ -4,10 +4,10 @@
 class BattleSettings
 {
 public:
-	int32_t Time; // 0x0
-	int32_t WinCount; // 0x4
-	int32_t Difficult; // 0x8
-	bool EnableFinalRound; // 0xC
+	int32_t Time {}; // 0x0
+	int32_t WinCount {}; // 0x4
+	int32_t Difficult {}; // 0x8
+	bool EnableFinalRound {}; // 0xC
 	BattleSettings() {}
 	void SetDefault();
 	int32_t GetTimeMax();

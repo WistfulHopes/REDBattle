@@ -322,7 +322,7 @@ private:
 		HCSSEQ_SOUSAI = 2,
 		HCSSEQ_Z_REVERSAL = 3,
 	};
-	bool ControlBattleObject_HitCollisionSub(BATTLE_CObjectManager::HCSSEQ);
+	bool ControlBattleObject_HitCollisionSub(HCSSEQ);
 	void ControlBattleObject_ZLine();
 public:
 	uint32_t GenerateUniqID();

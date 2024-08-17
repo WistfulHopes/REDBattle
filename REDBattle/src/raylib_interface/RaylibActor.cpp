@@ -27,32 +27,36 @@ void RaylibActor::LoadSprites()
     imgPac.SetPackFile(LoadFileData((std::string(GetApplicationDirectory()) + imgPacPath).data(), &imgPacSize));
 }
 
-bool RaylibActor::SetSprite()
+bool RaylibActor::SetSprite(const char* imgName)
 {
-    const auto spriteName = parentObj->m_ClsnAnalyzer.GetImageFileName(0);
-    if (!spriteName) return false;
-    if (!strncmp(spriteName, curSpriteName, 0x20)) return true;
-    auto idx = imgPac.SearchFileID(spriteName);
+    if (!strncmp(imgName, curSpriteName, 0x20)) return true;
+    if (textures.find(imgName) != textures.end()) return true;
+    
+    auto idx = imgPac.SearchFileID(imgName);
 
     if ((int)idx == -1) return false;
 
-    strcpy(curSpriteName, spriteName);
+    strcpy(curSpriteName, imgName);
 
     auto offset = imgPac.GetPackOffsetAddr(idx);
     auto size = imgPac.GetPackOffsetFileSize(idx);
 
     auto img = LoadImageFromMemory(".png", (unsigned char*)offset, size);
 
-    UnloadTexture(texture);
-    texture = LoadTextureFromImage(img);
+    auto texture = LoadTextureFromImage(img);
     UnloadImage(img);
 
+    textures.insert(std::make_pair(std::string(imgName), texture));
+    
     return true;
 }
 
 void RaylibActor::Draw()
 {
-    if (!SetSprite()) return;
+    const auto imgName = parentObj->m_ClsnAnalyzer.GetImageFileName(0);
+    if (!imgName) return;
+    
+    if (!SetSprite(imgName)) return;
 
     Rectangle source;
     source.x = parentObj->m_ClsnAnalyzer.GetViewTextureRect(0).m_X;
@@ -76,5 +80,5 @@ void RaylibActor::Draw()
     else origin.x = parentObj->m_ClsnAnalyzer.GetViewWorldRect(0).m_X;
     origin.y = -parentObj->m_ClsnAnalyzer.GetViewWorldRect(0).m_Y;
 
-    DrawTexturePro(texture, source, dest, origin, 0, WHITE);
+    DrawTexturePro(textures[imgName], source, dest, origin, 0, WHITE);
 }

@@ -509,11 +509,6 @@ void OBJ_CBase::CellBegin(const CXXBYTE<32>& name, int time)
 {
     if (!strncmp(name.GetStr(), AN_CmnActLockWait.GetStr(), 0x20)) m_ScriptFlag |= 1;
     else OnCellBegin(name, time);
-
-    if (m_MemberID != MemberID_01) return;
-    
-    std::cout << "m_SideID: " << m_SideID << std::endl;
-    std::cout << "m_CellName: " << m_CellName.GetStr() << std::endl;
 }
 
 void OBJ_CBase::Goto(CXXBYTE<32> label)

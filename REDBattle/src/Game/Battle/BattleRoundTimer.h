@@ -5,13 +5,13 @@ class RoundTimer
 {
 private:
 	static const int32_t FPS = 60;
-	int32_t m_FrameTimeMax; // 0x0
-	int32_t m_CurrentFrameTime; // 0x4
-	uint32_t m_TimeStep; // 0x8
-	bool m_Started; // 0xC
-	bool m_Pause; // 0xD
-	bool m_Infinity; // 0xE
-	bool m_forcePause; // 0xF
+	int32_t m_FrameTimeMax {}; // 0x0
+	int32_t m_CurrentFrameTime {}; // 0x4
+	uint32_t m_TimeStep {}; // 0x8
+	bool m_Started {}; // 0xC
+	bool m_Pause {}; // 0xD
+	bool m_Infinity {}; // 0xE
+	bool m_forcePause {}; // 0xF
 	void InitParam();
 public:
 	RoundTimer() {}
