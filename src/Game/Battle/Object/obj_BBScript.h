@@ -1976,7 +1976,7 @@ class CBBSFile
 public:
 	CBBSFile() {}
 
-	CBBSFile(void* data, int32_t size)
+	CBBSFile(void* data, uint32_t size)
 		: m_DataSize(size)
 	{
 		m_pData = new unsigned char[size];

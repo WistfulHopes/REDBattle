@@ -616,7 +616,7 @@ int OBJ_CBase::GetPosX()
 
         if (deg % 360000 < 0) degWrap += 360000;
 
-        auto rad = (float)deg * PI / 180.0f;
+        auto rad = (float)deg * M_PI / 180.0f;
 
         pos_x = (int32_t)(cosf(rad) * (float)m_PosX - sinf(rad) * (float)m_PosY);
     }
@@ -1277,18 +1277,18 @@ int OBJ_CBase::FuncCallBySwitchCaseTable(uint8_t* addr)
     switch (id)
     {
     case ID_ActionBegin:
-        ActionBegin(*(const CXXBYTE<32>*)(addr + 4));
+        obj->ActionBegin(*(const CXXBYTE<32>*)(addr + 4));
         return 0;
     case ID_ActionEnd:
         return 0;
     case ID_CellBegin:
-        CellBegin(*(const CXXBYTE<32>*)(addr + 4), *(int32_t*)(addr + 36));
+        obj->CellBegin(*(const CXXBYTE<32>*)(addr + 4), *(int32_t*)(addr + 36));
         return 0;
     case ID_Goto:
-        Goto(*(const CXXBYTE<32>*)(addr + 4));
+        obj->Goto(*(const CXXBYTE<32>*)(addr + 4));
         return 0;
     case ID_InitCharName:
-        InitCharName(*(const CXXBYTE<16>*)(addr + 4));
+        obj->InitCharName(*(const CXXBYTE<16>*)(addr + 4));
         return 0;
     default:
         return 0;

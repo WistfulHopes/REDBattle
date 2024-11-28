@@ -30,20 +30,3 @@ private:
     void SetupBattle();
     void UpdateBattle(float DeltaSeconds, bool bUpdateDraw);
 };
-
-namespace red
-{
-    namespace btl
-    {
-        inline void GamePos2RaylibPos(const int32_t& x, const int32_t& y, const int32_t& z, Vector3& v)
-        {
-            if (const auto scene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene()))
-            {
-                const auto linkMagn = scene->GetBattleScreenManager()->GetLinkMagn();
-                v.x = (float)x * 0.001f * linkMagn;
-                v.y = (float)y * 0.001f * linkMagn;
-                v.z = (float)z * 0.001f * linkMagn;
-            }
-        }
-    }
-}

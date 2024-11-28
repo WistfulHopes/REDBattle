@@ -1,4 +1,3 @@
-#include <raylib.h>
 #include "battle_ObjectManager.h"
 #include "Object/Char/char_ActCmn.h"
 #include <cstring>
@@ -98,47 +97,32 @@ BATTLE_CObjectManager::BATTLE_CObjectManager()
     m_IchigekiBGMName = "";
     m_BGSaturation.Init();
     m_CommonActionHash.Release();
+}
 
-    // TODO better way to load chara data
+void BATTLE_CObjectManager::SetCharaData(const FCharaData& InData)
+{
+    m_BBSFile[0][0] = CBBSFile(InData.CharaBBSData[0], InData.CharaBBSDataSize[0]);
+    m_BBSFile[0][1] = CBBSFile(InData.CharaBBSData[1], InData.CharaBBSDataSize[1]);
+    m_BBSFile[0][2] = CBBSFile(InData.CharaBBSData[2], InData.CharaBBSDataSize[2]);
+    m_BBSFile[0][3] = CBBSFile(InData.CharaBBSData[3], InData.CharaBBSDataSize[3]);
+    m_BBSFile[0][4] = CBBSFile(InData.CharaBBSData[4], InData.CharaBBSDataSize[4]);
+    m_BBSFile[0][5] = CBBSFile(InData.CharaBBSData[5], InData.CharaBBSDataSize[5]);
+    m_BBSFile[0][6] = CBBSFile(InData.CharaBBSData[6], InData.CharaBBSDataSize[6]);
 
-    int solBbsSize = 0;
-    auto solBbsData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\BBS_SOL.bbsbin").data(),
-                                   &solBbsSize);
+    m_BBSFile[1][0] = CBBSFile(InData.EffectBBSData[0], InData.EffectBBSDataSize[0]);
+    m_BBSFile[1][1] = CBBSFile(InData.EffectBBSData[1], InData.EffectBBSDataSize[1]);
+    m_BBSFile[1][2] = CBBSFile(InData.EffectBBSData[2], InData.EffectBBSDataSize[2]);
+    m_BBSFile[1][3] = CBBSFile(InData.EffectBBSData[3], InData.EffectBBSDataSize[3]);
+    m_BBSFile[1][4] = CBBSFile(InData.EffectBBSData[4], InData.EffectBBSDataSize[4]);
+    m_BBSFile[1][5] = CBBSFile(InData.EffectBBSData[5], InData.EffectBBSDataSize[5]);
+    m_BBSFile[1][6] = CBBSFile(InData.EffectBBSData[6], InData.EffectBBSDataSize[6]);
 
-    int solefBbsSize = 0;
-    auto solefBbsData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\BBS_SOLEF.bbsbin").data(),
-                                     &solefBbsSize);
-
-    int cmnefBbsSize = 0;
-    auto cmnefBbsData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\BBS_CMNEF.bbsbin").data(),
-                                     &cmnefBbsSize);
-
-    int solColSize = 0;
-    auto solColData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\COL_SOL.pac").data(),
-                                   &solColSize);
-
-    m_BBSFile[0][0] = CBBSFile(solBbsData, solBbsSize);
-    m_BBSFile[0][1] = CBBSFile(solBbsData, solBbsSize);
-    m_BBSFile[0][2] = CBBSFile(solBbsData, solBbsSize);
-    m_BBSFile[0][3] = CBBSFile(solBbsData, solBbsSize);
-    m_BBSFile[0][4] = CBBSFile(solBbsData, solBbsSize);
-    m_BBSFile[0][5] = CBBSFile(solBbsData, solBbsSize);
-    m_BBSFile[0][6] = CBBSFile(solBbsData, solBbsSize);
-
-    m_BBSFile[1][0] = CBBSFile(solefBbsData, solefBbsSize);
-    m_BBSFile[1][1] = CBBSFile(solefBbsData, solefBbsSize);
-    m_BBSFile[1][2] = CBBSFile(solefBbsData, solefBbsSize);
-    m_BBSFile[1][3] = CBBSFile(solefBbsData, solefBbsSize);
-    m_BBSFile[1][4] = CBBSFile(solefBbsData, solefBbsSize);
-    m_BBSFile[1][5] = CBBSFile(solefBbsData, solefBbsSize);
-    m_BBSFile[1][6] = CBBSFile(cmnefBbsData, cmnefBbsSize);
-
-    m_CharVector[0].m_ColPac.SetPackFile(solColData);
-    m_CharVector[1].m_ColPac.SetPackFile(solColData);
-    m_CharVector[2].m_ColPac.SetPackFile(solColData);
-    m_CharVector[3].m_ColPac.SetPackFile(solColData);
-    m_CharVector[4].m_ColPac.SetPackFile(solColData);
-    m_CharVector[5].m_ColPac.SetPackFile(solColData);
+    m_CharVector[0].m_ColPac.SetPackFile(InData.ColData[0]);
+    m_CharVector[1].m_ColPac.SetPackFile(InData.ColData[1]);
+    m_CharVector[2].m_ColPac.SetPackFile(InData.ColData[2]);
+    m_CharVector[3].m_ColPac.SetPackFile(InData.ColData[3]);
+    m_CharVector[4].m_ColPac.SetPackFile(InData.ColData[4]);
+    m_CharVector[5].m_ColPac.SetPackFile(InData.ColData[5]);
 }
 
 int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)

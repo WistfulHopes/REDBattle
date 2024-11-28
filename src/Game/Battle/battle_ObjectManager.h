@@ -8,6 +8,8 @@
 #include "Game/System/game_key.h"
 #include "BattleRecord.h"
 
+struct FCharaData;
+
 template <int V1, int V2>
 class CMultiBuffer
 {
@@ -193,7 +195,7 @@ public:
     ~BATTLE_CObjectManager()
     {
     }
-
+    
 private:
     void BOM_ConstructorSub();
 
@@ -316,7 +318,10 @@ private:
     OBJ_CBase* m_SortedObjPtrVector[TOTAL_OBJECT_NUM]{}; // 0xC10
     OBJ_CBase* m_CreateChokugoObjPtrVector[TOTAL_OBJECT_NUM]{}; // 0xF68
     uint32_t m_UsesObjPtrVectorNum{}; // 0x12C0
+    
 public:
+    void SetCharaData(const FCharaData& InData);
+
     void ControlBattleObject();
     void DrawBattleObject();
     void DrawBattleObjectIgnorePause();

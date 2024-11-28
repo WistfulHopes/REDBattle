@@ -23,6 +23,7 @@ void SCENE_CBattle::Tick(float DeltaSeconds)
 
 void SCENE_CBattle::SetupBattle()
 {
+    BattleObjectManager->SetCharaData(REDGameCommon::GetInstance()->GetCharaData());
     BattleObjectManager->ScriptAnalyze();
     BattleObjectManager->BOM_MatchOneceInitialize(false);
     BattleObjectManager->BOM_RoundAndEasyResetInitialize(false);

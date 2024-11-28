@@ -59,6 +59,15 @@ public:
 	void InitializeParam();
 };
 
+struct FCharaData
+{
+	uint8_t* CharaBBSData[7];
+	uint32_t CharaBBSDataSize[7];
+	uint8_t* EffectBBSData[7];
+	uint32_t EffectBBSDataSize[7];
+	uint8_t* ColData[7];
+};
+
 enum class EFadeType : uint8_t
 {
     Normal = 0x0000,
@@ -151,10 +160,10 @@ public:
 	REDGameCommon(REDGameCommon const&) = delete;
 	void operator=(REDGameCommon const&) = delete;
 
+	static REDGameCommon* GetInstance();
+
 	int32_t playerID;
 	SIDE_ID m_PlayerSide;
-
-	static REDGameCommon* GetInstance();
 
 private:
 	GAME_MODE m_GameMode {};
@@ -174,8 +183,12 @@ private:
 
 private:
 	REDBattlePlayerInfo BattlePlayerInfo[2] {};
+	FCharaData CharaData {};
 
 public:
+	FCharaData GetCharaData() { return CharaData; }
+	void LoadCharaData(uint8_t* charaBbs, uint32_t charaBbsSize, uint8_t* effBbs, uint32_t effBbsSize, uint8_t* col, int idx);
+	
 	void SetGameMode(GAME_MODE gameMode) 
 	{
 		m_PrevGameMode = m_GameMode;
