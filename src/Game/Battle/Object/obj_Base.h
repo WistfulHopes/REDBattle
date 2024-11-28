@@ -48,6 +48,23 @@ public:
     SFinishBranchVoiceInfo m_FinishBranchVoiceInfo{}; // 0x12D
 };
 
+class GAME_CCockpitEXGage
+{
+public:
+    uint32_t m_IconID; // 0x0
+    uint32_t m_SplitNum; // 0x4
+    int32_t m_MaxVal; // 0x8
+    int32_t m_Val; // 0xC
+    float m_DotWidth; // 0x10
+    uint32_t m_Color; // 0x14
+    uint32_t m_MaxColor; // 0x18
+    uint32_t m_EXGFlag; // 0x1C
+    bool m_Active; // 0x20
+    GAME_CCockpitEXGage();
+    ~GAME_CCockpitEXGage();
+    void Reset();
+};
+
 enum ACTV_STATE
 {
     ACTV_NOT_ACTIVE = 0,
@@ -478,6 +495,8 @@ public:
     void ActionChangeSignal();
 
     OBJ_CBase* GetControlObject(CO_TYPE type);
+
+    bool IsTrgBtnX(int offsetTime, int btnID);
     
     bool ActionRequestForce(const CXXBYTE<32>& actionName);
     bool ActionRequestEx(const CXXBYTE<32>& actionName, unsigned int flag, OBJ_CBase* pEnemy,

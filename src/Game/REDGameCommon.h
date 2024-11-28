@@ -148,6 +148,7 @@ namespace red
         extern bool g_SceneChangeFinish;
 		extern CSceneChange g_SceneChangeReq;
 		bool SceneChange(const CSceneChange& sc);
+    	PAD_ID Side2Pad(SIDE_ID sideID);
     };
 };
 
@@ -185,6 +186,9 @@ private:
 	REDBattlePlayerInfo BattlePlayerInfo[2] {};
 	FCharaData CharaData {};
 
+public:
+	const REDBattlePlayerInfo* GetBattlePlayerInfo(SIDE_ID sideID) { return &BattlePlayerInfo[sideID]; }
+	
 public:
 	FCharaData GetCharaData() { return CharaData; }
 	void LoadCharaData(uint8_t* charaBbs, uint32_t charaBbsSize, uint8_t* effBbs, uint32_t effBbsSize, uint8_t* col, int idx);

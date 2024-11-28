@@ -2,7 +2,6 @@
 #include <cstdint>
 #include "AALib/Common/cmn_typedef.h"
 #include "obj_scriptinc.h"
-#include "obj_Base.h"
 
 enum APFLG
 {
@@ -359,4 +358,101 @@ public:
 	int32_t CalcAtkLandStunTimeCrouchAddition(int32_t, uint32_t);
 	int32_t CalcAtkRecoverDamageRate(int32_t, uint32_t);
 	int32_t CalcAtkRushSousaiJizokuFrame(uint32_t);
+};
+
+struct AtkTimeCtrlParam
+{
+	int32_t startTime; // 0x0
+	int32_t endTime; // 0x4
+	int32_t value1; // 0x8
+	void Init();
+	bool IsSet();
+};
+class CAtkParamEx
+{
+public:
+	CAtkParamEx();
+	void CAtkParamExInit();
+	void CAtkParamExBunanInit();
+	int32_t m_AtkVectorX; // 0x0
+	int32_t m_AtkVectorY; // 0x4
+	int32_t m_AtkGravity; // 0x8
+	int32_t m_AtkWallBoundRate; // 0xC
+	int32_t m_AtkLandBoundRate; // 0x10
+	int32_t m_AtkLandStunTime; // 0x14
+	int32_t m_AtkAirStunTime; // 0x18
+	int32_t m_AtkWallBoundCount; // 0x1C
+	int32_t m_AtkLandBoundCount; // 0x20
+	int32_t m_AtkSleepStunTime; // 0x24
+	int32_t m_AtkLandHitAction; // 0x28
+	int32_t m_AtkAirHitAction; // 0x2C
+	int32_t m_AtkWallHaritsukiTime; // 0x30
+	int32_t m_AtkWallBoundWorldOnly; // 0x34
+	int32_t m_AtkKorogariTime; // 0x38
+	int32_t m_AtkSlideDownTime; // 0x3C
+	int32_t m_AtkWallBoundWaitTime; // 0x40
+	int32_t m_AtkKorogariUnlimited; // 0x44
+	int32_t m_AtkQuickDownFlag; // 0x48
+	int32_t m_AtkWSBPoint; // 0x4C
+	int32_t m_AtkIgnoreWSB; // 0x50
+	int32_t m_AtkWSBBlowOffType; // 0x54
+	int32_t m_AtkWSBLimitTime; // 0x58
+	int32_t m_AtkFinishStopTime; // 0x5C
+	int32_t m_AtkSlashUITime; // 0x60
+	int32_t m_AtkWallBoundGravity; // 0x64
+	int32_t m_AtkLandBoundGravity; // 0x68
+	int32_t m_AtkWallBoundStunTime; // 0x6C
+	int32_t m_AtkLandBoundStunTime; // 0x70
+	int32_t m_AtkWallBoundStunTimeAddition; // 0x74
+	int32_t m_AtkLandBoundStunTimeAddition; // 0x78
+	int32_t m_AtkWallBoundRateY; // 0x7C
+	int32_t m_AtkLandBoundRateX; // 0x80
+	int32_t m_AtkFuwafuwaDown; // 0x84
+	AtkTimeCtrlParam m_AtkVectorXPer; // 0x88
+	AtkTimeCtrlParam m_AtkVectorYPer; // 0x94
+	AtkTimeCtrlParam m_AtkGravityAdd; // 0xA0
+	int32_t m_AtkBlowOffLabel; // 0xAC
+	int32_t m_AtkBomberRate; // 0xB0
+	int32_t m_AtkRedRCTime; // 0xB4
+	bool CheckWSBLimitTime();
+	int32_t CalcAtkVectorX(uint32_t, CAtkParam *, CAtkParamEx *, int32_t);
+	int32_t CalcAtkVectorY(uint32_t, CAtkParam *, CAtkParamEx *, int32_t);
+	int32_t CalcAtkGravity(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkWallBoundRate(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkLandBoundRate(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkLandStunTime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkAirStunTime(uint32_t, CAtkParam *, CAtkParamEx *, int32_t);
+	int32_t CalcAtkWallBoundCount(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkLandBoundCount(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkSleepStunTime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkLandHitAction(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkAirHitAction(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkWallHaritsukiTime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkWallBoundWorldOnly(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkKorogariTime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkWallBoundWaitTime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkKorogariUnlimited(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkSlideDownTime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkQuickDownFlag(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkWSBPoint(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkIgnoreWSB(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkWSBBlowOffType(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkWSBLimitTime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkFinishStopTime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkSlashUITime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkWallBoundGravity(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkLandBoundGravity(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkWallBoundStunTime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkLandBoundStunTime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkWallBoundStunTimeAddition(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkLandBoundStunTimeAddition(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkFuwafuwaDown(uint32_t, CAtkParam *, CAtkParamEx *);
+	void CalcAtkVectorXPer(uint32_t, CAtkParamEx *, CAtkParamEx *);
+	void CalcAtkVectorYPer(uint32_t, CAtkParamEx *, CAtkParamEx *);
+	void CalcAtkGravityAdd(uint32_t, CAtkParamEx *, CAtkParamEx *);
+	int32_t CalcAtkBlowOffLabel(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkBomberRate(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkRedRCTime(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkWallBoundRateY(uint32_t, CAtkParam *, CAtkParamEx *);
+	int32_t CalcAtkLandBoundRateX(uint32_t, CAtkParam *, CAtkParamEx *);
 };

@@ -7,7 +7,7 @@
 #include "Scene/scene_Base.h"
 
 bool red::cmn::g_SceneChangeFinish = true;
-CSceneChange red::cmn::g_SceneChangeReq {};
+CSceneChange red::cmn::g_SceneChangeReq{};
 
 CSceneChange::CSceneChange()
 {
@@ -15,7 +15,8 @@ CSceneChange::CSceneChange()
     {
         for (int j = 0; j < 2; j++)
         {
-            m_scCharInfo[i][j].SetBattleCharaData(CHARA_ID_SOL, COLOR_ID_01, BATTLE_SCRIPT_DEFAULT, COSTUME_ID_01, HANDICAP_TYPE_LOWEST);
+            m_scCharInfo[i][j].SetBattleCharaData(CHARA_ID_SOL, COLOR_ID_01, BATTLE_SCRIPT_DEFAULT, COSTUME_ID_01,
+                                                  HANDICAP_TYPE_LOWEST);
         }
     }
     m_scAdvStage = "";
@@ -40,7 +41,9 @@ CSceneChange& CSceneChange::operator=(const CSceneChange& __that)
         for (int j = 0; j < 2; j++)
         {
             auto charInfo = __that.m_scCharInfo[i][j];
-            m_scCharInfo[i][j].SetBattleCharaData(charInfo.GetCharaID(), (EColorID)charInfo.GetColorID(), charInfo.GetScriptType(), (ECostumeID)charInfo.GetCostumeID(), (HANDICAP_TYPE)charInfo.GetHandicap());
+            m_scCharInfo[i][j].SetBattleCharaData(charInfo.GetCharaID(), (EColorID)charInfo.GetColorID(),
+                                                  charInfo.GetScriptType(), (ECostumeID)charInfo.GetCostumeID(),
+                                                  (HANDICAP_TYPE)charInfo.GetHandicap());
         }
     }
     m_scBGMID = __that.m_scBGMID;
@@ -63,7 +66,8 @@ void CSceneChangeCharaInfo::CSceneChangeCharaInfoInit()
 {
 }
 
-void CSceneChangeCharaInfo::SetBattleCharaData(ECharaID charaID, EColorID colorID, EBattleScript scriptType, ECostumeID costumeID, HANDICAP_TYPE handicap)
+void CSceneChangeCharaInfo::SetBattleCharaData(ECharaID charaID, EColorID colorID, EBattleScript scriptType,
+                                               ECostumeID costumeID, HANDICAP_TYPE handicap)
 {
     m_CharaID = charaID;
     m_ColorID = colorID;
@@ -80,6 +84,19 @@ bool red::cmn::SceneChange(const CSceneChange& sc)
     return true;
 }
 
+PAD_ID red::cmn::Side2Pad(SIDE_ID sideID)
+{
+    auto instance = REDGameCommon::GetInstance();
+    if (!instance) return PAD_ID_1CON;
+
+    if (instance->GetBattlePlayerInfo(sideID)->bPadAssign) return instance->GetBattlePlayerInfo(sideID)->PadID;
+
+    if (instance->GetBattlePlayerInfo(sideID == SIDE_BEGIN ? SIDE_2P : SIDE_1P)->bPadAssign)
+        return (PAD_ID)(instance->GetBattlePlayerInfo(sideID == SIDE_BEGIN ? SIDE_2P : SIDE_1P)->PadID == 0);
+
+    return (PAD_ID)(sideID != SIDE_BEGIN);
+}
+
 REDGameCommon* REDGameCommon::GetInstance()
 {
     static REDGameCommon sInstance;
@@ -93,7 +110,7 @@ REDGameCommon::REDGameCommon()
 }
 
 void REDGameCommon::LoadCharaData(uint8_t* charaBbs, uint32_t charaBbsSize, uint8_t* effBbs, uint32_t effBbsSize,
-    uint8_t* col, int idx)
+                                  uint8_t* col, int idx)
 {
     CharaData.CharaBBSData[idx] = charaBbs;
     CharaData.CharaBBSDataSize[idx] = charaBbsSize;

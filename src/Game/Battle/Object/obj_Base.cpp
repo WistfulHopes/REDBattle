@@ -313,6 +313,13 @@ OBJ_CBase* OBJ_CBase::GetControlObject(CO_TYPE type)
     }
 }
 
+bool OBJ_CBase::IsTrgBtnX(int offsetTime, int btnID)
+{
+    auto player = (OBJ_CCharBase*)m_pParentPly.GetPtr();
+    if (player == nullptr || player->m_BtnLastTrgCount(btnID) > offsetTime) return false;
+    return true;
+}
+
 void OBJ_CBase::GetPushWorldRect(int* L, int* T, int* R, int* B)
 {
     auto posX = GetPosX();

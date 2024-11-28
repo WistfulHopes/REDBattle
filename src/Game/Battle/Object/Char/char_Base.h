@@ -1,6 +1,7 @@
 #pragma once
 #include <Game/Battle/Object/obj_base.h>
 #include "char_ActFlag.h"
+#include "Game/Battle/Object/obj_AttackParam.h"
 
 enum SKILL_FLAG
 {
@@ -28,7 +29,7 @@ enum SKILL_FLAG
     SKLFLG_RECIPE_MUST_DIRECTION = -2147483648,
 };
 
-enum SKLEST
+enum SKLEST : uint32_t
 {
     SKLEST_Guard = 1,
     SKLEST_Combo = 2,
@@ -189,6 +190,61 @@ public:
     void* GetRBMemcpyBegin();
 };
 
+enum RPINP : int32_t
+{
+	RPINP_NON = 0,
+	RPINP_KEY = 1,
+	RPINP_SKILL = 2,
+	RPINP_WAIT = 3,
+};
+
+struct sRecipeInputKey
+{
+	RPINP m_Type; // 0x0
+	unsigned short m_RecFlg; // 0x4
+	unsigned short m_Time; // 0x6
+};
+struct sRecipeInputSkill
+{
+	RPINP m_Type; // 0x0
+	CXXBYTE<32> m_SkillNameRE; // 0x4
+	sRecipeInputSkill();
+};
+struct sRecipeWaitType
+{
+	RPINP m_Type; // 0x0
+	SRW_TYPE m_SRWType; // 0x4
+	int32_t m_Time; // 0x8
+};
+
+class CSkillInfoList
+{
+public:
+	CSkillInfoList();
+	void CSkillInfoListInit();
+	enum
+	{
+		SKILL_INFO_NUM = 180,
+	};
+	CSkillInfo m_SkillInfo[180]; // 0x0
+	int32_t m_RBMemcpyBegin; // 0x16800
+	int32_t m_SkillRegisterIndexList[180]; // 0x16804
+	int32_t m_SkillRegisterNum; // 0x16AD4
+	unsigned char m_RecipeDataBuffer[8000]; // 0x16AD8
+	uint32_t m_RecipeDataBufferTotal; // 0x18A18
+	int32_t m_SkillInfoCount; // 0x18A1C
+	int32_t m_SkillSettingID; // 0x18A20
+	int32_t m_RBMemcpyEnd; // 0x18A24
+	AA_EasyHash<CXXBYTE<32>,200,800> m_SkillNameMap; // 0x18A28
+	CSkillInfo * GetCurSettingSkillInfo();
+	CSkillInfo * GetSkillInfo(int32_t);
+	const unsigned long long GetRBMemcpySize();
+	const unsigned long long GetRBTotalMemcpySize();
+	const void * GetRBMemcpyBegin();
+	void SaveRollbackParam(void *, const unsigned long long);
+	void LoadRollbackParam(const void *, const unsigned long long);
+};
+
 enum GUARD_DAN
 {
     GUARD_DAN_NON = 0,
@@ -209,6 +265,145 @@ enum RCELMFLG
 {
     RCELMFLG_HIT = 1,
     RCELMFLG_GUARD = 4,
+};
+
+class CCPUInfo
+{
+public:
+	CCPUInfo();
+	void CCPUInfoReset();
+	int32_t m_LastInitializedLevel; // 0x0
+	int32_t m_Level; // 0x4
+	int32_t m_LastInitializedGuardLevelBonus; // 0x8
+	float m_LevelF01; // 0xC
+	float m_LevelF01Katayori; // 0x10
+	CSkillInfo * m_PlayingSkill; // 0x18
+	const CSkillInfo * m_PlayingSkillLastForDisp; // 0x20
+	int32_t m_RecipeStopTypeForDebug; // 0x28
+	int32_t m_RecipePlayElmTimer; // 0x2C
+	int32_t m_RecipePlayElmTimerWithStop; // 0x30
+	uint32_t m_RecipePlayElmFlag; // 0x34
+	int32_t m_RecipePlayingTime; // 0x38
+	int32_t m_RecipePlayingTimeWithStop; // 0x3C
+	int32_t m_RecipeLandNeutralTime; // 0x40
+	int32_t m_RecipePlayIndex; // 0x44
+	sRecipeInputKey * m_RecipeElmCurPtr; // 0x48
+	int32_t m_RecipePlayElmDone; // 0x50
+	CSkillInfo * m_SkillByRecipe; // 0x58
+	int32_t m_RecipePlayElmCount; // 0x60
+	int32_t m_KeyDirection; // 0x64
+	unsigned short m_KeyFlagReg; // 0x68
+	int32_t m_InputWait; // 0x6C
+	int32_t m_DefGuard; // 0x70
+	int32_t m_DefSwitchGuard; // 0x74
+	int32_t m_DefJustGuard; // 0x78
+	int32_t m_DefBarrierGuard; // 0x7C
+	int32_t m_RangeGuard; // 0x80
+	int32_t m_RangeSwitchGuard; // 0x84
+	int32_t m_RangeJustGuard; // 0x88
+	int32_t m_RangeBarrierGuard; // 0x8C
+	int32_t m_FDKeizoku; // 0x90
+	int32_t m_GuardShitaiTime; // 0x94
+	int32_t m_GuardReversalTime; // 0x98
+	int32_t m_Guard; // 0x9C
+	int32_t m_SwitchGuard; // 0xA0
+	int32_t m_JustGuard; // 0xA4
+	int32_t m_BarrierGuard; // 0xA8
+	int32_t m_BarrierGuardSub; // 0xAC
+	int32_t m_Ukemi; // 0xB0
+	int32_t m_LockReject; // 0xB4
+	int32_t m_NCHandanWait; // 0xB8
+	CCmnRect m_DlEnemyCollision; // 0xBC
+	int32_t m_DlEnemyPosX; // 0xCC
+	int32_t m_DlEnemyPosY; // 0xD0
+	int32_t m_DlKuguriChikuseki; // 0xD4
+	int32_t m_DlKuguriSaikin; // 0xD8
+	int32_t m_DlShotChikuseki; // 0xDC
+	int32_t m_DlShotSaikin; // 0xE0
+	int32_t m_DlTobiChikuseki; // 0xE4
+	int32_t m_DlTobiSaikin; // 0xE8
+	int32_t m_DlSukidarakeSaikin; // 0xEC
+	int32_t m_DlEnemyCrouchTimer; // 0xF0
+	int32_t m_DlEnemyNoAttackTimer; // 0xF4
+	int32_t m_DlReversalTimer; // 0xF8
+	int32_t m_DlStress; // 0xFC
+	int32_t m_DlNageReady; // 0x100
+	CSkillInfo * m_DlEnemyLastUseSkill; // 0x108
+	CSkillInfo * m_DlEnemyLastDelayUpdateSkill; // 0x110
+	CPUTsuyosa m_CPUTsuyosa; // 0x118
+	RPINP m_RecipePlayStructType; // 0x119
+	SBRS_STATE m_SkillByRecipeState; // 0x11A
+	bool m_isRecipePlaying; // 0x11B
+	GUARD_DAN m_PrevGuardDan; // 0x11C
+	bool m_NCNowHandan; // 0x11D
+	bool m_DlEnemyDamage; // 0x11E
+	bool m_DlEnemyGuard; // 0x11F
+	bool m_DlEnemyAttacking; // 0x120
+	GUARD_DAN m_DlEnemyGuardDan; // 0x121
+};
+
+enum ADAT_TYPE : int32_t
+{
+	ADAT_UNKNOWN = 0,
+	ADAT_FRONT = 1,
+	ADAT_BACK = 2,
+	ADAT_VERT = 3,
+	ADAT_WALLBOUND = 4,
+};
+
+enum RCCOLOR : int32_t
+{
+	RCCOLOR_R = 0,
+	RCCOLOR_Y = 1,
+	RCCOLOR_V = 2,
+	RCCOLOR_INVALID = 3,
+};
+
+enum MOVE_X_USAGE : int32_t
+{
+	MOVE_X_USAGE_ETC = 0,
+	MOVE_X_USAGE_FWALK = 1,
+	MOVE_X_USAGE_BWALK = 2,
+	MOVE_X_USAGE_FDASH = 3,
+	MOVE_X_USAGE_BDASH = 4,
+	MOVE_X_USAGE_FAIRDASH = 5,
+	MOVE_X_USAGE_BAIRDASH = 6,
+	MOVE_X_USAGE_FJUMP = 7,
+	MOVE_X_USAGE_BJUMP = 8,
+};
+
+enum : int32_t
+{
+	FINISH_INPUT_NONE = 0,
+	FINISH_INPUT_CHANGE1 = 1,
+	FINISH_INPUT_CHANGE2 = 2,
+};
+
+struct AuraEffectInfo
+{
+	int32_t m_scaleX; // 0x0
+	int32_t m_scaleY; // 0x4
+	int32_t m_scaleZ; // 0x8
+	CXXBYTE<32> m_name; // 0xC
+	AuraEffectInfo();
+};
+
+enum POS_BODY_3D : int32_t
+{
+	BODY_3D_HEAD = 0,
+	BODY_3D_CHEST = 1,
+	BODY_3D_PELVIS = 2,
+	BODY_3D_SHOULDER_L = 3,
+	BODY_3D_SHOULDER_R = 4,
+	BODY_3D_ELBOW_L = 5,
+	BODY_3D_ELBOW_R = 6,
+	BODY_3D_HAND_L = 7,
+	BODY_3D_HAND_R = 8,
+	BODY_3D_CALF_L = 9,
+	BODY_3D_CALF_R = 10,
+	BODY_3D_FOOT_L = 11,
+	BODY_3D_FOOT_R = 12,
+	BODY_3D_NUM = 13,
 };
 
 struct FDamageCellEX
@@ -261,6 +456,22 @@ class OBJ_CCharBase : public OBJ_CBase
         ECharaID m_id{};
         AA_EasyMap<CXXBYTE<16>, CXXBYTE<128>, 32, 1> m_mouthTable{};
     };
+	
+	struct FEntrySubMemberDispInfo
+	{
+		int32_t x; // 0x0
+		int32_t y; // 0x4
+		int32_t z; // 0x8
+		bool bDispOn; // 0xC
+		FEntrySubMemberDispInfo();
+	};
+
+	struct FVoiceSetting
+	{
+		VOICE_TYPE Type; // 0x0
+		char RandomNum; // 0x4
+		char PlayPercent; // 0x5
+	};
 
 private:
     int32_t CharBaseSyncBegin{};
@@ -475,9 +686,176 @@ public:
     bool m_IamLeft{}; // 0xC174
     bool m_IamLeftPrev{}; // 0xC175
     ID_CMNACT m_CurCommonActionID{}; // 0xC178
+	unsigned char m_InpFlag[324][2]; // 0xC17C
+	int32_t m_BtnLastTrgCount[8]; // 0xC404
+	int32_t m_BtnLastTrgOffCount[8]; // 0xC424
+	int32_t m_BtnHoldCount[8]; // 0xC444
+	int32_t m_BtnRendaCount[8]; // 0xC464
+	int32_t m_BtnRendaAddTime[8]; // 0xC484
+	int32_t m_UkemiBtnTime; // 0xC4A4
+	int32_t m_BtnHoldCountWithoutGuard[8]; // 0xC4A8
+	unsigned char m_PreFRCInput; // 0xC4C8
+	unsigned char m_PreTenkey; // 0xC4C9
+	unsigned char m_DashTime1st[2]; // 0xC4CA
+	unsigned char m_DashTime2nd[2]; // 0xC4CC
+	unsigned char m_DashChangeTenkey[2]; // 0xC4CE
+	unsigned char m_JustGuardInputTime[2]; // 0xC4D0
+	unsigned char m_JustGuardPenaltyTime[2]; // 0xC4D2
+	unsigned char m_PreTenkeyEasy; // 0xC4D4
+	unsigned char m_DashTime1stEasy[2]; // 0xC4D5
+	unsigned char m_DashTime2ndEasy[2]; // 0xC4D7
+	unsigned char m_DashChangeTenkeyEasy[2]; // 0xC4D9
+	int32_t m_stylishComboCount; // 0xC4DC
+	int32_t m_PrivateVal[8]; // 0xC4E0
+	int32_t m_SkillCheckBit; // 0xC500
+
+private:
+	int32_t m_ChargeShotVal[4]; // 0xC504
+	unsigned char m_CameraComboOnce[10]; // 0xC514
+	unsigned char m_RendaSmashStartType[3]; // 0xC51E
+	unsigned char m_RendaSmashType[3]; // 0xC521
 
 public:
-    int32_t m_ExKizetsu{}; // 0xC64C
+	
+	int32_t m_DemoTimer; // 0xC524
+	GAME_CCockpitEXGage m_ExGage[5]; // 0xC528
+	int32_t m_DashInputKeepTime; // 0xC5DC
+	int32_t m_PlayerAttackRate; // 0xC5E0
+	int32_t m_PlayerDefenceRate; // 0xC5E4
+	int32_t m_CharacterAddAttackRate; // 0xC5E8
+	int32_t m_CharacterAddDefenceRate; // 0xC5EC
+	int32_t m_PlayerCrushRate; // 0xC5F0
+	int32_t m_PlayerTensionRate; // 0xC5F4
+	int32_t m_SousaiCancelTime; // 0xC5F8
+	int32_t m_ReactionWait; // 0xC5FC
+	CXXBYTE<32> m_TmpLabel; // 0xC600
+	int32_t m_AirTimer; // 0xC620
+	int32_t m_DamageColX; // 0xC624
+	int32_t m_DamageColY; // 0xC628
+	int32_t m_DamageColW; // 0xC62C
+	int32_t m_DamageColH; // 0xC630
+	uint32_t m_ActionRequestFlagForJumpTmp; // 0xC634
+	HACT_HitAction m_HitAction; // 0xC638
+	ADAT_TYPE m_AirDamageAngleType; // 0xC63C
+	int32_t m_SkyDashCorrect; // 0xC640
+	int32_t m_BackStepInvalidTime; // 0xC644
+	int32_t m_BoundReadyTime; // 0xC648
+	int32_t m_ExKizetsu; // 0xC64C
+	int32_t m_RomanCancelRsvSpeedX; // 0xC650
+	int32_t m_LongSenkoInputActiveTime; // 0xC654
+	int32_t m_LongSenkoInputActiveTimeForDust; // 0xC658
+	bool m_LongSenkoInputActiveOnCurAction; // 0xC65C
+	int32_t m_OldPosXDebug; // 0xC660
+	int32_t m_OldPosYDebug; // 0xC664
+	int32_t m_AttackTimeDebug; // 0xC668
+	int32_t m_DustHomingTime; // 0xC66C
+	int32_t m_DustHomingSubTime; // 0xC670
+	int32_t m_DustBoundTime; // 0xC674
+	int32_t m_NewDustHomingTime; // 0xC678
+	int32_t m_CmnActObjReg0; // 0xC67C
+	int32_t m_CmnActObjReg1; // 0xC680
+	int32_t m_CmnActObjReg2; // 0xC684
+	int32_t m_CmnActObjReg3; // 0xC688
+	int32_t m_CmnActObjReg4; // 0xC68C
+	int32_t m_CmnActObjReg5; // 0xC690
+	int32_t m_CmnActObjReg6; // 0xC694
+	int32_t m_CmnActObjReg7; // 0xC698
+	int32_t m_ForceRomanCancelYoyakuTimer; // 0xC69C
+	int32_t m_ForceRomanCancelTimer; // 0xC6A0
+	int32_t m_ForceRomanCancelDoneTimer; // 0xC6A4
+	int32_t m_ForceRomanCancelIgnoreTimer; // 0xC6A8
+	int32_t m_NandemoCancelTime; // 0xC6AC
+	int32_t m_ExPointForPGX; // 0xC6B0
+	int32_t m_ExPointForPGY; // 0xC6B4
+	int32_t m_GuardBalance; // 0xC6B8
+	int32_t m_GuardBalanceStopTime; // 0xC6BC
+	int32_t m_GuardBalanceMaxTime; // 0xC6C0
+	uint32_t m_TmpSkillForceDisableFlag; // 0xC6C4
+	CSkillInfo * m_LastSkillAttackPtr; // 0xC6C8
+	int32_t m_AttackLastHitTime; // 0xC6D0
+	CXXBYTE<16> m_CommonVoiceTable[120]; // 0xC6D4
+	int32_t m_SlowTime; // 0xCE54
+	int32_t m_SlowTimeBySC; // 0xCE58
+	int32_t m_RomanCancelEndTime; // 0xCE5C
+	int32_t m_RomanCancelEndTimeByAttack; // 0xCE60
+	int32_t m_RomanCancelEndTimeByAttackTmp; // 0xCE64
+	int32_t m_RomanCancelBattenTime; // 0xCE68
+	int32_t m_IchigekiGage; // 0xCE6C
+	CXXBYTE<32> m_JimakuName; // 0xCE70
+	int32_t m_JimakuTime; // 0xCE90
+	int32_t m_JimakuForceTime; // 0xCE94
+	int32_t m_JimakuBGTime; // 0xCE98
+	int32_t m_DemoEnd_YoinTime; // 0xCE9C
+	CXXBYTE<32> m_EntryActionNameSelf; // 0xCEA0
+	CXXBYTE<32> m_EntryActionNameEnemy; // 0xCEC0
+	CXXBYTE<32> m_EntryActionNameReady; // 0xCEE0
+	int32_t m_HeliumTime; // 0xCF00
+	int32_t m_GTmpReg[8]; // 0xCF04
+	int32_t m_JitabataHitStopHendou; // 0xCF24
+	int32_t m_BurstYomiTime; // 0xCF28
+	int32_t m_ComboVoiceSpeakingTimer; // 0xCF2C
+	int32_t m_ComboVoiceUkemiWait; // 0xCF30
+	int32_t m_ComboVoiceReadyTimer; // 0xCF34
+	int32_t m_JumpCancelSenkoActiveTime; // 0xCF38
+	CXXBYTE<32> m_MeshSetNameExchangeTable[20]; // 0xCF3C
+	CXXBYTE<32> m_AnimeNameExchangeTable[8]; // 0xD1BC
+	float m_HitPointLengthDispMaxF01; // 0xD2BC
+	int32_t m_AirJumpTime; // 0xD2C0
+	bool m_AirJumpFlyMOM; // 0xD2C4
+	int32_t m_WinActionButton; // 0xD2C8
+	int32_t m_TrainingValue; // 0xD2CC
+	int32_t m_GGBlockingOKTime; // 0xD2D0
+	int32_t m_GGBlockingIgnoreTime; // 0xD2D4
+	int32_t m_ThrowInputTime; // 0xD2D8
+	int32_t m_NoNagenukeTime; // 0xD2DC
+	int32_t m_HomingDashTsuigekiTime; // 0xD2E0
+	int32_t m_DokiDokiStopTime; // 0xD2E4
+	int32_t m_DokiDokiStopDamage; // 0xD2E8
+	uint32_t m_TimeWithoutAnten; // 0xD2EC
+	int32_t m_DustHomingDash2HoseiBase; // 0xD2F0
+	int32_t m_DustHomingDash2HoseiUntilBound; // 0xD2F4
+	int32_t m_NearSlashObjectDistance; // 0xD2F8
+	int32_t m_RedRomanCancelTime; // 0xD2FC
+	int32_t m_FaultlessDefenceDisableTime; // 0xD300
+	int32_t m_SlowRate; // 0xD304
+	int32_t m_HitPointRecover; // 0xD308
+	int32_t m_HitPointRecoverStopTime; // 0xD30C
+	int32_t m_TrainingHPRecoverWait; // 0xD310
+	short m_SenkoInputNormal; // 0xD314
+	short m_SenkoInputSpecial; // 0xD316
+	short m_SenkoInputUltimate; // 0xD318
+	int32_t m_DeadCounter; // 0xD31C
+	int32_t m_DmgColCounter; // 0xD320
+	int32_t m_AssistAttackPosZ; // 0xD324
+	int32_t m_JumpDir; // 0xD328
+	unsigned char m_CmdSuccessInAnten; // 0xD32C
+	unsigned char m_DownFromSlideDown; // 0xD32D
+	int32_t m_WorldSideBreakPoint; // 0xD330
+	int32_t m_CmnCharaReg[24]; // 0xD334
+	int32_t m_CmnCharaActReg[8]; // 0xD394
+	int32_t m_DamageActionCount; // 0xD3B4
+	int32_t m_FuwafuwaDownTimer; // 0xD3B8
+	CXXBYTE<32> m_DamageTransferInterruptFunc; // 0xD3BC
+	int32_t m_RedRCTime; // 0xD3DC
+	unsigned short m_WSBEstimateDamage; // 0xD3E0
+	CXXBYTE<32> m_ComboSameNameStack[100]; // 0xD3E2
+	int32_t m_SameAttackGravity; // 0xE064
+	int32_t m_BoundAddGravity; // 0xE068
+	CAtkParam m_AtkParamForGGThrowStack; // 0xE070
+	CAtkParamEx m_AtkParamCHForGGThrowStack; // 0xE468
+	CAtkParamEx m_AtkParamNHForGGThrowStack; // 0xE520
+	int32_t m_TensionBalance; // 0xE5D8
+	int32_t m_TensionPenaltyTime; // 0xE5DC
+	int32_t m_BurstPenaltyTime; // 0xE5E0
+	int32_t m_TensionGG; // 0xE5E4
+	int32_t m_TensionGGUseDisp; // 0xE5E8
+	int32_t m_BurstLog; // 0xE5EC
+	int32_t m_TensionNoTouchTime; // 0xE5F0
+	int32_t m_NegativeVal; // 0xE5F4
+	int32_t m_TensionMovePenaltyTime; // 0xE5F8
+	int32_t m_TensionSideTime; // 0xE5FC
+	FEntrySubMemberDispInfo m_EntrySubMemberDispInfo[2]; // 0xE600
+	FVoiceSetting m_VoiceSettingTable[100]; // 0xE620
 
 private:
     bool m_Entry{}; // 0xE940
@@ -509,6 +887,9 @@ public:
     unsigned char m_MikiwameMoveCancelAvailable{}; // 0xEA14
     unsigned char m_MemberChangeUltimateAvailable{}; // 0xEA15
 
+private:
+    int32_t CharBaseSyncEnd;
+    
 public:
     CXXBYTE<16> m_CharName{}; // 0xEF5C
     CXXBYTE<16> m_CharNameForVoice{}; // 0xEF6C
@@ -519,7 +900,18 @@ public:
     VAR_Type m_VoiceCond_Var[10]{}; // 0xF118
 
 public:
+	CCPUInfo m_CPUInfo; // 0xF158    
+	CSkillInfoList m_SkillInfoList; // 0xF280
+	AA_EasyHash<CXXBYTE<16>,120,480> m_CommonVoiceHash; // 0x29D7C
+	AA_EasyHash<CXXBYTE<16>,100,400> m_VoiceSettingHash; // 0x2A9B0
+	AA_EasyHash<CXXBYTE<32>,20,80> m_MeshSetNameExchangeHash; // 0x2B3DC
+	AA_EasyHash<CXXBYTE<32>,600,2400> m_MeshSetCellHash; // 0x2B728
+	unsigned char m_MeshSetCellTable[600]; // 0x3199C
+	AA_EasyHash<CXXBYTE<32>,8,32> m_AnimeNameExchangeHash; // 0x31BF4
+	AA_EasyMap<CXXBYTE<16>,CXXBYTE<128>,128,1> m_MouthTable; // 0x31D48
+
     OBJ_CCharBase();
+    ~OBJ_CCharBase() override {}
     void ObjectConstructor_ForPlayer();
     void PlayerInitializeOnEasyReset();
 
@@ -529,6 +921,7 @@ public:
     short GetForceChangeCDT() { return ply_CDT_ForceChange; }
     short GetInnerCDT() { return ply_CDT_Inner; }
     bool CheckPlayerFlag(PLAYER_FLAG flag) { return m_PlayerFlag & flag; }
+    bool CheckPlayerFlag2(PLAYER_FLAG2 flag) { return m_PlayerFlag2 & flag; }
     void DelPlayerFlag2(PLAYER_FLAG2 flag) { m_PlayerFlag2 &= ~flag; }
     void AddPlayerFlag4(PLAYER_FLAG4 flag) { m_PlayerFlag4 |= flag; }
     void DelPlayerFlag4(PLAYER_FLAG4 flag) { m_PlayerFlag4 &= ~flag; }
@@ -537,6 +930,9 @@ public:
     bool CheckAttackFlag(PLATTACK_FLAG flag) { return m_AttackFlag & flag; }
 
     const char* GetContextActionName(const CXXBYTE<32>& actName) override;
+
+public:
+	int32_t CommandFlagUpdate();
 
     bool IsDead() override;
     void SetEntry(bool entry) { m_Entry = entry; }

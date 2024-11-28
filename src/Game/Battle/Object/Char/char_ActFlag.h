@@ -1,6 +1,6 @@
 #pragma once
 
-enum PLAYER_FLAG
+enum PLAYER_FLAG : uint32_t
 {
 	PLFLG_CROUCH = 1,
 	PLFLG_DOWN = 2,

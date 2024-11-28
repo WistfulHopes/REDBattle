@@ -530,7 +530,7 @@ public:
 private:
     CBattleInputAnalyzer m_BattleInputAnalyzer[6]{}; // 0x37A8
 public:
-    CBattleInputAnalyzer* BattleInputAnalyzer(SIDE_ID, EMemberID);
+    CBattleInputAnalyzer* BattleInputAnalyzer(SIDE_ID sideID, EMemberID memberID) { return &m_BattleInputAnalyzer[sideID * 3 + memberID]; }
     bool IsAC15System();
     void CheckBattleFastFowardEndAC15();
 

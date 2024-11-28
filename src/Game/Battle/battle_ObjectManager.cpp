@@ -797,6 +797,63 @@ void BATTLE_CObjectManager::ControlBattleObject()
     // TODO finish
 }
 
+void BATTLE_CObjectManager::ControlBattleObject_KeyRenewal()
+{
+    const auto battleScene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene());
+    if (battleScene->GetBattleState()->IsBattleDoing())
+    {
+        // TODO replay
+    }
+
+    if (m_BOMFlag & 1)
+    {
+        // TODO trial (mission)
+    }
+
+    auto padId1P = red::cmn::Side2Pad(SIDE_1P);
+    auto padId2P = red::cmn::Side2Pad(SIDE_2P);
+
+    // TODO training menu
+
+    uint16_t keyFlagReg;
+
+    for (int i = 0; i < 2; i++)
+    {
+        uint16_t recflg;
+        for (int j = 0; j < 3; j++)
+        {
+            keyFlagReg = 0;
+            recflg = 0;
+            OBJ_CCharBase* player = &m_CharVector[i * 3 + j];
+
+            // TODO online training
+
+            if (!player->CheckPlayerFlag2(PLFLG2_CPU) || player->m_CPUInfo.m_RecipePlayStructType != 1)
+            {
+                // TODO replay recordings
+                /* else */ recflg = keyFlagReg;
+            }
+            else
+                recflg = player->m_CPUInfo.m_KeyFlagReg;
+
+            m_BattleInputAnalyzer[i * 3 + j].UpdateBattleInputAnalyzer(recflg);
+            keyFlagReg = recflg;
+
+            if (player->IsEntry() && player->GetMainPlayerBase(player->m_SideID) == player)
+            {
+                // TODO training key info update
+            }
+        }
+    }
+
+    // TODO training stuff
+
+    for (auto player : m_CharVector)
+    {
+        if (player.IsEntry()) player.CommandFlagUpdate();
+    }
+}
+
 void BATTLE_CObjectManager::ControlBattleObject_Move()
 {
 }
