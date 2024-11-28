@@ -10,6 +10,7 @@
 #include "Char/char_Base.h"
 
 const char* nullstr = "\x0";
+int32_t RED_SIDE_OFFSET = 50000;
 
 void OBJ_CBaseRelativePtr::SetPtr(OBJ_CBase* ptr)
 {
@@ -103,6 +104,354 @@ int OBJ_CBase::ReleaseResource()
 
 void OBJ_CBase::ObjectConstructor_ForObject()
 {
+}
+
+void OBJ_CBase::ObjUnactivate()
+{
+    if (m_ActiveState == ACTV_NOT_ACTIVE || (m_ActiveState != ACTV_ACTIVE && m_ActiveState != ACTV_REQ_ACTIVE &&
+        m_ActiveState == ACTV_REQ_NO_ACTIVE))
+        return;
+
+    m_ObjSignal |= 0x200;
+    m_ActiveState = ACTV_REQ_NO_ACTIVE;
+    ActionChangeSignal();
+}
+
+bool OBJ_CBase::ObjIsUsing()
+{
+    if (m_ActiveState == ACTV_NOT_ACTIVE || (m_ActiveState != ACTV_ACTIVE && m_ActiveState != ACTV_REQ_ACTIVE &&
+        m_ActiveState == ACTV_REQ_NO_ACTIVE))
+        return false;
+
+    return true;
+}
+
+void OBJ_CBase::ActionChangeSignal()
+{
+    if (!m_IsPlayerObj)
+    {
+        auto itr = 0;
+        const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+            GetBattleObjectManager();
+
+        while (true)
+        {
+            auto nextSortedActiveObj = objManager->GetNextSortedActiveObjectWithCreateChokugo(&itr);
+
+            if (nextSortedActiveObj == nullptr) break;
+
+            if (m_ActiveState != ACTV_NOT_ACTIVE)
+            {
+                if (m_ActiveState != ACTV_ACTIVE && m_ActiveState != ACTV_REQ_ACTIVE && m_ActiveState ==
+                    ACTV_REQ_NO_ACTIVE)
+                    continue;
+
+                if (nextSortedActiveObj->m_SideID == SIDE_ID_NUM && nextSortedActiveObj->m_MemberID == m_MemberID)
+                {
+                    nextSortedActiveObj->DoInterrupt(ON_PLAYER_ACTION_CHANGE);
+
+                    if (nextSortedActiveObj->m_KowareCur == 0 && (m_CollisionFlag2 & OBJ_CLSN_2_KOWARE_ACT) != 0)
+                    {
+                        RequestKoware(CO_SELF);
+                    }
+                }
+            }
+        }
+    }
+
+    auto itr = 0;
+    const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+        GetBattleObjectManager();
+
+    while (true)
+    {
+        auto nextSortedActiveObj = objManager->GetNextSortedActiveObjectWithCreateChokugo(&itr);
+
+        if (nextSortedActiveObj == nullptr) break;
+
+        if (m_ActiveState != ACTV_NOT_ACTIVE)
+        {
+            if (m_ActiveState != ACTV_ACTIVE && m_ActiveState != ACTV_REQ_ACTIVE && m_ActiveState ==
+                ACTV_REQ_NO_ACTIVE)
+                continue;
+
+            if (nextSortedActiveObj->m_SideID == SIDE_ID_NUM && nextSortedActiveObj->m_MemberID == m_MemberID &&
+                nextSortedActiveObj->m_pLinkObject_ChangeToEliminate == this)
+            {
+                nextSortedActiveObj->m_ObjSignal |= 0x400;
+            }
+        }
+    }
+}
+
+OBJ_CBase* OBJ_CBase::GetControlObject(CO_TYPE type)
+{
+    switch (type)
+    {
+    case CO_PREV:
+        return m_pPrevChild;
+    case CO_PARENT:
+        return m_pParentObj;
+    case CO_PLAYER:
+        return m_pParentPly;
+    case CO_STACK0:
+        return m_pChildStack[0];
+    case CO_STACK1:
+        return m_pChildStack[1];
+    case CO_STACK2:
+        return m_pChildStack[2];
+    case CO_STACK3:
+        return m_pChildStack[3];
+    case CO_STACK4:
+        return m_pChildStack[4];
+    case CO_STACK5:
+        return m_pChildStack[5];
+    case CO_STACK6:
+        return m_pChildStack[6];
+    case CO_STACK7:
+        return m_pChildStack[7];
+    case CO_STACK_FOR_CMN_ACT:
+        return m_pChildStack[8];
+    case CO_WINNER:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetWinnerObj();
+        }
+    case CO_LOSER:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetWinnerObj()->m_pTargetObj;
+        }
+    case CO_LOCKED:
+        return m_pLockLinkObj;
+    case CO_ENEMY:
+        return m_pTargetObj;
+    case CO_SELF:
+        return this;
+    case CO_ATTACK_MASTER:
+        return m_pAttackMaster;
+    case CO_ATTACK_SLAVE:
+        return m_pAttackSlaveNewest;
+    case CO_TRIAL:
+        return m_pTrialObj;
+    case CO_PLAYER1:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetMainPlayer(SIDE_1P);
+        }
+    case CO_PLAYER2:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetMainPlayer(SIDE_2P);
+        }
+    case CO_SELF_MAIN_PLAYER:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetMainPlayer(m_SideID);
+        }
+    case CO_SELF_SUB_MEMBER1:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetSubMember(m_SideID, SubMemberID_01);
+        }
+    case CO_SELF_SUB_MEMBER2:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetSubMember(m_SideID, SubMemberID_02);
+        }
+    case CO_ENEMY_MAIN_PLAYER:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetMainPlayer(static_cast<SIDE_ID>(m_SideID == 0 ? 1 : 0));
+        }
+    case CO_ENEMY_SUB_MEMBER1:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetSubMember(static_cast<SIDE_ID>(m_SideID == 0 ? 1 : 0), SubMemberID_01);
+        }
+    case CO_ENEMY_SUB_MEMBER2:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetSubMember(static_cast<SIDE_ID>(m_SideID == 0 ? 1 : 0), SubMemberID_02);
+        }
+    case CO_PREV_MAIN_PLAYER:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetTeamManager(m_SideID)->GetPrevMainPlayer();
+        }
+    case CO_PREV_ENEMY_MAIN_PLAYER:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetTeamManager(static_cast<SIDE_ID>(m_SideID == 0 ? 1 : 0))->GetPrevMainPlayer();
+        }
+    case CO_MAIN_PLAYER1:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetMainPlayer(SIDE_1P);
+        }
+    case CO_MAIN_PLAYER2:
+        {
+            const auto objManager = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene())->
+                GetBattleObjectManager();
+            return objManager->GetMainPlayer(SIDE_2P);
+        }
+    default:
+        return nullptr;
+    }
+}
+
+void OBJ_CBase::GetPushWorldRect(int* L, int* T, int* R, int* B)
+{
+    auto posX = GetPosX();
+    auto posY = GetPosY();
+
+    auto dirObj = m_pLinkObject_Direction;
+    uint32_t direction;
+
+    if (!dirObj) direction = m_Direction;
+    else direction = GetObjDir();
+
+    auto pushFront = direction ? GetPushColW() / 2 : GetPushColW() / 2 + m_PushColWidthFront;
+    auto pushBack = direction ? GetPushColW() / 2 + m_PushColWidthFront : GetPushColW() / 2;
+
+    *T = GetPushColH() + posY;
+    *B = posY - GetPushColHLow();
+
+    *L = posX - pushBack;
+    *R = posX + pushFront;
+
+    if (L && R)
+    {
+        if (m_ClsnAnalyzer.m_CollisionNum[5])
+        {
+            float tmpL;
+            float tmpR;
+
+            auto worldRect = m_ClsnAnalyzer.m_CollisionAddr[5]->m_WorldRect;
+
+            if (direction != 0)
+            {
+                tmpL = worldRect.m_X * -1000.f;
+                tmpR = (worldRect.m_W + worldRect.m_X) * 1000.f;
+            }
+            else
+            {
+                tmpL = (worldRect.m_W + worldRect.m_X) * 1000.f;
+                tmpR = worldRect.m_X * -1000.f;
+            }
+
+            *L = posX - (int)tmpL;
+            *R = posX + (int)tmpR;
+        }
+    }
+    
+    if ((m_CollisionFlag & OBJ_CLSN_LOCKING) != 0 && (m_CollisionFlag3 & OBJ_CLSN_3_NOFAT_PUSHCOL_LOCKING) == 0)
+    {
+        if (L && R)
+        {
+            int tmpL, tmpT, tmpR, tmpB = 0;
+            m_pLockLinkObj.GetPtr()->GetPushWorldRect(&tmpL, &tmpT, &tmpR, &tmpB);
+
+            if (*T < tmpT) *T = tmpT;
+            if (*B > tmpB) *B = tmpB;
+            if (*L > tmpL) *L = tmpL;
+            if (*R < tmpR) *R = tmpR;
+        }
+        else
+        {
+            int tmpT, tmpB = 0;
+            m_pLockLinkObj.GetPtr()->GetPushWorldRect(nullptr, &tmpT, nullptr, &tmpB);
+
+            if (*T < tmpT) *T = tmpT;
+            if (*B > tmpB) *B = tmpB;
+        }
+    }
+    
+    if (m_pLinkObject_PushCollision)
+    {
+        if (L && R)
+        {
+            int tmpL, tmpT, tmpR, tmpB = 0;
+            m_pLinkObject_PushCollision.GetPtr()->GetPushWorldRect(&tmpL, &tmpT, &tmpR, &tmpB);
+
+            if (*T < tmpT) *T = tmpT;
+            if (*B > tmpB) *B = tmpB;
+            if (*L > tmpL) *L = tmpL;
+            if (*R < tmpR) *R = tmpR;
+        }
+        else
+        {
+            int tmpT, tmpB = 0;
+            m_pLinkObject_PushCollision.GetPtr()->GetPushWorldRect(nullptr, &tmpT, nullptr, &tmpB);
+
+            if (*T < tmpT) *T = tmpT;
+            if (*B > tmpB) *B = tmpB;
+        }
+    }
+}
+
+void OBJ_CBase::GetPushWorldRectForWorldClip(int* L, int* R)
+{
+    auto posX = GetPosX();
+    *L = posX - RED_SIDE_OFFSET - 35000;
+    *R = RED_SIDE_OFFSET + posX + 35000;
+
+    if (m_CollisionFlag & OBJ_CLSN_LOCKING)
+    {
+        int tmpL, tmpR = 0;
+        m_pLockLinkObj.GetPtr()->GetPushWorldRectForWorldClip(&tmpL, &tmpR);
+
+        if (*L > tmpL) *L = tmpL;
+        if (*R < tmpR) *R = tmpR;
+    }
+    
+    if (m_pLinkObject_PushCollision)
+    {
+        int tmpL, tmpR = 0;
+        m_pLinkObject_PushCollision.GetPtr()->GetPushWorldRectForWorldClip(&tmpL, &tmpR);
+
+        if (*L > tmpL) *L = tmpL;
+        if (*R < tmpR) *R = tmpR;
+    }
+}
+
+void OBJ_CBase::GetPushScreenRect(int& L, int& T, int& R, int& B)
+{
+    GetPushWorldRect(nullptr, &T, nullptr, &B);
+    GetPushWorldRectForWorldClip(&L, &R);
+    
+    auto dirObj = m_pLinkObject_Angle.GetPtr()->m_pLinkObject_Direction;
+    uint32_t direction;
+
+    if (!dirObj) direction = m_Direction;
+    else direction = GetObjDir();
+
+    if (direction != 0)
+    {
+        L -= m_PushScreenOffsetFront;
+        R += m_PushScreenOffsetBack;
+    }
+    else
+    {
+        R += m_PushScreenOffsetFront;
+        L -= m_PushScreenOffsetBack;
+    }
+
+    T += m_PushScreenOffsetTop;
+    B += m_PushScreenOffsetBottom;
 }
 
 bool OBJ_CBase::ActionRequestForce(const CXXBYTE<32>& actionName)
@@ -225,6 +574,70 @@ OBJ_CCharBase* OBJ_CBase::GetMainPlayerBase(SIDE_ID side)
     return objManager->GetTeamManager(side)->GetMainPlayer();
 }
 
+int OBJ_CBase::GetPosX()
+{
+    auto angleY = 0;
+    auto angleY2 = 0;
+    if (m_pLinkObject_Angle != nullptr)
+    {
+        auto linkObj = m_pLinkObject_Angle.GetPtr()->m_pLinkObject_Angle;
+        if (!linkObj)
+        {
+            angleY2 = angleY = m_pLinkObject_Angle.GetPtr()->m_AngleYDeg_x1000;
+        }
+        else
+        {
+            angleY2 = m_pLinkObject_Angle.GetPtr()->m_AngleYDeg_x1000;
+            angleY = linkObj.GetPtr()->GetAngleY() + angleY2;
+        }
+    }
+
+    int pos_x;
+
+    if (m_pLinkObject_Angle == nullptr || angleY == 0)
+        pos_x = m_PosX;
+    else
+    {
+        if (m_pLinkObject_Angle.GetPtr()->m_pLinkObject_Angle)
+        {
+            angleY2 += m_pLinkObject_Angle.GetPtr()->m_pLinkObject_Angle.GetPtr()->GetAngleY();
+        }
+
+        auto dirObj = m_pLinkObject_Angle.GetPtr()->m_pLinkObject_Direction;
+        uint32_t direction;
+
+        if (!dirObj) direction = m_Direction;
+        else direction = GetObjDir();
+
+        if (direction > 0) angleY2 = -angleY2;
+
+        auto deg = angleY2 / 1000;
+        auto degWrap = deg % 360000;
+
+        if (deg % 360000 < 0) degWrap += 360000;
+
+        auto rad = (float)deg * PI / 180.0f;
+
+        pos_x = (int32_t)(cosf(rad) * (float)m_PosX - sinf(rad) * (float)m_PosY);
+    }
+
+    auto posObj = m_pLinkObject_Position;
+
+    if (posObj == nullptr)
+    {
+        posObj = m_pLinkObject_PositionCenter;
+
+        if (posObj == nullptr)
+        {
+            if ((m_CollisionFlag & OBJ_CLSN_LOCK_LINK_POSITION) != OBJ_CLSN_LOCK_LINK_POSITION) return pos_x;
+
+            posObj = m_pLockLinkObj;
+        }
+    }
+
+    return posObj.GetPtr()->GetPosX() + pos_x;
+}
+
 int OBJ_CBase::GetPosY()
 {
     if (m_pLinkObject_Position) return m_PosY + m_pLinkObject_Position.GetPtr()->GetPosY();
@@ -242,6 +655,65 @@ int OBJ_CBase::GetPosYCenter()
     if (player->CheckPlayerFlag(PLFLG_CROUCH)) return m_PosY + 90000;
     if (player->CheckPlayerFlag(PLFLG_LOW_BALANCE)) return m_PosY + 40000;
     return m_PosX + 200000;
+}
+
+int OBJ_CBase::GetAngleY()
+{
+    if (!m_pLinkObject_Angle) return m_AngleYDeg_x1000;
+
+    return m_pLinkObject_Angle.GetPtr()->GetAngleY() + m_AngleYDeg_x1000;
+}
+
+int OBJ_CBase::GetPushColW()
+{
+    if (m_PushColWidth >= 0) return m_PushColWidth;
+    if (m_IsPlayerObj == false) return 120;
+
+    auto player = (OBJ_CCharBase*)this;
+
+    if ((m_ActionFlag & OBJ_ACT_AIR) == 0 && GetPosY() <= 0)
+    {
+        if (player->CheckPlayerFlag(PLFLG_CROUCH) == 0 && player->CheckPlayerFlag(PLFLG_LOW_BALANCE) == 0)
+            return player->ply_PushColWidthStand;
+
+        return player->ply_PushColWidthCrouch;
+    }
+
+    return player->ply_PushColWidthAir;
+}
+
+int OBJ_CBase::GetPushColH()
+{
+    if (m_PushColHeight >= 0) return m_PushColHeight;
+    if (m_IsPlayerObj == false) return 100;
+
+    auto player = (OBJ_CCharBase*)this;
+
+    if ((m_ActionFlag & OBJ_ACT_AIR) == 0 && GetPosY() <= 0)
+    {
+        if (player->CheckPlayerFlag(PLFLG_CROUCH) == 0 && player->CheckPlayerFlag(PLFLG_LOW_BALANCE) == 0)
+            return player->ply_PushColHeightStand;
+
+        return player->ply_PushColHeightCrouch;
+    }
+
+    return player->ply_PushColHeightAir;
+}
+
+int OBJ_CBase::GetPushColHLow()
+{
+    if (m_PushColHeightLow != 0xFFFFFFF) return m_PushColHeightLow;
+    if (m_IsPlayerObj)
+    {
+        auto player = (OBJ_CCharBase*)this;
+
+        if (m_ActionFlag & OBJ_ACT_AIR || GetPosY() > 0)
+        {
+            return player->ply_PushColHeightLowAir;
+        }
+    }
+
+    return 0;
 }
 
 uint32_t OBJ_CBase::GetObjDir()
@@ -289,7 +761,7 @@ void OBJ_CBase::ScriptFrameStep()
     {
         m_CurAddr = GetActionAddr(m_ActionRequestInfo.m_RequestName, nullptr);
         ExecuteCellBeginToCellEnd(m_CurAddr);
-        
+
         if (!strncmp(m_ActionRequestInfoReg.m_RequestGotoLabel.GetStr(), nullstr, 0x20)) return;
 
         m_CurAddr = m_pBBSFile->GetGotoAddrBBSF(m_CurActionTopAddr, m_ActionRequestInfoReg.m_RequestGotoLabel);
@@ -297,7 +769,7 @@ void OBJ_CBase::ScriptFrameStep()
         m_CurAddr = ExecuteCellBeginToCellEnd(m_CurAddr);
         return;
     }
-    
+
     if (*(uint32_t*)m_CurAddr != ID_ActionEnd)
     {
         if (m_CellTime >= m_CellTimeMax && !m_IsCellTimeStop && m_CellTimeMax != 0x7FFFFFFF)
@@ -330,7 +802,7 @@ void OBJ_CBase::BBST_OnActionBegin(const CXXBYTE<32>& actName)
         m_pLinkObject_Collision.ClearPtr();
     }
     m_pControlObject.ClearPtr();
-    
+
     m_IsCellTimeStop = false;
     m_CellTimeStopOnece = false;
     m_CellBeginCount = 0;
@@ -378,7 +850,7 @@ void OBJ_CBase::BBST_OnActionBegin(const CXXBYTE<32>& actName)
                 cmd = *(uint32_t*)addr;
                 auto beginVal = BeginEndList;
                 auto beginFound = true;
-                
+
                 while (*(uint32_t*)beginVal != cmd)
                 {
                     if ((int64_t)++beginVal >= (int64_t)&BeginEndList + 0x88)
@@ -915,9 +1387,10 @@ void OBJ_CBase::FuncCall(const CXXBYTE<32>& funcName)
 void OBJ_CBase::SetPosXRawinBattle(int val)
 {
     m_PosX = val;
-    
+
     const auto battleScene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene());
-    m_PosX += 1000 * battleScene->GetBattleScreenManager()->GetWorldSideMove() * battleScene->GetBattleScreenManager()->GetWorldSideMoveValue();
+    m_PosX += 1000 * battleScene->GetBattleScreenManager()->GetWorldSideMove() * battleScene->GetBattleScreenManager()->
+        GetWorldSideMoveValue();
 }
 
 void OBJ_CBase::WorldCollision(int on)
@@ -1001,5 +1474,39 @@ void OBJ_CBase::ZLine(ZLINE line, ZLINE_LEVEL level)
     {
         m_ZLine = line;
         m_ZLevel = level;
+    }
+}
+
+void OBJ_CBase::RequestKoware(CO_TYPE obj)
+{
+    auto co = GetControlObject(obj);
+
+    if (co != nullptr && co->m_KowareCur == 0)
+    {
+        if (co->m_IsPlayerObj)
+        {
+            ((OBJ_CCharBase*)co)->DelAttackFlag(PLATK_FLEXCANCEL);
+            co->m_CollisionFlag &= ~OBJ_CLSN_CHAIN_READY;
+        }
+
+        co->m_ActionFlag &= ~OBJ_ACT_COUNTER_UKERU;
+        co->m_ActionFlag |= OBJ_ACT_ATTACK_END;
+        co->DoInterrupt(ON_KOWARE);
+        co->m_ValidInterruptFlag[0][1].Del(0x2000);
+        co->m_ValidInterruptFlag[1][1].Del(0x2000);
+        co->m_ValidInterruptFlag[2][1].Del(0x2000);
+        co->m_ValidInterruptFlag[3][1].Del(0x2000);
+        co->m_ValidInterruptFlag[4][1].Del(0x2000);
+        co->m_KowareDone = true;
+        co->m_ValidInterruptFlag[0][0].Del(0x4);
+        co->m_ValidInterruptFlag[1][0].Del(0x4);
+        co->m_ValidInterruptFlag[2][0].Del(0x4);
+        co->m_ValidInterruptFlag[3][0].Del(0x4);
+        co->m_ValidInterruptFlag[4][0].Del(0x4);
+        co->m_ValidInterruptFlag[0][0].Del(0x20);
+        co->m_ValidInterruptFlag[1][0].Del(0x20);
+        co->m_ValidInterruptFlag[2][0].Del(0x20);
+        co->m_ValidInterruptFlag[3][0].Del(0x20);
+        co->m_ValidInterruptFlag[4][0].Del(0x20);
     }
 }

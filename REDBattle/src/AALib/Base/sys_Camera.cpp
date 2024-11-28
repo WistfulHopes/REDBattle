@@ -23,7 +23,7 @@ AA_CCamera::AA_CCamera()
     m_At.Set(0, 0, 1);
     m_BaseUp.Set(0, 1, 0);
     m_Up.Set(0, 1, 0);
-    m_FOV = 1.5707964f;
+    m_FOV = 1.02974426f; // y fov
     m_FrontClip = 3;
     m_BackClip = 5000;
     m_AspectRatio = 16.f / 9.f;
@@ -38,6 +38,12 @@ bool AA_CCamera::Update()
     CreateFOVPlane();
 
     return true;
+}
+
+void AA_CCamera::CreateVec3Dir(AA_Vector3* out)
+{
+    *out = m_At - m_Pos;
+    out->Normalize();
 }
 
 void AA_CCamera::CreateFOVPlane()

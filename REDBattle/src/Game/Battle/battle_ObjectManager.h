@@ -287,11 +287,11 @@ public:
     static int32_t GetPlayerIndex(SIDE_ID, EMemberID);
     OBJ_CCharBase* GetPlayer(SIDE_ID side, EMemberID memberID) { return &m_CharVector[side * 3 + memberID]; }
     OBJ_CCharBase* GetPlayerObjFromIndex(int32_t);
-    OBJ_CCharBase* GetMainPlayer(SIDE_ID);
-    OBJ_CCharBase* GetSubMember(SIDE_ID, ESubMemberID);
+    OBJ_CCharBase* GetMainPlayer(SIDE_ID side) { return GetTeamManager(side)->GetMainPlayer(); }
+    OBJ_CCharBase* GetSubMember(SIDE_ID side, ESubMemberID subMemberId) { return GetTeamManager(side)->GetSubMember(subMemberId); }
     OBJ_CBase* GetNextActiveObject(int32_t*);
     OBJ_CBase* GetNextSortedActiveObject(int32_t*);
-    OBJ_CBase* GetNextSortedActiveObjectWithCreateChokugo(int32_t*);
+    OBJ_CBase* GetNextSortedActiveObjectWithCreateChokugo(int32_t* itr);
     OBJ_CBase* GetNextSortedActiveObjectWithCreateChokugo_Inverse(int32_t*);
     OBJ_CBase* GetNextObject(int32_t*);
     OBJ_CBase* GetNextObjectAndChar(int32_t*);

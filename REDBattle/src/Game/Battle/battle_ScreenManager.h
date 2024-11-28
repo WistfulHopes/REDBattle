@@ -137,15 +137,15 @@ private:
         int32_t bottom {}; // 0xC
         int32_t higherBottom {}; // 0x10
         OBJ_BOX();
-        int32_t Left() { return left; }
-        int32_t Right() { return right; }
-        int32_t Top() { return top; }
-        int32_t Bottom() { return bottom; }
-        int32_t HigherBottom() { return higherBottom; }
-        int32_t Width();
-        int32_t Height();
-        int32_t CenterX();
-        int32_t CenterY();
+        int32_t Left() const { return left; }
+        int32_t Right() const { return right; }
+        int32_t Top() const { return top; }
+        int32_t Bottom() const { return bottom; }
+        int32_t HigherBottom() const { return higherBottom; }
+        int32_t Width() const { return right - left; }
+        int32_t Height() const { return top - bottom; }
+        int32_t CenterX() const { return left + (right - left) / 2; }
+        int32_t CenterY() const { return bottom + (top - bottom) / 2; }
         int32_t StandDistY();
         void Initialize();
     };
@@ -166,16 +166,16 @@ public:
 	void ResetToCenter(int32_t, int32_t);
 	bool AddScreenTarget(OBJ_CBase *, uint32_t);
 	bool ResetScreenTarget();
-	void SetScreenCornerObject(bool);
+	void SetScreenCornerObject(bool bQuick);
 	bool SetLinkCameraMagn(AA_Vector3 &, AA_Vector3 &);
 	bool SetLinkCamera(const AA_Handle *);
 	bool IsScreenStable();
-	bool UpdateScreenPosition(bool);
+	bool UpdateScreenPosition(bool bQuick);
 	void ResetScreenPos(int32_t, int32_t, int32_t);
 	int32_t GetObjectScale();
 	int32_t GetScreenX();
 	int32_t GetScreenY();
-	int32_t GetScreenW();
+	int32_t GetScreenW() { return m_ScreenWorldWidth; }
 	int32_t GetCameraPosX();
 	int32_t GetCameraPosY();
 	int32_t GetCameraPosW();
@@ -189,8 +189,8 @@ public:
 	int32_t GetCollLeftSide();
 	int32_t GetCollRightSide();
 	int32_t GetCollYUp();
-	int32_t GetScreenCenterX();
-	int32_t GetScreenCenterY();
+	int32_t GetScreenCenterX() { return m_ScreenWorldCenterX; }
+	int32_t GetScreenCenterY() { return m_ScreenWorldCenterY; }
 	void SetTargetX(int32_t);
 	void SetTargetY(int32_t);
 	void SetTargetW(int32_t);

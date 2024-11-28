@@ -373,9 +373,19 @@ public:
     int32_t m_PassiveMoveX{};
     int32_t m_PassiveMoveY{};
 
+    int32_t m_PushScreenOffsetFront;
+    int32_t m_PushScreenOffsetBack;
+    int32_t m_PushScreenOffsetTop;
+    int32_t m_PushScreenOffsetBottom;
+
     OBJ_CBaseRelativePtr m_pAttackSlave[10]{};
     OBJ_CBaseRelativePtr m_pLockLinkObj{};
     OBJ_CBaseRelativePtr m_pAttackSlaveNewest{};
+    int m_AttackSlaveCount;
+    int m_AttackObjectMax;
+
+    OBJ_CBaseRelativePtr m_pAttackMaster;
+    OBJ_CBaseRelativePtr m_pHitBackMaster;
 
     int32_t m_HitPoint{};
     int32_t m_HitPointMax{};
@@ -463,6 +473,12 @@ public:
 
     void ObjectConstructor_ForObject();
 
+    void ObjUnactivate();
+    bool ObjIsUsing();
+    void ActionChangeSignal();
+
+    OBJ_CBase* GetControlObject(CO_TYPE type);
+    
     bool ActionRequestForce(const CXXBYTE<32>& actionName);
     bool ActionRequestEx(const CXXBYTE<32>& actionName, unsigned int flag, OBJ_CBase* pEnemy,
                          CXXBYTE<32> label, unsigned int reqFlag);
@@ -479,11 +495,22 @@ public:
 
     OBJ_CCharBase* GetMainPlayerBase(SIDE_ID side);
 
+    int GetPosX();
     int GetPosY();
     int GetPosYCenter();
+    int GetAngleY();
 
+    int GetPushColW();
+    int GetPushColH();
+    int GetPushColHLow();
+    
     uint32_t GetObjDir();
-
+    
+    void GetPushWorldRect(int* L, int* T, int* R, int* B);
+    void GetPushWorldRectMax(int* L, int* T, int* R, int* B);
+    void GetPushWorldRectForWorldClip(int* L, int* R);
+    void GetPushScreenRect(int& L, int& T, int& R, int& B);
+    
     bool IsActionRequested();
     void ScriptFrameStep();
     virtual void BBST_OnActionBegin(const CXXBYTE<32>& actName);
@@ -521,11 +548,13 @@ public:
 
     void ResetAirDashCount();
     void ResetAirJumpCount();
+    
+    void RequestKoware(CO_TYPE obj);
+    
+    void ZLine(ZLINE line, ZLINE_LEVEL level);
 
     bool IsDamage()
     {
         return m_CollisionFlag & OBJ_CLSN_DAMAGE_IMPACT && m_CollisionFlag & OBJ_CLSN_DAMAGE;
     }
-
-    void ZLine(ZLINE line, ZLINE_LEVEL level);
 };

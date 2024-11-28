@@ -27,6 +27,7 @@ void RaylibState::UpdateCamera()
 {
     if (!sysCamera) return;
     
+    cam3D.fovy = sysCamera->GetFOV() * (180 / PI);
     cam3D.position.x = sysCamera->GetPos().X;
     cam3D.position.y = sysCamera->GetPos().Y;
     cam3D.position.z = -sysCamera->GetPos().Z;

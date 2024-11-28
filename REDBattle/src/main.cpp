@@ -1,21 +1,17 @@
-#include <cmath>
-#include <fstream>
-#include <Game/REDGameCommon.h>
-#include <vector>
 #include <raylib.h>
-
 #include "raylib_interface/RaylibState.h"
+#include <Game/REDGameCommon.h>
 #include "AALib/AASystemRED.h"
 
 #define ONE_FRAME (1.f / 60.f)
 
 int main()
 {
-    const int screenWidth = 1280;
-    const int screenHeight = 720;
+    const int screenWidth = 1920;
+    const int screenHeight = 1080;
 
-    int windowWidth = 2560;
-    int windowHeight = 1440;
+    int windowWidth = 1920;
+    int windowHeight = 1080;
     
     InitWindow(windowWidth, windowHeight, "REDBattle");
     SetTargetFPS(60);

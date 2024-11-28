@@ -84,8 +84,8 @@ public:
 	OBJ_CCharBase * GetMainPlayer() { return m_pMainPlayerObject; }
 	void SetMainPlayer(OBJ_CCharBase *);
 	void SetMainPlayerSimple(OBJ_CCharBase *);
-	OBJ_CCharBase * GetPrevMainPlayer();
-	OBJ_CCharBase * GetSubMember(ESubMemberID);
+	OBJ_CCharBase * GetPrevMainPlayer() { return m_pPrevMainPlayerObject; }
+	OBJ_CCharBase * GetSubMember(ESubMemberID subMemberId) { return m_pMemberObjects[subMemberId + 1]; }
 	OBJ_CCharBase * GetAliveSubMember(ESubMemberID SubMemberID);
 	void UpdateMainTarget(BATTLE_TeamManager *);
 	void ChangeMainPlayer(OBJ_CCharBase *);

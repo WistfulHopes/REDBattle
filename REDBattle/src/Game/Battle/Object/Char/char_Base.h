@@ -533,6 +533,7 @@ public:
     void AddPlayerFlag4(PLAYER_FLAG4 flag) { m_PlayerFlag4 |= flag; }
     void DelPlayerFlag4(PLAYER_FLAG4 flag) { m_PlayerFlag4 &= ~flag; }
     bool CheckPlayerFlag4(PLAYER_FLAG4 flag) { return m_PlayerFlag4 & flag; }
+    bool DelAttackFlag(PLATTACK_FLAG flag) { return m_AttackFlag &= ~flag; }
     bool CheckAttackFlag(PLATTACK_FLAG flag) { return m_AttackFlag & flag; }
 
     const char* GetContextActionName(const CXXBYTE<32>& actName) override;
@@ -540,6 +541,8 @@ public:
     bool IsDead() override;
     void SetEntry(bool entry) { m_Entry = entry; }
     bool IsEntry() { return m_Entry; }
+	bool IsEntryBattle() { return m_EntryBattle; }
+    bool IsEntryBattleDoing() { return m_EntryBattleDoing; }
     void SetCallingChar(EMemberID memberID) { m_callingChar = memberID; }
     void SetCalledChar(EMemberID memberID) { m_calledChar = memberID; }
 

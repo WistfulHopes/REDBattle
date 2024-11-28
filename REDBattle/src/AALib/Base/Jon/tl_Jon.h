@@ -7,6 +7,8 @@ class AA_CCollision_JON : public AA_CCollision
 {
 public:
 	static const int32_t COLLISION_IMAGE_MAX {}; // 0xFFFFFFFFFFFFFFFF
+
+	friend class OBJ_CBase;
 private:
 	sJonElmView * m_ViewAddr {}; // 0x10
 	sJonElmCollision * m_CollisionAddr[18] {}; // 0x18

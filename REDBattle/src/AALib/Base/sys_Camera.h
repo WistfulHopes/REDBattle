@@ -39,27 +39,27 @@ public:
 	void ResetUp() { m_Up = m_BaseUp; }
 	void SetPos(float x, float y, float z) { m_Pos.Set(x, y, z); }
 	void SetLookAt(float x, float y, float z) { m_At.Set(x, y, z); }
-	void SetUp(float, float, float);
+	void SetUp(float x, float y, float z) { m_Up.Set(x, y, z); }
 	void SetDir(float, float, float);
 	void SetFOV(float fov) { m_FOV = fov; }
 	void SetFrontClip(float frontClip) { m_FrontClip = frontClip; }
 	void SetBackClip(float backClip) { m_BackClip = backClip; }
 	void SetAspectRatio(float aspectRatio) { m_AspectRatio = aspectRatio; }
-	void CreateVec3Dir(AA_Vector3 *);
+	void CreateVec3Dir(AA_Vector3 *out);
 	void CreateFOVPlane();
-	float GetPosX();
-	float GetPosY();
-	float GetPosZ();
-	float GetUpX();
-	float GetUpY();
-	float GetUpZ();
-	float GetLookAtX();
-	float GetLookAtY();
-	float GetLookAtZ();
-	float GetAspectRatio();
+	float GetPosX() { return m_Pos.X; }
+	float GetPosY() { return m_Pos.Y; }
+	float GetPosZ() { return m_Pos.Z; }
+	float GetUpX() { return m_Up.X; }
+	float GetUpY() { return m_Up.Y; }
+	float GetUpZ() { return m_Up.Z; }
+	float GetLookAtX() { return m_At.X; }
+	float GetLookAtY() { return m_At.Y; }
+	float GetLookAtZ() { return m_At.Z; }
+	float GetAspectRatio() { return m_AspectRatio; }
 	float GetFOV() { return m_FOV; }
-	float GetFrontClip();
-	float GetBackClip();
+	float GetFrontClip() { return m_FrontClip; }
+	float GetBackClip() { return m_BackClip; }
 	const AA_Vector3 & GetPos() { return m_Pos; }
 	const AA_Vector3 & GetUp() { return m_Up; }
 	const AA_Vector3 & GetLookAt() { return m_At; }

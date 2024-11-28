@@ -230,7 +230,12 @@ public:
 
 class AA_Rotator
 {
-    float Pitch, Yaw, Roll {};
+public:
+    float Pitch {};
+    float Yaw {};
+    float Roll {};
+
+    AA_Rotator(float InPitch, float InYaw, float InRoll) : Pitch(InPitch), Yaw(InYaw), Roll(InRoll) {}
 };
 
 class AA_Matrix
@@ -295,6 +300,14 @@ public:
     AA_Matrix(float FOVY, float AspectRatio, float MinZ, float MaxZ)
     {
         auto matrix = MatrixPerspective(FOVY, AspectRatio, MinZ, MaxZ);
+
+        *this = *(AA_Matrix*)&matrix;        
+    }
+
+    AA_Matrix(AA_Rotator Rotator)
+    {
+        Rotator = AA_Rotator(Rotator.Pitch * DEG2RAD, Rotator.Yaw * DEG2RAD, Rotator.Roll * DEG2RAD);
+        auto matrix = MatrixRotateXYZ(*(Vector3*)&Rotator);
 
         *this = *(AA_Matrix*)&matrix;        
     }

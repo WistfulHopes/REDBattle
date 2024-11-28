@@ -8,13 +8,13 @@
 #include <Game/Scene/scene_Battle.h>
 #include "AALib/AASystemRED.h"
 
-constexpr int StartupPositionX[2][3] {{-252000, -504000, -756000}, {252000, 504000, 756000}};
+constexpr int StartupPositionX[2][3]{{-252000, -504000, -756000}, {252000, 504000, 756000}};
 
-int32_t IsControlPrioritySmallSub_(const void * _a, const void * _b)
+int32_t IsControlPrioritySmallSub_(const void* _a, const void* _b)
 {
     auto objA = *(OBJ_CCharBase**)_a;
     auto objB = *(OBJ_CCharBase**)_b;
-    
+
     if (objA->m_ActiveState == ACTV_ACTIVE || objB->m_ActiveState == ACTV_ACTIVE)
     {
         if ((uint8_t)(objA->m_ObjFlag4 >> 19) ^ (uint8_t)(objB->m_ObjFlag4 >> 19) & 1)
@@ -53,7 +53,7 @@ int32_t IsControlPrioritySmallSub_(const void * _a, const void * _b)
     return objA->m_ActiveState != ACTV_ACTIVE;
 }
 
-int32_t IsControlPriorityBig_(const void * _a, const void * _b)
+int32_t IsControlPriorityBig_(const void* _a, const void* _b)
 {
     if (IsControlPrioritySmallSub_(_a, _b)) return 1;
     return -1;
@@ -102,16 +102,20 @@ BATTLE_CObjectManager::BATTLE_CObjectManager()
     // TODO better way to load chara data
 
     int solBbsSize = 0;
-    auto solBbsData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\BBS_SOL.bbsbin").data(), &solBbsSize);
+    auto solBbsData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\BBS_SOL.bbsbin").data(),
+                                   &solBbsSize);
 
     int solefBbsSize = 0;
-    auto solefBbsData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\BBS_SOLEF.bbsbin").data(), &solefBbsSize);
+    auto solefBbsData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\BBS_SOLEF.bbsbin").data(),
+                                     &solefBbsSize);
 
     int cmnefBbsSize = 0;
-    auto cmnefBbsData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\BBS_CMNEF.bbsbin").data(), &cmnefBbsSize);
-    
+    auto cmnefBbsData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\BBS_CMNEF.bbsbin").data(),
+                                     &cmnefBbsSize);
+
     int solColSize = 0;
-    auto solColData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\COL_SOL.pac").data(), &solColSize);
+    auto solColData = LoadFileData((std::string(GetApplicationDirectory()) + "\\assets\\COL_SOL.pac").data(),
+                                   &solColSize);
 
     m_BBSFile[0][0] = CBBSFile(solBbsData, solBbsSize);
     m_BBSFile[0][1] = CBBSFile(solBbsData, solBbsSize);
@@ -149,7 +153,7 @@ int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)
     m_BattleCheckSumErrorFoundList[1] = 0;
     m_RequestFadeOut = false;
     m_bForceBGHide = false;
-    
+
     m_BurstVal[0] = 15000;
     m_BurstVal[1] = 15000;
     m_MatchStaticValue0[0] = 0;
@@ -160,7 +164,7 @@ int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)
     m_Rakusyo[1] = 0;
     m_YogoreLevel[0] = 0;
     m_YogoreLevel[1] = 0;
-    
+
     m_PreBurstVal[0] = 15000;
     m_PreBurstVal[1] = 15000;
     m_PreMatchStaticValue0[0] = 0;
@@ -189,8 +193,8 @@ int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)
     m_OnlineTraining_IsResetDone = false;
     m_OnlineTraining_StartSideFrip = false;
     m_OnlineTraining_StartPos = MAAI_TYPE_NORMAL_GAME;
-    m_OnlineTraining_Wins[0]= 0;
-    m_OnlineTraining_Wins[1]= 0;
+    m_OnlineTraining_Wins[0] = 0;
+    m_OnlineTraining_Wins[1] = 0;
 
     m_LastLoadedCharID[0] = REDGameCommon::GetInstance()->GetBattleCharaID(SIDE_BEGIN, MemberID_Begin);
     m_LastLoadedCharID[1] = REDGameCommon::GetInstance()->GetBattleCharaID(SIDE_2P, MemberID_Begin);
@@ -224,7 +228,7 @@ int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)
     m_UsesObjPtrVectorNum = 0;
 
     int numActivePlayers = 0;
-    
+
     for (int i = 0; i < CHARA_OBJECT_NUM; i++)
     {
         if (m_CharVector[i].IsEntry())
@@ -236,7 +240,7 @@ int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)
 
     for (int i = 0; i < OBJECT_NUM; i++)
     {
-        m_ObjPtrVector[i + numActivePlayers] = &m_ObjVector[i]; 
+        m_ObjPtrVector[i + numActivePlayers] = &m_ObjVector[i];
     }
 
     m_UsesObjPtrVectorNum = 100 + numActivePlayers;
@@ -245,7 +249,7 @@ int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)
     m_NoActiveObjectCount = 0;
     m_EtcActiveObjectCount = 0;
     m_ActiveForceEffectNum = 0;
-    
+
     return 0;
 }
 
@@ -386,13 +390,13 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
         {
             auto enemy = m_TeamManager[1].GetMemberFromIndex(0);
             if (teamManager.GetSideID() == SIDE_2P) enemy = m_TeamManager[1].GetMemberFromIndex(0);
-            
+
             member->m_pTargetObj.ClearPtr();
             member->m_pTargetObj.SetPtr(enemy);
-            
+
             member->m_pAttackSlave[0].ClearPtr();
             member->m_pAttackSlave[0].SetPtr(enemy);
-            
+
             member->m_pAttackSlaveNewest.ClearPtr();
             member->m_pAttackSlaveNewest.SetPtr(enemy);
         }
@@ -400,13 +404,13 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
         {
             auto enemy = m_TeamManager[1].GetMemberFromIndex(0);
             if (teamManager.GetSideID() == SIDE_2P) enemy = m_TeamManager[1].GetMemberFromIndex(0);
-            
+
             member->m_pTargetObj.ClearPtr();
             member->m_pTargetObj.SetPtr(enemy);
-            
+
             member->m_pAttackSlave[0].ClearPtr();
             member->m_pAttackSlave[0].SetPtr(enemy);
-            
+
             member->m_pAttackSlaveNewest.ClearPtr();
             member->m_pAttackSlaveNewest.SetPtr(enemy);
         }
@@ -414,13 +418,13 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
         {
             auto enemy = m_TeamManager[1].GetMemberFromIndex(0);
             if (teamManager.GetSideID() == SIDE_2P) enemy = m_TeamManager[1].GetMemberFromIndex(0);
-            
+
             member->m_pTargetObj.ClearPtr();
             member->m_pTargetObj.SetPtr(enemy);
-            
+
             member->m_pAttackSlave[0].ClearPtr();
             member->m_pAttackSlave[0].SetPtr(enemy);
-            
+
             member->m_pAttackSlaveNewest.ClearPtr();
             member->m_pAttackSlaveNewest.SetPtr(enemy);
         }
@@ -445,7 +449,7 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
             }
         }
     }
-    
+
     for (int i = 0; i < 2; i++)
     {
         for (int j = 0; j < 3; j++)
@@ -455,7 +459,7 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
             m_CharVector[i * 3 + j].FuncCall(FN_PreInit);
         }
     }
-    
+
     for (int i = 0; i < 2; i++)
     {
         if (!&m_CharVector[i * 3]) continue;
@@ -504,7 +508,7 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
     // TODO reset screen pos
 
     m_BOMFlag &= ~1;
-    
+
     m_WorldBlacker = false;
     m_bBackGroundStop = false;
 
@@ -518,14 +522,30 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
     }
 
     // TODO update screen pos
-    
+
     m_BOMFlag &= ~10;
     m_IchigekiBGMRequestSideID = SIDE_ID_INVALID;
     m_StartInputTimeAC15 = 0;
 
     m_CharVector[3].m_Direction = 1;
-    
+
     return 0;
+}
+
+OBJ_CBase* BATTLE_CObjectManager::GetNextSortedActiveObjectWithCreateChokugo(int32_t* itr)
+{
+    if (*itr < m_ActiveObjectCount)
+    {
+        *itr += 1;
+        return m_SortedObjPtrVector[*itr - 1];
+    }
+
+    auto chokugoObjectCount = *itr - m_ActiveObjectCount;
+
+    if (chokugoObjectCount >= m_CreateChokugoObjectCount) return nullptr;
+
+    *itr += 1;
+    return m_SortedObjPtrVector[chokugoObjectCount];
 }
 
 void BATTLE_CObjectManager::AllActiveCheck()
@@ -535,10 +555,10 @@ void BATTLE_CObjectManager::AllActiveCheck()
     m_NoActiveObjectCount = 0;
     m_EtcActiveObjectCount = 0;
 
-    std::vector<OBJ_CBase*> objVector {};
+    std::vector<OBJ_CBase*> objVector{};
     auto inactiveCount = 0;
     auto activeCount = 0;
-    
+
     if (m_UsesObjPtrVectorNum)
     {
         auto num = m_UsesObjPtrVectorNum;
@@ -564,7 +584,7 @@ void BATTLE_CObjectManager::AllActiveCheck()
             default:
                 break;
             }
-            
+
             objPtr++;
             --num;
             if (!num)
@@ -590,7 +610,7 @@ void BATTLE_CObjectManager::AllActiveCheck()
     m_ActiveObjectCount = activeCount;
 
     auto sortCount = 0;
-    
+
     if (m_UsesObjPtrVectorNum)
     {
         auto sortedObj = m_SortedObjPtrVector;
@@ -609,7 +629,99 @@ void BATTLE_CObjectManager::AllActiveCheck()
 
 void BATTLE_CObjectManager::DeleteCheck()
 {
+    int i = 0;
+    bool objDel;
     
+    do
+    {
+        objDel = false;
+        int chokugoObjCount = 0;
+        auto vecIdx = 0;        
+
+        while (true)
+        {
+            OBJ_CBase* objPtr = nullptr;
+            if (i == 0)
+            {
+                if (chokugoObjCount >= m_CreateChokugoObjectCount)
+                {
+                    if (chokugoObjCount - m_CreateChokugoObjectCount < m_ActiveObjectCount)
+                    {
+                        auto unk = m_ActiveObjectCount - (chokugoObjCount - m_CreateChokugoObjectCount);
+                        chokugoObjCount++;
+                        i++;
+                        vecIdx++;
+                        
+                        objPtr = m_ObjPtrVector[106 + unk];
+                    }
+                }
+                else
+                {
+                    auto unk = m_CreateChokugoObjectCount - chokugoObjCount;
+                    chokugoObjCount++;
+                    i++;
+                    vecIdx++;
+                        
+                    objPtr = m_SortedObjPtrVector[106 + unk];
+                }
+            }
+            else
+            {
+                if (chokugoObjCount >= m_ActiveObjectCount)
+                {
+                    auto unk = chokugoObjCount - m_ActiveObjectCount;
+
+                    if (unk < m_CreateChokugoObjectCount)
+                    {
+                        chokugoObjCount++;
+                        i++;
+                        vecIdx++;
+                        objPtr = m_CreateChokugoObjPtrVector[chokugoObjCount - m_ActiveObjectCount];
+                    }
+                }
+                else
+                {
+                    chokugoObjCount++;
+                    objPtr = m_CreateChokugoObjPtrVector[i];
+                    i++;
+                    vecIdx++;
+                }
+            }
+
+            if (objPtr == nullptr) break;
+
+            if (objPtr->ObjIsUsing())
+            {
+                if ((objPtr->m_ObjSignal & 0x200) == 0)
+                {
+                    auto changeToEliminate = objPtr->m_pLinkObject_ChangeToEliminate.GetPtr();
+
+                    auto unk = objPtr->m_ObjSignal >> 10 & 1;
+                    
+                    if (changeToEliminate)
+                    {
+                        auto tmp = unk | 2;
+                        if ((changeToEliminate->m_ObjSignal & 0x200) == 0)
+                        {
+                            tmp = unk;
+                        }
+                        unk = tmp;
+
+                        if (!changeToEliminate->ObjIsUsing()) unk |= 4;
+                    }
+                    
+                    if (unk)
+                    {
+                        objPtr->ObjUnactivate();
+                        objDel = true;
+                    }
+                }
+            }
+        }
+
+        i = 1 - i;
+    }
+    while (objDel);
 }
 
 void BATTLE_CObjectManager::ControlBattleObject()
@@ -671,7 +783,7 @@ void BATTLE_CObjectManager::ControlBattleObject()
 
         m_SortedObjPtrVector[i]->m_ObjSignal &= 0xFFFFF1EF;
     }
-    
+
     for (int i = 0; i < m_ActiveObjectCount; i++)
     {
         if (!m_SortedObjPtrVector[i]) break;
@@ -681,7 +793,7 @@ void BATTLE_CObjectManager::ControlBattleObject()
     }
 
     battleScene->GetBattleScreenManager()->StopScreenPositionUpdate(false);
-    
+
     for (int i = 0; i < m_ActiveObjectCount; i++)
     {
         if (!m_SortedObjPtrVector[i]) break;
@@ -709,6 +821,15 @@ void BATTLE_CObjectManager::ControlBattleObject_HitCollision()
 {
 }
 
+OBJ_CCharBase* BATTLE_CObjectManager::GetWinnerObj()
+{
+    if (m_WinnerSideID != SIDE_ID_NUM)
+    {
+        return m_TeamManager[m_WinnerSideID].GetMainPlayer();
+    }
+    return nullptr;
+}
+
 void BATTLE_CObjectManager::TransferAirActionCount(OBJ_CCharBase* dst, OBJ_CCharBase* src)
 {
     int v3;
@@ -716,24 +837,24 @@ void BATTLE_CObjectManager::TransferAirActionCount(OBJ_CCharBase* dst, OBJ_CChar
     int ply_AirDashCountMax;
     int m_HomingDashCountMax;
     int m_MikiwameMoveCountMax;
-    
+
     if (dst->IsEntry() && src->IsEntry())
     {
         v3 = src->ply_AirDashCountMax - src->m_AirDashCount;
         ply_AirJumpCountMax = dst->ply_AirJumpCountMax;
-        if ( ply_AirJumpCountMax + src->m_AirJumpCount - src->ply_AirJumpCountMax < ply_AirJumpCountMax )
+        if (ply_AirJumpCountMax + src->m_AirJumpCount - src->ply_AirJumpCountMax < ply_AirJumpCountMax)
             ply_AirJumpCountMax += src->m_AirJumpCount - src->ply_AirJumpCountMax;
         dst->m_AirJumpCount = ply_AirJumpCountMax;
         ply_AirDashCountMax = dst->ply_AirDashCountMax;
-        if ( ply_AirDashCountMax - v3 < ply_AirDashCountMax )
+        if (ply_AirDashCountMax - v3 < ply_AirDashCountMax)
             ply_AirDashCountMax = dst->ply_AirDashCountMax - v3;
         dst->m_AirDashCount = ply_AirDashCountMax;
         m_HomingDashCountMax = dst->m_HomingDashCountMax;
-        if ( src->m_HomingDashCount < m_HomingDashCountMax )
+        if (src->m_HomingDashCount < m_HomingDashCountMax)
             m_HomingDashCountMax = src->m_HomingDashCount;
         dst->m_HomingDashCount = m_HomingDashCountMax;
         m_MikiwameMoveCountMax = dst->m_MikiwameMoveCountMax;
-        if ( src->m_MikiwameMoveCount < m_MikiwameMoveCountMax )
+        if (src->m_MikiwameMoveCount < m_MikiwameMoveCountMax)
             m_MikiwameMoveCountMax = src->m_MikiwameMoveCount;
         dst->m_MikiwameMoveCount = m_MikiwameMoveCountMax;
     }
@@ -790,5 +911,6 @@ void BATTLE_CObjectManager::ScriptAnalyze()
     m_CharVector[5].m_CurAddr = m_CharVector[5].m_TopAddr = m_BBSFileAnalyzeData[0][5].m_ScriptTopAddr;
 
     m_ObjVector[OBJECT_NUM - 1].m_pBBSFile = &m_BBSFileAnalyzeData[1][6];
-    m_ObjVector[OBJECT_NUM - 1].m_CurAddr = m_ObjVector[OBJECT_NUM - 1].m_TopAddr = m_BBSFileAnalyzeData[1][6].m_ScriptTopAddr;
+    m_ObjVector[OBJECT_NUM - 1].m_CurAddr = m_ObjVector[OBJECT_NUM - 1].m_TopAddr = m_BBSFileAnalyzeData[1][6].
+        m_ScriptTopAddr;
 }
