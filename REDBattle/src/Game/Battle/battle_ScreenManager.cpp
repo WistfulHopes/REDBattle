@@ -66,7 +66,7 @@ bool BATTLE_CScreenManager::LinkCameraMove()
     auto upY = len;
     auto upZ = normalZ;
 
-    // m_pCamera->SetUp(upX, upY, upZ);
+    m_pCamera->SetUp(upX, upY, upZ);
 
     auto atX = dir.X + posX;
     auto atY = dir.Y + posY;
