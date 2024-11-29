@@ -51,17 +51,19 @@ public:
 class GAME_CCockpitEXGage
 {
 public:
-    uint32_t m_IconID; // 0x0
-    uint32_t m_SplitNum; // 0x4
-    int32_t m_MaxVal; // 0x8
-    int32_t m_Val; // 0xC
-    float m_DotWidth; // 0x10
-    uint32_t m_Color; // 0x14
-    uint32_t m_MaxColor; // 0x18
-    uint32_t m_EXGFlag; // 0x1C
-    bool m_Active; // 0x20
-    GAME_CCockpitEXGage();
-    ~GAME_CCockpitEXGage();
+    uint32_t m_IconID{}; // 0x0
+    uint32_t m_SplitNum{}; // 0x4
+    int32_t m_MaxVal{}; // 0x8
+    int32_t m_Val{}; // 0xC
+    float m_DotWidth{}; // 0x10
+    uint32_t m_Color{}; // 0x14
+    uint32_t m_MaxColor{}; // 0x18
+    uint32_t m_EXGFlag{}; // 0x1C
+    bool m_Active{}; // 0x20
+    GAME_CCockpitEXGage() {}
+
+    ~GAME_CCockpitEXGage() {}
+
     void Reset();
 };
 
@@ -390,16 +392,16 @@ public:
     int32_t m_PassiveMoveX{};
     int32_t m_PassiveMoveY{};
 
-    int32_t m_PushScreenOffsetFront;
-    int32_t m_PushScreenOffsetBack;
-    int32_t m_PushScreenOffsetTop;
-    int32_t m_PushScreenOffsetBottom;
+    int32_t m_PushScreenOffsetFront{};
+    int32_t m_PushScreenOffsetBack{};
+    int32_t m_PushScreenOffsetTop{};
+    int32_t m_PushScreenOffsetBottom{};
 
     OBJ_CBaseRelativePtr m_pAttackSlave[10]{};
     OBJ_CBaseRelativePtr m_pLockLinkObj{};
     OBJ_CBaseRelativePtr m_pAttackSlaveNewest{};
-    int m_AttackSlaveCount;
-    int m_AttackObjectMax;
+    int m_AttackSlaveCount{};
+    int m_AttackObjectMax{};
 
     OBJ_CBaseRelativePtr m_pAttackMaster;
     OBJ_CBaseRelativePtr m_pHitBackMaster;
@@ -497,7 +499,7 @@ public:
     OBJ_CBase* GetControlObject(CO_TYPE type);
 
     bool IsTrgBtnX(int offsetTime, int btnID);
-    
+
     bool ActionRequestForce(const CXXBYTE<32>& actionName);
     bool ActionRequestEx(const CXXBYTE<32>& actionName, unsigned int flag, OBJ_CBase* pEnemy,
                          CXXBYTE<32> label, unsigned int reqFlag);
@@ -522,14 +524,14 @@ public:
     int GetPushColW();
     int GetPushColH();
     int GetPushColHLow();
-    
+
     uint32_t GetObjDir();
-    
+
     void GetPushWorldRect(int* L, int* T, int* R, int* B);
     void GetPushWorldRectMax(int* L, int* T, int* R, int* B);
     void GetPushWorldRectForWorldClip(int* L, int* R);
     void GetPushScreenRect(int& L, int& T, int& R, int& B);
-    
+
     bool IsActionRequested();
     void ScriptFrameStep();
     virtual void BBST_OnActionBegin(const CXXBYTE<32>& actName);
@@ -567,9 +569,9 @@ public:
 
     void ResetAirDashCount();
     void ResetAirJumpCount();
-    
+
     void RequestKoware(CO_TYPE obj);
-    
+
     void ZLine(ZLINE line, ZLINE_LEVEL level);
 
     bool IsDamage()

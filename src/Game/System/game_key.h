@@ -18,13 +18,13 @@ public:
 	unsigned short m_RecFlgTime[30] {}; // 0x40
 	unsigned short m_CurIndex {}; // 0x7C
 	static const unsigned short RECFLGTIME_MAX; // 0xFFFFFFFFFFFFFFFF
-	void UpdateBattleInputAnalyzer(unsigned short);
+	void UpdateBattleInputAnalyzer(unsigned short recFlg);
 	bool CheckCommand(CMD_KeyCommandID, uint32_t);
 	bool CheckRotateCommand(uint32_t, uint32_t);
 	bool CheckHighJump();
-	bool IsHold(unsigned short);
-	bool IsTrgOn(unsigned short);
-	bool IsTrgOff(unsigned short);
+	bool IsHold(unsigned short recFlg);
+	bool IsTrgOn(unsigned short recFlg);
+	bool IsTrgOff(unsigned short recFlg);
 	unsigned short GetCurRecFlg();
 	void ResetRecFlag();
 	void ResetRecFlagSafe(bool isTime0);

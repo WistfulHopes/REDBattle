@@ -123,9 +123,21 @@ public:
 	float m_Y {}; // 0x4
 	float m_W {}; // 0x8
 	float m_H {}; // 0xC
-	CCmnRect(float, float, float, float);
-	CCmnRect();
-	void SetRect(float, float, float, float);
+	CCmnRect(float x, float y, float w, float h)
+	{
+		m_X = x;
+		m_Y = y;
+		m_W = w;
+		m_H = h;
+	}
+	CCmnRect() {}
+	void SetRect(float x, float y, float w, float h)
+	{
+		m_X = x;
+		m_Y = y;
+		m_W = w;
+		m_H = h;
+	}
 	void Reset();
 	void Normalize();
 	bool IsPointIn(float, float);
@@ -180,7 +192,7 @@ template <int Num, typename T>
 class BitArrayRED 
 {
 public:
-    BitArrayRED();
+    BitArrayRED() {}
 };
 
 enum MAAI_TYPE

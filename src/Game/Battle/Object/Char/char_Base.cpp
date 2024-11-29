@@ -587,6 +587,10 @@ int32_t OBJ_CCharBase::CommandFlagUpdate()
             
         }
     }
+
+    // TODO finish command flag update
+
+    return 0;
 }
 
 bool OBJ_CCharBase::IsDead()
