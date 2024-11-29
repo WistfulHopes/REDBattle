@@ -270,11 +270,11 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
 
     int order[2] = {0, 1};
 
-    for (int i = 0; i < 2; i++)
+    for (int& i : order)
     {
         auto rand = AASystemRED::GetInstance()->GetRandomManager().Get(1)->GenS32() % 2;
-        auto val = order[i];
-        order[i] = order[rand];
+        auto val = i;
+        i = order[rand];
         order[rand] = val;
     }
 
@@ -300,20 +300,19 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
     m_WorldBlacker = false;
     m_bBackGroundStop = false;
 
-    for (int i = 0; i < 2; i++)
+    for (int playerIdx : order)
     {
-        auto playerIdx = order[i];
         auto chara = &m_SortedObjPtrVector[3 * playerIdx];
         for (int j = 0; j < 3; j++)
         {
-            auto initArg = new CInitializeObjectExArg();
-            initArg->actName = "";
-            initArg->argparent = nullptr;
-            initArg->flag = 0;
-            initArg->exPoint = POS_WORLD_ZERO;
-            initArg->memberID = MemberID_01;
-            initArg->fixedMemberID = MemberID_01;
-            initArg->isPlayer = true;
+            auto initArg = CInitializeObjectExArg();
+            initArg.actName = "";
+            initArg.argparent = nullptr;
+            initArg.flag = 0;
+            initArg.exPoint = POS_WORLD_ZERO;
+            initArg.memberID = MemberID_01;
+            initArg.fixedMemberID = MemberID_01;
+            initArg.isPlayer = true;
 
             auto charObj = &m_CharVector[(playerIdx & 0xff) * 3 + (j & 0xFF)];
             if (charObj != nullptr)
@@ -340,7 +339,7 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
                 charObj->m_CreateArgFromParent.m_CreateArg_PointLightSide = -1;
                 charObj->m_CreateArgFromParent.m_CreateArg_PointLightMember = -1;
 
-                charObj->ObjectInitializeOnActivate(initArg);
+                charObj->ObjectInitializeOnActivate(&initArg);
             }
             *chara = charObj;
             ++chara;
@@ -934,8 +933,8 @@ void BATTLE_CObjectManager::ScriptAnalyze()
 {
     for (int i = 0; i < 7; i++)
     {
-        m_BBSFileAnalyzeData[0][i].BBSAnalyzeExe((unsigned char*)m_BBSFile[0][i].m_pData, m_BBSFile[0][i].m_DataSize);
-        m_BBSFileAnalyzeData[1][i].BBSAnalyzeExe((unsigned char*)m_BBSFile[1][i].m_pData, m_BBSFile[1][i].m_DataSize);
+        m_BBSFileAnalyzeData[0][i].BBSAnalyzeExe(m_BBSFile[0][i].m_pData, m_BBSFile[0][i].m_DataSize);
+        m_BBSFileAnalyzeData[1][i].BBSAnalyzeExe(m_BBSFile[1][i].m_pData, m_BBSFile[1][i].m_DataSize);
     }
 
     m_CharVector[0].m_pBBSFile = &m_BBSFileAnalyzeData[0][0];

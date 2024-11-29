@@ -1356,17 +1356,17 @@ uint8_t* OBJ_CBase::GetActionAddr(const CXXBYTE<32> actionName, int* pOutIndex)
     }
 
     auto hash = AA_MakeHash(s.GetStr());
-    const auto key = new CHashKey();
-    key->SetKey(hash);
+    auto key = CHashKey();
+    key.SetKey(hash);
 
-    auto node = m_pBBSFile->m_ActIndexTable->SearchNode(key);
+    auto node = m_pBBSFile->m_ActIndexTable->SearchNode(&key);
 
     if (!node || &m_pBBSFile->m_ScriptTopAddr[node->GetData()] == nullptr)
     {
         hash = AA_MakeHash(AN_CmnActStand.GetStr());
-        key->SetKey(hash);
+        key.SetKey(hash);
 
-        node = m_pBBSFile->m_ActIndexTable->SearchNode(key);
+        node = m_pBBSFile->m_ActIndexTable->SearchNode(&key);
 
         m_ActionRequestInfo.m_RequestName = AN_CmnActStand;
     }

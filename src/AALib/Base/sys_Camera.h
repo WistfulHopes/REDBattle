@@ -26,7 +26,7 @@ protected:
 	void PlaneFromPoint(AA_Vector3 *pP0, AA_Vector3 *pP1, AA_Vector3 *pP2, AA_Vector4 *pPlane);
 public:
 	AA_CCamera();
-	~AA_CCamera() {}
+	~AA_CCamera() = default;
 	bool Update();
 	void InitPos(float x, float y, float z);
 	void InitPosAt(float, float, float, float, float, float);

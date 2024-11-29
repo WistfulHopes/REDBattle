@@ -1974,16 +1974,12 @@ public:
 class CBBSFile 
 {
 public:
-	CBBSFile() {}
+	CBBSFile() = default;
 
-	CBBSFile(void* data, uint32_t size)
-		: m_DataSize(size)
-	{
-		m_pData = new unsigned char[size];
-		memcpy(m_pData, data, size);
-	}
+	CBBSFile(uint8_t* data, uint32_t size)
+		: m_pData(data), m_DataSize(size) {}
 	
-	void* m_pData{};
+	uint8_t* m_pData{};
 	uint32_t m_DataSize{};
 };
 
@@ -2026,8 +2022,8 @@ public:
 			m_PostFuncAddrTable = nullptr;
 		}
 	}
-	unsigned char* m_DataTopAddr{}; // 0x0
-	unsigned char* m_ScriptTopAddr{}; // 0x8
+	uint8_t* m_DataTopAddr{}; // 0x0
+	uint8_t* m_ScriptTopAddr{}; // 0x8
 	int32_t m_ActionBeginCount{}; // 0x10
 	sActionBegin* m_ActionBeginListAddr{}; // 0x18
 	std::shared_ptr<CHashTable<CHashNodeC32BYTEtoU32>> m_ActIndexTable{}; // 0x20
@@ -2035,7 +2031,7 @@ public:
 	std::shared_ptr<CHashTable<CHashNodeC32BYTEtoU32>> m_PreFuncAddrTable{}; // 0x40
 	std::shared_ptr<CHashTable<CHashNodeC32BYTEtoU32>> m_PostFuncAddrTable{}; // 0x50
 	bool m_bAllocate{}; // 0x60
-	void BBSAnalyzeExe(unsigned char* addr, uint32_t size);
-	unsigned char* GetFuncAddrBase(const CXXBYTE<32>& funcName, CHashTable<CHashNodeC32BYTEtoU32>* pTable);
-	unsigned char* GetGotoAddrBBSF(unsigned char* curActionTop, const CXXBYTE<32>& gotoLabel);
+	void BBSAnalyzeExe(uint8_t* addr, uint32_t size);
+	uint8_t* GetFuncAddrBase(const CXXBYTE<32>& funcName, CHashTable<CHashNodeC32BYTEtoU32>* pTable);
+	uint8_t* GetGotoAddrBBSF(uint8_t* curActionTop, const CXXBYTE<32>& gotoLabel);
 };

@@ -23,6 +23,14 @@ REDBootSequenceRoot::REDBootSequenceRoot()
     SeqSaveData = new REDBootSequenceSaveDataRoot();
 }
 
+REDBootSequenceRoot::~REDBootSequenceRoot()
+{
+    delete SeqInit;
+    delete SeqStaticLoad;
+    delete SeqPreLoadData;
+    delete SeqSaveData;
+}
+
 SCENE_CBoot::SCENE_CBoot()
 {
     Sequencer = new REDBootSequenceRoot();

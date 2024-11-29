@@ -3,7 +3,7 @@
 
 class REDStateMachine {
 public:
-    REDStateMachine() {}
+    REDStateMachine() = default;
     virtual ~REDStateMachine() { delete CurrentSubState; }
 
 private:

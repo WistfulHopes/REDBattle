@@ -69,6 +69,11 @@ public:
         m_NodeCnt = 0;
     }
 
+    ~CHashTable()
+    {
+        delete m_Node;
+    }
+
     T* SearchNode(const CHashKey* key)
     {
         int32_t val = m_NodeCnt - 1;

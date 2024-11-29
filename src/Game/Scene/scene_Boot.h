@@ -6,6 +6,7 @@ class REDBootSequenceRoot : public REDStateMachineRoot
 {
 public:
     REDBootSequenceRoot();
+    virtual ~REDBootSequenceRoot();
 
     void BeginState() override;
     void TickState(float DeltaSeconds) override;
@@ -20,7 +21,7 @@ private:
 class REDBootSequenceInit : public REDStateMachine 
 {
 public:
-    REDBootSequenceInit() {}
+    REDBootSequenceInit() = default;
 
     void BeginState() override;
 };

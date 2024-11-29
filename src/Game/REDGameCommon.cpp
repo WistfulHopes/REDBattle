@@ -109,8 +109,7 @@ REDGameCommon::REDGameCommon()
     m_CurrentScene->SceneInitialize();
 }
 
-void REDGameCommon::LoadCharaData(uint8_t* charaBbs, uint32_t charaBbsSize, uint8_t* effBbs, uint32_t effBbsSize,
-                                  uint8_t* col, int idx)
+void REDGameCommon::LoadCharaData(uint8_t* charaBbs, uint32_t charaBbsSize, uint8_t* effBbs, uint32_t effBbsSize, uint8_t* col, int idx)
 {
     CharaData.CharaBBSData[idx] = charaBbs;
     CharaData.CharaBBSDataSize[idx] = charaBbsSize;

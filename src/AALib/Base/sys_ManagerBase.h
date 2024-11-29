@@ -12,7 +12,13 @@ protected:
 	void Cleanup();
 public:
 	AA_ManagerBase();
-	~AA_ManagerBase() {}
+	virtual ~AA_ManagerBase()
+	{
+		for (uint32_t i = 0; i < m_InstanceNum; i++)		
+		{
+			delete m_Instances[i];
+		}
+	}
 	void CleanupInstance();
 	AA_Handle RegistInstanceHandle(T* inst);
 	T* RegistInstance(T* inst);

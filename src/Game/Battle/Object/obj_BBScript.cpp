@@ -2623,7 +2623,7 @@ const uint16_t commandSizeTable[2596] =
     36u
 };
 
-void CBBSFileAnalyzeData::BBSAnalyzeExe(unsigned char* addr, uint32_t size)
+void CBBSFileAnalyzeData::BBSAnalyzeExe(uint8_t* addr, uint32_t size)
 {
     m_DataTopAddr = addr;
     m_ActionBeginCount = *(int*)addr;
@@ -2655,7 +2655,7 @@ void CBBSFileAnalyzeData::BBSAnalyzeExe(unsigned char* addr, uint32_t size)
             std::vector<CHashKeyC32BYTE> hashes{};
             do
             {
-                unsigned char* begin = m_ScriptTopAddr;
+                auto begin = m_ScriptTopAddr;
                 uint32_t command = *(uint32_t*)(begin + offset);
                 if (command == targetID)
                 {
@@ -2681,7 +2681,7 @@ void CBBSFileAnalyzeData::BBSAnalyzeExe(unsigned char* addr, uint32_t size)
     initFuncTable(m_PostFuncAddrTable.get(), ID_PostFuncBegin);
 }
 
-unsigned char* CBBSFileAnalyzeData::GetFuncAddrBase(const CXXBYTE<32>& funcName,
+uint8_t* CBBSFileAnalyzeData::GetFuncAddrBase(const CXXBYTE<32>& funcName,
                                                     CHashTable<CHashNodeC32BYTEtoU32>* pTable)
 {
     auto hash = AA_MakeHash(funcName.GetStr());
@@ -2692,7 +2692,7 @@ unsigned char* CBBSFileAnalyzeData::GetFuncAddrBase(const CXXBYTE<32>& funcName,
     return nullptr;
 }
 
-unsigned char* CBBSFileAnalyzeData::GetGotoAddrBBSF(unsigned char* curActionTop, const CXXBYTE<32>& gotoLabel)
+uint8_t* CBBSFileAnalyzeData::GetGotoAddrBBSF(uint8_t* curActionTop, const CXXBYTE<32>& gotoLabel)
 {
     while (true)
     {

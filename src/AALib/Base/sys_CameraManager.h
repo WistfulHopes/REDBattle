@@ -6,7 +6,7 @@ class AA_CCameraManager : public AA_ManagerBase<AA_CCamera,16>
 {
 public:
 	AA_CCameraManager() {}
-	virtual ~AA_CCameraManager() {}
+	~AA_CCameraManager() override = default;
 
 	void Update() override 
 	{

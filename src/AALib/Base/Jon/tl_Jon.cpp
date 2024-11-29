@@ -76,7 +76,7 @@ const wchar_t* AA_CCollision_JON::GetAnimeName()
     auto fileName = m_ImageFileName[0];
     if (!fileName) return nullptr;
 
-    wchar_t* name = new wchar_t[0x20];
+    wchar_t name[0x20] {};
     std::mbstowcs(name, fileName, 0x20);
 
     wchar_t* end = nullptr;
@@ -95,7 +95,7 @@ int32_t AA_CCollision_JON::GetAnimeFrame()
     auto fileName = m_ImageFileName[0];
     if (!fileName) return 0;
 
-    wchar_t* name = new wchar_t[0x20];
+    wchar_t name[0x20] {};
     std::mbstowcs(name, fileName, 0x20);
 
     wchar_t* numOffset = nullptr;

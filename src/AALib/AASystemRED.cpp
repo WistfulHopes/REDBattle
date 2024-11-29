@@ -7,6 +7,10 @@ AASystemRED::AASystemRED()
     m_bInitialized = false;
 }
 
+AASystemRED::~AASystemRED()
+{
+}
+
 void AASystemRED::Initialize()
 {
     auto cam = new AA_CCamera();
