@@ -38,12 +38,18 @@ public:
 	bool CheckAny();
 	void Set(T flag) { m_Flag &= flag; }
 	void SetN(T);
-	T Get();
+	T Get()
+	{
+		return m_Flag;
+	}
 	void Add(T flag) { m_Flag |= flag; }
 	void AddN(T);
 	void Del(T flag) { m_Flag &= ~flag; }
 	void DelN(T);
-	void Reset();
+	void Reset()
+	{
+		m_Flag = 0;
+	}
 	operator T();
 	T & operator|=(const T &);
 	const T operator&(const T &);

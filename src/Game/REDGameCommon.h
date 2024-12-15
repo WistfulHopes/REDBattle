@@ -232,5 +232,10 @@ public:
         return BattlePlayerInfo[PlayerSide].m_MemberCharaInfoList[MemberID].CharaID;
     }
 
+    EBattleScript GetBattleScriptType(SIDE_ID PlayerSide, EMemberID MemberID)
+    {
+        return BattlePlayerInfo[PlayerSide].m_MemberCharaInfoList[MemberID].ScriptType;
+    }
+
     void UpdateFrameCounter() { m_FrameCounter++; }
 };

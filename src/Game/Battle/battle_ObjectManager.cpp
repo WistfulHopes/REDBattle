@@ -1,5 +1,6 @@
 #include "battle_ObjectManager.h"
 #include "Object/Char/char_ActCmn.h"
+#include <algorithm>
 #include <cstring>
 #include <fstream>
 #include <Game/REDGameCommon.h>
@@ -310,8 +311,10 @@ int32_t BATTLE_CObjectManager::BOM_RoundAndEasyResetInitialize(bool use2ndInitia
             initArg.argparent = nullptr;
             initArg.flag = 0;
             initArg.exPoint = POS_WORLD_ZERO;
-            initArg.memberID = MemberID_01;
-            initArg.fixedMemberID = MemberID_01;
+            initArg.argsideID = (SIDE_ID)playerIdx;
+            initArg.argFixedSideID = (SIDE_ID)playerIdx;
+            initArg.memberID = (EMemberID)j;
+            initArg.fixedMemberID = (EMemberID)j;
             initArg.isPlayer = true;
 
             auto charObj = &m_CharVector[(playerIdx & 0xff) * 3 + (j & 0xFF)];
@@ -890,12 +893,10 @@ void BATTLE_CObjectManager::TransferAirActionCount(OBJ_CCharBase* dst, OBJ_CChar
             ply_AirDashCountMax = dst->ply_AirDashCountMax - v3;
         dst->m_AirDashCount = ply_AirDashCountMax;
         m_HomingDashCountMax = dst->m_HomingDashCountMax;
-        if (src->m_HomingDashCount < m_HomingDashCountMax)
-            m_HomingDashCountMax = src->m_HomingDashCount;
+        m_HomingDashCountMax = std::min(src->m_HomingDashCount, m_HomingDashCountMax);
         dst->m_HomingDashCount = m_HomingDashCountMax;
         m_MikiwameMoveCountMax = dst->m_MikiwameMoveCountMax;
-        if (src->m_MikiwameMoveCount < m_MikiwameMoveCountMax)
-            m_MikiwameMoveCountMax = src->m_MikiwameMoveCount;
+        m_MikiwameMoveCountMax = std::min(src->m_MikiwameMoveCount, m_MikiwameMoveCountMax);
         dst->m_MikiwameMoveCount = m_MikiwameMoveCountMax;
     }
 }

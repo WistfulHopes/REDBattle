@@ -1,8 +1,7 @@
 #include "obj_Base.h"
+#include <algorithm>
 #include <cstring>
-#include <dinput.h>
 #include <intrin.h>
-#include <iostream>
 #include <Game/Scene/scene_Battle.h>
 
 #include "obj_Flag.h"
@@ -30,8 +29,70 @@ OBJ_CBase::OBJ_CBase()
     ObjectConstructor_ForObject();
 }
 
-int OBJ_CBase::ObjectInitializeOnActivate(const CInitializeObjectExArg* arg)
+int OBJ_CBase::ObjectInitializeOnActivate(const CInitializeObjectExArg* pArg)
 {
+    ObjectConstructor_ForObject();
+
+    if (m_IsPlayerObj) ((OBJ_CCharBase*)this)->ObjectConstructor_ForPlayer();
+
+    m_IsDirty = true;
+    m_ClsnAnalyzer.AnalyzeCollisionFile(nullptr);
+    m_ClsnAnalyzer.SetCollisionFileName("");
+
+    m_FixedSideID = pArg->argFixedSideID;
+    m_SideID = pArg->argsideID;
+    m_FixedMemberID = pArg->fixedMemberID;
+    m_MemberID = pArg->memberID;
+    m_ScriptType = REDGameCommon::GetInstance()->GetBattleScriptType(m_SideID, m_MemberID);
+
+    if (m_IsPlayerObj)
+    {
+        m_CharaID = REDGameCommon::GetInstance()->GetBattleCharaID(m_SideID, m_MemberID);
+        m_FixedCharaID = REDGameCommon::GetInstance()->GetBattleCharaID(m_FixedSideID, m_FixedMemberID);
+    }
+
+    m_ActiveState = ACTV_REQ_ACTIVE;
+
+    const auto battleScene = dynamic_cast<SCENE_CBattle*>(REDGameCommon::GetInstance()->GetScene());
+    const auto objManager = battleScene->GetBattleObjectManager();
+
+    if (pArg->bIsCommonObject)
+    {
+        m_ColPac.SetPackFile(REDGameCommon::GetInstance()->GetCharaData().ColData[6]);
+        ScriptInitialize(objManager->GetCommonScriptData(m_IsPlayerObj ? ScriptData_Body : ScriptData_Effect));
+    }
+    else
+    {
+        const auto idx = m_FixedSideID * 3 + m_FixedMemberID;
+        m_ColPac.SetPackFile(REDGameCommon::GetInstance()->GetCharaData().ColData[idx]);
+        ScriptInitialize(objManager->GetScriptData(m_FixedSideID, m_FixedMemberID, m_IsPlayerObj ? ScriptData_Body : ScriptData_Effect));
+    }
+
+    if (pArg->isPlayer && !pArg->fixedMemberID)
+    {
+        battleScene->GetBattleScreenManager()->AddScreenTarget(this, 0);
+    }
+
+    if (pArg->argparent)
+    {
+        if (m_pParentObj.GetPtr()) m_pParentObj.ClearPtr();
+        m_pParentObj = pArg->argparent;
+
+        if (m_pParentPly.GetPtr()) m_pParentPly.ClearPtr();
+        if (pArg->argparent->m_pParentPly) m_pParentPly = pArg->argparent->m_pParentPly;
+
+        if (m_pTargetObj.GetPtr()) m_pTargetObj.ClearPtr();
+        if (pArg->argparent->m_pTargetObj) m_pTargetObj = pArg->argparent->m_pTargetObj;
+
+        // TODO rest of this mess
+    }
+
+    m_Direction = pArg->dir;
+
+    // TODO rest
+    
+    if (pArg->doScriptStep) ControlPhase_FrameStep();
+    
     return 0;
 }
 
@@ -320,6 +381,45 @@ bool OBJ_CBase::IsTrgBtnX(int offsetTime, int btnID)
     return true;
 }
 
+void OBJ_CBase::ScriptInitialize(CBBSFileAnalyzeData* bbsFile)
+{
+    m_pBBSFile = bbsFile;
+    m_ScriptFlag = 0;
+    m_ScriptGotoAddr = nullptr;
+    m_GotoForLoopAddr = nullptr;
+    m_ActionRequestInfo.m_RequestName = "";
+    m_ActionRequestInfo.m_RequestFlag = 0;
+    m_ActionRequestInfo.m_RequestGotoLabel = "";
+    m_ActionRequestInfo.m_RequestSkillID = -1;
+    m_ActionRequestInfo.m_SomeSkillIsRequested = false;
+    m_ActionRequestInfo.m_SomeSkillIsRequestReserved = false;
+    m_ActionRequestInfo.m_RequestGCSkill = -1;
+    m_ActionRequestInfo.m_RequestName = "";
+    m_TopAddr = m_pBBSFile->m_ScriptTopAddr;
+    m_CurAddr = m_pBBSFile->m_ScriptTopAddr;
+    m_CellTime = 0;
+    m_CellTimeMax = 0;
+    m_CellBeginCount = 0;
+    m_CellNoStopCellNum = 0;
+    for (auto& name : m_CellNoStopCellNameList)
+    {
+        name = "";
+    }
+    m_CellNoStopCellCurIndex = 0;
+    m_CellNoStopCellCurFrame = 0;
+
+    if (m_pControlObject) m_pControlObject.ClearPtr();
+
+    for (auto& validInterruptFlag : m_ValidInterruptFlag)
+    {
+        validInterruptFlag[0].Reset();
+        validInterruptFlag[1].Reset();
+        validInterruptFlag[2].Reset();
+        validInterruptFlag[3].Reset();
+        validInterruptFlag[4].Reset();
+    }
+}
+
 void OBJ_CBase::GetPushWorldRect(int* L, int* T, int* R, int* B)
 {
     auto posX = GetPosX();
@@ -337,11 +437,11 @@ void OBJ_CBase::GetPushWorldRect(int* L, int* T, int* R, int* B)
     *T = GetPushColH() + posY;
     *B = posY - GetPushColHLow();
 
-    *L = posX - pushBack;
-    *R = posX + pushFront;
-
     if (L && R)
     {
+        *L = posX - pushBack;
+        *R = posX + pushFront;
+
         if (m_ClsnAnalyzer.m_CollisionNum[5])
         {
             float tmpL;
@@ -364,7 +464,7 @@ void OBJ_CBase::GetPushWorldRect(int* L, int* T, int* R, int* B)
             *R = posX + (int)tmpR;
         }
     }
-    
+
     if ((m_CollisionFlag & OBJ_CLSN_LOCKING) != 0 && (m_CollisionFlag3 & OBJ_CLSN_3_NOFAT_PUSHCOL_LOCKING) == 0)
     {
         if (L && R)
@@ -372,21 +472,21 @@ void OBJ_CBase::GetPushWorldRect(int* L, int* T, int* R, int* B)
             int tmpL, tmpT, tmpR, tmpB = 0;
             m_pLockLinkObj.GetPtr()->GetPushWorldRect(&tmpL, &tmpT, &tmpR, &tmpB);
 
-            if (*T < tmpT) *T = tmpT;
-            if (*B > tmpB) *B = tmpB;
-            if (*L > tmpL) *L = tmpL;
-            if (*R < tmpR) *R = tmpR;
+            *T = std::max(*T, tmpT);
+            *B = std::min(*B, tmpB);
+            *L = std::min(*L, tmpL);
+            *R = std::max(*R, tmpR);
         }
         else
         {
             int tmpT, tmpB = 0;
             m_pLockLinkObj.GetPtr()->GetPushWorldRect(nullptr, &tmpT, nullptr, &tmpB);
 
-            if (*T < tmpT) *T = tmpT;
-            if (*B > tmpB) *B = tmpB;
+            *T = std::max(*T, tmpT);
+            *B = std::min(*B, tmpB);
         }
     }
-    
+
     if (m_pLinkObject_PushCollision)
     {
         if (L && R)
@@ -394,18 +494,18 @@ void OBJ_CBase::GetPushWorldRect(int* L, int* T, int* R, int* B)
             int tmpL, tmpT, tmpR, tmpB = 0;
             m_pLinkObject_PushCollision.GetPtr()->GetPushWorldRect(&tmpL, &tmpT, &tmpR, &tmpB);
 
-            if (*T < tmpT) *T = tmpT;
-            if (*B > tmpB) *B = tmpB;
-            if (*L > tmpL) *L = tmpL;
-            if (*R < tmpR) *R = tmpR;
+            *T = std::max(*T, tmpT);
+            *B = std::min(*B, tmpB);
+            *L = std::min(*L, tmpL);
+            *R = std::max(*R, tmpR);
         }
         else
         {
             int tmpT, tmpB = 0;
             m_pLinkObject_PushCollision.GetPtr()->GetPushWorldRect(nullptr, &tmpT, nullptr, &tmpB);
 
-            if (*T < tmpT) *T = tmpT;
-            if (*B > tmpB) *B = tmpB;
+            *T = std::max(*T, tmpT);
+            *B = std::min(*B, tmpB);
         }
     }
 }
@@ -421,17 +521,17 @@ void OBJ_CBase::GetPushWorldRectForWorldClip(int* L, int* R)
         int tmpL, tmpR = 0;
         m_pLockLinkObj.GetPtr()->GetPushWorldRectForWorldClip(&tmpL, &tmpR);
 
-        if (*L > tmpL) *L = tmpL;
-        if (*R < tmpR) *R = tmpR;
+        *L = std::min(*L, tmpL);
+        *R = std::max(*R, tmpR);
     }
-    
+
     if (m_pLinkObject_PushCollision)
     {
         int tmpL, tmpR = 0;
         m_pLinkObject_PushCollision.GetPtr()->GetPushWorldRectForWorldClip(&tmpL, &tmpR);
 
-        if (*L > tmpL) *L = tmpL;
-        if (*R < tmpR) *R = tmpR;
+        *L = std::min(*L, tmpL);
+        *R = std::max(*R, tmpR);
     }
 }
 
@@ -439,8 +539,8 @@ void OBJ_CBase::GetPushScreenRect(int& L, int& T, int& R, int& B)
 {
     GetPushWorldRect(nullptr, &T, nullptr, &B);
     GetPushWorldRectForWorldClip(&L, &R);
-    
-    auto dirObj = m_pLinkObject_Angle.GetPtr()->m_pLinkObject_Direction;
+
+    auto dirObj = m_pLinkObject_Direction;
     uint32_t direction;
 
     if (!dirObj) direction = m_Direction;
@@ -756,7 +856,7 @@ void OBJ_CBase::ScriptFrameStep()
             if (m_CellTime != 0x7FFFFFFE)
             {
                 m_CellTime++;
-                if (m_CellTime < 0) m_CellTime = 0;
+                m_CellTime = std::max(m_CellTime, 0);
             }
             else m_CellTime = 0x7FFFFFFE;
         }
@@ -884,7 +984,8 @@ void OBJ_CBase::BBST_OnActionBegin(const CXXBYTE<32>& actName)
 
                 addr += commandSizeTable[cmd];
             }
-            while (nestLevel);
+            while (nestLevel > 0);
+            if (cmd == ID_ActionEnd) break;
         }
 
         if (cmd != ID_ActionEnd) FuncCallBySwitchCaseTable(addr);
@@ -1018,8 +1119,8 @@ uint8_t* OBJ_CBase::ExecuteCellBeginToCellEnd(uint8_t* addr)
                 continue;
             }
 
-            LONG64 bittestVal = 0xC00000020100000FuLL;
-            bool bIsNestCommand = cmd == ID_IfBegin || (cmd - 6 <= ID_CheckTeamMemberName && BitTest64(
+            int64_t bittestVal = 0xC00000020100000FLL;
+            bool bIsNestCommand = cmd == ID_IfBegin || (cmd - 6 <= ID_CheckTeamMemberName && _bittest64(
                 &bittestVal,
                 cmd - 6)) || cmd - ID_IfBeginCoType <= 2 || cmd == ID_IfBeginGameMode || cmd == ID_IfBeginCharaID;
 

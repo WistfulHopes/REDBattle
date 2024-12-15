@@ -1,5 +1,6 @@
 #include "battle_ScreenManager.h"
 
+#include <algorithm>
 #include <set>
 #include <AALib/AASystemRED.h>
 
@@ -335,10 +336,30 @@ void BATTLE_CScreenManager::ResetScreenManager()
     m_WorldTopSide = 5400;
 }
 
+bool BATTLE_CScreenManager::AddScreenTarget(OBJ_CBase* obj, uint32_t flag)
+{
+    if (!obj) return false;
+
+    if (m_TargetObjectNum >= 6) return false;
+
+    if (m_TargetObjectNum)
+    {
+        for (uint32_t i = 0; i < m_TargetObjectNum; i++)
+        {
+            if (obj == m_ppObject[i]) return false;
+        }
+    }
+        
+    m_ppObject[m_TargetObjectNum] = obj;
+    m_TargetObjectFlag[m_TargetObjectNum] = flag;
+    m_TargetObjectNum++;
+
+    return true;
+}
+
 void BATTLE_CScreenManager::SetScreenCornerObject(bool bQuick)
 {
     int32_t v5 = 0;
-    int32_t v31 = 0;
     int32_t v50 = 0;
     int32_t arg_8 = 0;
 
@@ -428,22 +449,22 @@ void BATTLE_CScreenManager::SetScreenCornerObject(bool bQuick)
                 if (arg_8 != 0)
                 {
                     auto objLeft = m_ObjLeft;
-                    if (screenWorldCenterX < objLeft) objLeft = screenWorldCenterX;
+                    objLeft = std::min(screenWorldCenterX, objLeft);
                     m_ObjLeft = objLeft;
 
                     auto objRight = m_ObjRight;
-                    if (screenWorldRight > objRight) objRight = screenWorldRight;
+                    objRight = std::max(screenWorldRight, objRight);
                     m_ObjRight = objRight;
 
                     auto objTop = m_ObjTop;
-                    if (screenWorldCenterY > objTop) objTop = screenWorldCenterY;
+                    objTop = std::max(screenWorldCenterY, objTop);
                     m_ObjTop = objTop;
 
                     auto tmp_objBottom = m_ObjBottom;
-                    if (b < tmp_objBottom) tmp_objBottom = b;
+                    tmp_objBottom = std::min(b, tmp_objBottom);
                     m_ObjBottom = tmp_objBottom;
 
-                    if (b > v5) v5 = b;
+                    v5 = std::max(b, v5);
                     v50 = v5;
                     objBottom = arg_8;
                 }
@@ -535,37 +556,29 @@ bool BATTLE_CScreenManager::UpdateScreenPosition(bool bQuick)
             auto targetOffsetAirYMax = ScreenY_TargetOffset + 350;
             m_TargetOffsetLandYMax = targetOffsetAirYMax;
 
-            int tmp = 1280000 / m_TargetWidth;
-            if (tmp * ObjBox()->Bottom() / 1000 <= m_TargetOffsetAirYPos ||
-                tmp * (ObjBox()->HigherBottom() - ObjBox()->Bottom()) / 1000 >= m_TargetOffsetAirYDist)
+            int widthRatio = 1280000 / m_TargetWidth;
+            if (widthRatio * ObjBox()->Bottom() / 1000 <= m_TargetOffsetAirYPos ||
+                widthRatio * (ObjBox()->HigherBottom() - ObjBox()->Bottom()) / 1000 >= m_TargetOffsetAirYDist)
             {
-                if (m_TargetOffsetY + m_TargetOffsetLandYAdd < targetOffsetAirYMax)
-                {
-                    targetOffsetAirYMax = m_TargetOffsetY + m_TargetOffsetLandYAdd;
-                }
+                targetOffsetAirYMax = std::min(m_TargetOffsetY + m_TargetOffsetLandYAdd, targetOffsetAirYMax);
             }
             else
             {
                 targetOffsetAirYMax = m_TargetOffsetAirYMax;
-                if (m_TargetOffsetY - m_TargetOffsetLandYAdd > targetOffsetAirYMax)
-                {
-                    targetOffsetAirYMax = m_TargetOffsetY - m_TargetOffsetLandYAdd;
-                }
+                targetOffsetAirYMax = std::max(m_TargetOffsetY - m_TargetOffsetLandYAdd, targetOffsetAirYMax);
             }
             m_TargetOffsetY = targetOffsetAirYMax;
-
-            int32_t worldTopSide;
 
             if (ObjBox()->HigherBottom() - ObjBox()->Bottom() > m_ZoomOutBeginDistY)
             {
                 auto maxZoomWidth = ObjBox()->HigherBottom() - ObjBox()->Bottom() + 1280;
 
-                if (maxZoomWidth > m_MaxZoomOutWidth) maxZoomWidth = m_MaxZoomOutWidth;
+                maxZoomWidth = std::min(maxZoomWidth, m_MaxZoomOutWidth);
             }
 
             auto widthY = 1000 * m_MaxZoomOutWidth / m_WidthY;
 
-            worldTopSide = widthY * ObjBox()->HigherBottom() / 1000 - widthY * targetOffsetAirYMax / 1000;
+            int32_t worldTopSide = widthY * ObjBox()->HigherBottom() / 1000 - widthY * targetOffsetAirYMax / 1000;
 
             if (worldTopSide < 0 || worldTopSide > m_WorldTopSide)
                 m_TargetCenterY = m_WorldTopSide;
@@ -581,7 +594,7 @@ bool BATTLE_CScreenManager::UpdateScreenPosition(bool bQuick)
         auto velWidth = width * 10 / 20 + (width * 10 >> 0x1F);
         velWidth -= velWidth >> 0x1F;
         width = 0x28;
-        if (width < velWidth) width = velWidth;
+        width = std::max(width, velWidth);
 
         m_VelWidth = width;
         m_DelayW = 450;
@@ -699,7 +712,7 @@ bool BATTLE_CScreenManager::UpdateScreenPosition(bool bQuick)
         m_VelCenterY = --screenYSpeed;
     }
 
-    m_ScreenWorldCenterY += velCenterY;
+    m_ScreenWorldCenterY += m_VelCenterY;
 
     if (bQuick)
     {
@@ -892,7 +905,7 @@ bool BATTLE_CScreenManager::UpdateScreenPosition(bool bQuick)
     }
 
     auto objectScalePre = m_ObjectScale;
-    if (m_ScreenY >= m_WorldTopSide - 900) m_ScreenY = m_WorldTopSide - 900;
+    m_ScreenY = std::min(m_ScreenY, m_WorldTopSide - 900);
 
     m_MoveX = screenXPre - m_ScreenX;
     m_MoveY = screenYPre - m_ScreenY;

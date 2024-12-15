@@ -430,6 +430,10 @@ public:
     int32_t m_CellTimeMax{};
     int32_t m_CellBeginCount{};
     int32_t m_CellNoStopCellNum{};
+    CXXBYTE<32> m_CellNoStopCellNameList[6]{};
+    int32_t m_CellNoStopCellCurIndex{};
+    int32_t m_CellNoStopCellCurFrame{};
+    bool m_bCellUpdated{};
 
     uint8_t* m_TmpArgAddr{};
     CXXBYTE<32> m_PreActionName{};
@@ -485,7 +489,7 @@ public:
     int32_t m_GotoTimes{};
 
 public:
-    int ObjectInitializeOnActivate(const class CInitializeObjectExArg* arg);
+    int ObjectInitializeOnActivate(const class CInitializeObjectExArg* pArg);
     int OnDelete();
     void OnRollbackDelete();
     int ReleaseResource();
@@ -500,6 +504,8 @@ public:
 
     bool IsTrgBtnX(int offsetTime, int btnID);
 
+    void ScriptInitialize(CBBSFileAnalyzeData* bbsFile);
+    
     bool ActionRequestForce(const CXXBYTE<32>& actionName);
     bool ActionRequestEx(const CXXBYTE<32>& actionName, unsigned int flag, OBJ_CBase* pEnemy,
                          CXXBYTE<32> label, unsigned int reqFlag);

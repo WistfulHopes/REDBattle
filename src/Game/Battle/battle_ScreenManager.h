@@ -164,7 +164,7 @@ public:
 	void ResetScreenManager();
 	void ResetOnRoundReset(unsigned char);
 	void ResetToCenter(int32_t, int32_t);
-	bool AddScreenTarget(OBJ_CBase *, uint32_t);
+	bool AddScreenTarget(OBJ_CBase * obj, uint32_t flag);
 	bool ResetScreenTarget();
 	void SetScreenCornerObject(bool bQuick);
 	bool SetLinkCameraMagn(AA_Vector3 &, AA_Vector3 &);
