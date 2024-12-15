@@ -8,8 +8,6 @@
 #include "Game/System/game_key.h"
 #include "BattleRecord.h"
 
-struct FCharaData;
-
 template <int V1, int V2>
 class CMultiBuffer
 {
@@ -252,7 +250,6 @@ public:
     OBJ_CBase* ActivateObject(const CInitializeObjectExArg*);
 
 private:
-    CBBSFile m_BBSFile[2][7];
     CBBSFileAnalyzeData m_BBSFileAnalyzeData[2][7]{}; // 0x2F0
 public:
     static int32_t GetPlayerIndexWithCommon(SIDE_ID, EMemberID);
@@ -320,8 +317,6 @@ private:
     uint32_t m_UsesObjPtrVectorNum{}; // 0x12C0
     
 public:
-    void SetCharaData(const FCharaData& InData);
-
     void ControlBattleObject();
     void DrawBattleObject();
     void DrawBattleObjectIgnorePause();

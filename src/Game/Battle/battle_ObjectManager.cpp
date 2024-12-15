@@ -100,32 +100,6 @@ BATTLE_CObjectManager::BATTLE_CObjectManager()
     m_CommonActionHash.Release();
 }
 
-void BATTLE_CObjectManager::SetCharaData(const FCharaData& InData)
-{
-    m_BBSFile[0][0] = CBBSFile(InData.CharaBBSData[0], InData.CharaBBSDataSize[0]);
-    m_BBSFile[0][1] = CBBSFile(InData.CharaBBSData[1], InData.CharaBBSDataSize[1]);
-    m_BBSFile[0][2] = CBBSFile(InData.CharaBBSData[2], InData.CharaBBSDataSize[2]);
-    m_BBSFile[0][3] = CBBSFile(InData.CharaBBSData[3], InData.CharaBBSDataSize[3]);
-    m_BBSFile[0][4] = CBBSFile(InData.CharaBBSData[4], InData.CharaBBSDataSize[4]);
-    m_BBSFile[0][5] = CBBSFile(InData.CharaBBSData[5], InData.CharaBBSDataSize[5]);
-    m_BBSFile[0][6] = CBBSFile(InData.CharaBBSData[6], InData.CharaBBSDataSize[6]);
-
-    m_BBSFile[1][0] = CBBSFile(InData.EffectBBSData[0], InData.EffectBBSDataSize[0]);
-    m_BBSFile[1][1] = CBBSFile(InData.EffectBBSData[1], InData.EffectBBSDataSize[1]);
-    m_BBSFile[1][2] = CBBSFile(InData.EffectBBSData[2], InData.EffectBBSDataSize[2]);
-    m_BBSFile[1][3] = CBBSFile(InData.EffectBBSData[3], InData.EffectBBSDataSize[3]);
-    m_BBSFile[1][4] = CBBSFile(InData.EffectBBSData[4], InData.EffectBBSDataSize[4]);
-    m_BBSFile[1][5] = CBBSFile(InData.EffectBBSData[5], InData.EffectBBSDataSize[5]);
-    m_BBSFile[1][6] = CBBSFile(InData.EffectBBSData[6], InData.EffectBBSDataSize[6]);
-
-    m_CharVector[0].m_ColPac.SetPackFile(InData.ColData[0]);
-    m_CharVector[1].m_ColPac.SetPackFile(InData.ColData[1]);
-    m_CharVector[2].m_ColPac.SetPackFile(InData.ColData[2]);
-    m_CharVector[3].m_ColPac.SetPackFile(InData.ColData[3]);
-    m_CharVector[4].m_ColPac.SetPackFile(InData.ColData[4]);
-    m_CharVector[5].m_ColPac.SetPackFile(InData.ColData[5]);
-}
-
 int32_t BATTLE_CObjectManager::BOM_MatchOneceInitialize(bool bIs2ndCall)
 {
     if (!bIs2ndCall)
@@ -617,12 +591,12 @@ void BATTLE_CObjectManager::DeleteCheck()
 {
     int i = 0;
     bool objDel;
-    
+
     do
     {
         objDel = false;
         int chokugoObjCount = 0;
-        auto vecIdx = 0;        
+        auto vecIdx = 0;
 
         while (true)
         {
@@ -637,7 +611,7 @@ void BATTLE_CObjectManager::DeleteCheck()
                         chokugoObjCount++;
                         i++;
                         vecIdx++;
-                        
+
                         objPtr = m_ObjPtrVector[106 + unk];
                     }
                 }
@@ -647,7 +621,7 @@ void BATTLE_CObjectManager::DeleteCheck()
                     chokugoObjCount++;
                     i++;
                     vecIdx++;
-                        
+
                     objPtr = m_SortedObjPtrVector[106 + unk];
                 }
             }
@@ -683,7 +657,7 @@ void BATTLE_CObjectManager::DeleteCheck()
                     auto changeToEliminate = objPtr->m_pLinkObject_ChangeToEliminate.GetPtr();
 
                     auto unk = objPtr->m_ObjSignal >> 10 & 1;
-                    
+
                     if (changeToEliminate)
                     {
                         auto tmp = unk | 2;
@@ -695,7 +669,7 @@ void BATTLE_CObjectManager::DeleteCheck()
 
                         if (!changeToEliminate->ObjIsUsing()) unk |= 4;
                     }
-                    
+
                     if (unk)
                     {
                         objPtr->ObjUnactivate();
@@ -833,7 +807,8 @@ void BATTLE_CObjectManager::ControlBattleObject_KeyRenewal()
             if (!player->CheckPlayerFlag2(PLFLG2_CPU) || player->m_CPUInfo.m_RecipePlayStructType != 1)
             {
                 // TODO replay recordings
-                /* else */ recflg = keyFlagReg;
+                /* else */
+                recflg = keyFlagReg;
             }
             else
                 recflg = player->m_CPUInfo.m_KeyFlagReg;
@@ -934,24 +909,9 @@ void BATTLE_CObjectManager::ScriptAnalyze()
 {
     for (int i = 0; i < 7; i++)
     {
-        m_BBSFileAnalyzeData[0][i].BBSAnalyzeExe(m_BBSFile[0][i].m_pData, m_BBSFile[0][i].m_DataSize);
-        m_BBSFileAnalyzeData[1][i].BBSAnalyzeExe(m_BBSFile[1][i].m_pData, m_BBSFile[1][i].m_DataSize);
+        m_BBSFileAnalyzeData[0][i].BBSAnalyzeExe(REDGameCommon::GetInstance()->GetCharaData().CharaBBSData[i],
+                                                 REDGameCommon::GetInstance()->GetCharaData().CharaBBSDataSize[i]);
+        m_BBSFileAnalyzeData[1][i].BBSAnalyzeExe(REDGameCommon::GetInstance()->GetCharaData().EffectBBSData[i],
+                                                 REDGameCommon::GetInstance()->GetCharaData().EffectBBSDataSize[i]);
     }
-
-    m_CharVector[0].m_pBBSFile = &m_BBSFileAnalyzeData[0][0];
-    m_CharVector[0].m_CurAddr = m_CharVector[0].m_TopAddr = m_BBSFileAnalyzeData[0][0].m_ScriptTopAddr;
-    m_CharVector[1].m_pBBSFile = &m_BBSFileAnalyzeData[0][1];
-    m_CharVector[1].m_CurAddr = m_CharVector[1].m_TopAddr = m_BBSFileAnalyzeData[0][1].m_ScriptTopAddr;
-    m_CharVector[2].m_pBBSFile = &m_BBSFileAnalyzeData[0][2];
-    m_CharVector[2].m_CurAddr = m_CharVector[2].m_TopAddr = m_BBSFileAnalyzeData[0][2].m_ScriptTopAddr;
-    m_CharVector[3].m_pBBSFile = &m_BBSFileAnalyzeData[0][3];
-    m_CharVector[3].m_CurAddr = m_CharVector[3].m_TopAddr = m_BBSFileAnalyzeData[0][3].m_ScriptTopAddr;
-    m_CharVector[4].m_pBBSFile = &m_BBSFileAnalyzeData[0][4];
-    m_CharVector[4].m_CurAddr = m_CharVector[4].m_TopAddr = m_BBSFileAnalyzeData[0][4].m_ScriptTopAddr;
-    m_CharVector[5].m_pBBSFile = &m_BBSFileAnalyzeData[0][5];
-    m_CharVector[5].m_CurAddr = m_CharVector[5].m_TopAddr = m_BBSFileAnalyzeData[0][5].m_ScriptTopAddr;
-
-    m_ObjVector[OBJECT_NUM - 1].m_pBBSFile = &m_BBSFileAnalyzeData[1][6];
-    m_ObjVector[OBJECT_NUM - 1].m_CurAddr = m_ObjVector[OBJECT_NUM - 1].m_TopAddr = m_BBSFileAnalyzeData[1][6].
-        m_ScriptTopAddr;
 }
