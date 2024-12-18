@@ -1,11 +1,15 @@
 #pragma once
-#include "Game/REDGameCommon.h"
+#include <cstdint>
+
+#include "Game/REDGameConstant.h"
+
+class CSceneChange;
 
 class SCENE_CBase
 {
 public:
-    SCENE_CBase() {}
-    ~SCENE_CBase() {}
+    SCENE_CBase() = default;
+    virtual ~SCENE_CBase() = default;
 
 public:
     float GameTime {};

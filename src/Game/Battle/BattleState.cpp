@@ -1,6 +1,8 @@
 #include "BattleState.h"
 #include <Game/Scene/scene_Battle.h>
 
+#include "Game/REDGameCommon.h"
+
 void BattleState::Setup()
 {
     m_RoundCount = 1;

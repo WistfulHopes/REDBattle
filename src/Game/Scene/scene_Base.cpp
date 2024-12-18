@@ -1,6 +1,7 @@
 #include "scene_Base.h"
 
 #include "AALib/AASystemRED.h"
+#include "Game/REDGameCommon.h"
 
 namespace
 {

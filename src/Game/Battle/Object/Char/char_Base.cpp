@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include "char_ActCmn.h"
+#include "Game/REDGameCommon.h"
 
 OBJ_CCharBase::OBJ_CCharBase()
 {

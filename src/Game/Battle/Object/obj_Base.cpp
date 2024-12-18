@@ -7,6 +7,7 @@
 #include "obj_Flag.h"
 #include "Char/char_ActCmn.h"
 #include "Char/char_Base.h"
+#include "Game/REDGameCommon.h"
 
 const char* nullstr = "\x0";
 int32_t RED_SIDE_OFFSET = 50000;

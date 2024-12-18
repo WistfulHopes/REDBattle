@@ -3,6 +3,8 @@
 #include <AALib/AASystemRED.h>
 #include <Game/Scene/scene_Battle.h>
 
+#include "Game/REDGameCommon.h"
+
 void BATTLE_TeamManager::Initialize(SIDE_ID sideID)
 {
     m_SideID = sideID;

@@ -1,6 +1,8 @@
 #include "scene_Boot.h"
 #include <AALib/AASystemRED.h>
 
+#include "Game/REDGameCommon.h"
+
 namespace
 {
     bool s_bInitialized = false;

@@ -3,8 +3,7 @@
 #include <string>
 #include "REDGameConstant.h"
 #include <memory>
-
-class SCENE_CBase;
+#include "Scene/scene_Base.h"
 
 enum BATTLE_DRAMA_ID : int32_t
 {
