@@ -388,14 +388,7 @@ void OBJ_CBase::ScriptInitialize(CBBSFileAnalyzeData* bbsFile)
     m_ScriptFlag = 0;
     m_ScriptGotoAddr = nullptr;
     m_GotoForLoopAddr = nullptr;
-    m_ActionRequestInfo.m_RequestName = "";
-    m_ActionRequestInfo.m_RequestFlag = 0;
-    m_ActionRequestInfo.m_RequestGotoLabel = "";
-    m_ActionRequestInfo.m_RequestSkillID = -1;
-    m_ActionRequestInfo.m_SomeSkillIsRequested = false;
-    m_ActionRequestInfo.m_SomeSkillIsRequestReserved = false;
-    m_ActionRequestInfo.m_RequestGCSkill = -1;
-    m_ActionRequestInfo.m_RequestName = "";
+    m_ActionRequestInfo.CActionRequestInfoInit();
     m_TopAddr = m_pBBSFile->m_ScriptTopAddr;
     m_CurAddr = m_pBBSFile->m_ScriptTopAddr;
     m_CellTime = 0;
