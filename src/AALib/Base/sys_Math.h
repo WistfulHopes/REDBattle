@@ -310,6 +310,28 @@ public:
         M[3][3] = d.GetW();
     }
 
+
+    AA_Matrix(float x, float y, float z)
+    {
+        M[0][0] = 1;
+        M[0][1] = 0;
+        M[0][2] = 0;
+        M[0][3] = 0;
+        M[1][0] = 0;
+        M[1][1] = 1;
+        M[1][2] = 0;
+        M[1][3] = 0;
+        M[2][0] = 0;
+        M[2][1] = 0;
+        M[2][2] = 1;
+        M[2][3] = 0;
+        M[3][0] = x;
+        M[3][1] = y;
+        M[3][2] = z;
+        M[3][3] = 1;
+    }
+
+    
     AA_Matrix(const AA_Vector3 EyePosition, const AA_Vector3 LookDirection, const AA_Vector3 UpVector)
     {
         // Vector3Subtract(eye, target)
